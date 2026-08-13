@@ -971,20 +971,35 @@ transact_fiber (TransactData *data)
             return dex_future_new_for_error (g_steal_pointer (&local_error));
 
           n_items = g_list_model_get_n_items (store);
-          for (guint i = 0; i < n_items; i++)
-            {
-              g_autoptr (BzEntry) entry = NULL;
-              gboolean installed        = FALSE;
+          {
+            g_autoptr (BzEntry) first_valid = NULL;
 
-              entry     = g_list_model_get_item (store, i);
-              installed = bz_entry_is_installed (entry);
-              if ((data->remove && installed) ||
-                  (!data->remove && !installed))
-                {
-                  selected_entry = g_steal_pointer (&entry);
-                  break;
-                }
-            }
+            for (guint i = 0; i < n_items; i++)
+              {
+                g_autoptr (BzEntry) entry = NULL;
+                gboolean installed        = FALSE;
+
+                entry     = g_list_model_get_item (store, i);
+                installed = bz_entry_is_installed (entry);
+                if ((data->remove && installed) ||
+                    (!data->remove && !installed))
+                  {
+                    if (first_valid == NULL)
+                      first_valid = g_object_ref (entry);
+
+                    if (!data->remove &&
+                        selected_entry == NULL &&
+                        bz_flatpak_entry_is_user (BZ_FLATPAK_ENTRY (entry)))
+                      selected_entry = g_object_ref (entry);
+
+                    if (data->remove)
+                      break;
+                  }
+              }
+
+            if (selected_entry == NULL)
+              selected_entry = g_steal_pointer (&first_valid);
+          }
           if (selected_entry == NULL)
             return dex_future_new_false ();
         }

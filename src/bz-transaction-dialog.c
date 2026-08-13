@@ -94,6 +94,7 @@ create_entry_radio_buttons (AdwAlertDialog *alert,
         {
           GtkWidget      *listbox           = NULL;
           GtkCheckButton *first_valid_radio = NULL;
+          GtkCheckButton *first_user_radio  = NULL;
           GtkCheckButton *dummy_radio       = NULL;
 
           listbox = gtk_list_box_new ();
@@ -124,15 +125,26 @@ create_entry_radio_buttons (AdwAlertDialog *alert,
                 }
               else
                 {
+                  /* Prefer a user-installation source so installs land in the
+                     user installation where possible; system-installation
+                     installs fail with “Path does not exist” when driven from
+                     inside the sandboxed app (bazaar-org/bazaar#1298). */
                   if (first_valid_radio == NULL)
-                    {
-                      gtk_check_button_set_active (GTK_CHECK_BUTTON (radio), TRUE);
-                      first_valid_radio = (GtkCheckButton *) radio;
-                    }
+                    first_valid_radio = GTK_CHECK_BUTTON (radio);
+
+                  if (!remove &&
+                      first_user_radio == NULL &&
+                      bz_flatpak_entry_is_user (BZ_FLATPAK_ENTRY (entry)))
+                    first_user_radio = GTK_CHECK_BUTTON (radio);
                 }
 
               gtk_list_box_append (GTK_LIST_BOX (listbox), row);
             }
+
+          if (!remove && first_user_radio != NULL)
+            first_valid_radio = first_user_radio;
+          if (first_valid_radio != NULL)
+            gtk_check_button_set_active (first_valid_radio, TRUE);
 
           gtk_box_append (GTK_BOX (container), listbox);
         }
@@ -529,11 +541,25 @@ bulk_install_dialog_fiber (BulkInstallDialogData *data)
       if (store == NULL || g_list_model_get_n_items (G_LIST_MODEL (store)) == 0)
         continue;
 
-      entry = g_list_model_get_item (G_LIST_MODEL (store), 0);
-      if (entry == NULL)
-        continue;
+      {
+        guint n_items = g_list_model_get_n_items (G_LIST_MODEL (store));
 
-      if (bz_entry_is_installed (entry) || bz_entry_is_holding (entry))
+        for (guint j = 0; j < n_items; j++)
+          {
+            g_autoptr (BzEntry) candidate = NULL;
+
+            candidate = g_list_model_get_item (G_LIST_MODEL (store), j);
+            if (candidate == NULL ||
+                bz_entry_is_installed (candidate) ||
+                bz_entry_is_holding (candidate))
+              continue;
+
+            entry = g_steal_pointer (&candidate);
+            if (bz_flatpak_entry_is_user (BZ_FLATPAK_ENTRY (entry)))
+              break;
+          }
+      }
+      if (entry == NULL)
         continue;
 
       g_ptr_array_add (resolved_entries, g_object_ref (entry));

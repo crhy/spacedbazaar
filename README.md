@@ -4,6 +4,19 @@
 Bazaar
 </h1>
 
+> [!IMPORTANT]
+> This is **space**dbazaar, the [Spaced Linux](https://github.com/crhy/spaced)
+> fork of Bazaar. It tracks upstream `main` and carries Spaced Linux-specific
+> fixes that upstream has not yet merged. Current delta:
+> - `Prefer user-installation sources when installing from the sandbox`: the
+>   install dialog, shift-click install, and bulk-install paths now preselect
+>   the user-installation source whenever one exists. System-installation
+>   installs driven from inside the sandboxed app fail after the download with
+>   "Path does not exist" ([bazaar-org/bazaar#1298]
+>   (https://github.com/bazaar-org/bazaar/issues/1298), Spaced Linux issue #61),
+>   while user-installation installs work. System installations remain the
+>   preselected source when no user source exists and for removals.
+
 > [!NOTE]
 > If you are a distributor/packager who would like to learn how to customize
 > Bazaar, take a look at the [docs](/docs/overview.md).

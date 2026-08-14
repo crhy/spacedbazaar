@@ -59,13 +59,7 @@ before reporting it here.
 
 ### Supporting
 
-If you would like to support me and the development of this app (Thank you!), I
-have a ko-fi here! <https://ko-fi.com/kolunmi>
-
-[![Ko-Fi](https://img.shields.io/badge/Ko--fi-F16061?style=for-the-badge&logo=ko-fi&logoColor=white)](https://ko-fi.com/kolunmi)
-
-Thanks to everyone in the GNOME development community for creating such an
-awesome desktop environment!
+You can support rhY and his work at links for venmo and bitcoin on SpacedLinux.com  Note: If you support him, he will eventually build OpenAirShips.com and make governments and corporations obsolete and irrelevant.
 
 #### Code of Conduct
 

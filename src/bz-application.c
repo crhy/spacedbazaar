@@ -68,7 +68,6 @@
 #include "env.h"
 #include "error.h"
 #include "io.h"
-#include "progress-bar-designs/common.h"
 #include "search-index-write.h"
 #include "util.h"
 
@@ -761,7 +760,7 @@ bz_application_about_action (GSimpleAction *action,
 
   g_object_set (
       dialog,
-      "application-name", "Bazaar",
+      "application-name", "SpacedBazaar",
       "application-icon", "io.github.kolunmi.Bazaar",
       "developer-name", _ ("The Bazaar Contributors"),
       "developers", developers,
@@ -3670,10 +3669,11 @@ init_service_struct (BzApplication *self,
       g_action_map_lookup_action (G_ACTION_MAP (self), "sync-remotes"), "enabled",
       G_BINDING_SYNC_CREATE);
 
-  gtk_style_context_add_provider_for_display (
-      gdk_display_get_default (),
-      bz_get_pride_style_provider (),
-      GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
+  /* Spaced Linux ships dark desktop themes; keep the store in the dark even
+     though the sandboxed app cannot read the host's color-scheme setting. */
+  adw_style_manager_set_color_scheme (
+      adw_style_manager_get_default (),
+      ADW_COLOR_SCHEME_FORCE_DARK);
 }
 
 static GtkWindow *

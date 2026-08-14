@@ -1,5 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<object class="BzPrideFlagConfig">
-  <typehint name="flag-specs" type="BzPrideFlagSpec"/>
-  <typehint name="flag-specs.stripes" type="BzPrideFlagStripeSpec"/>
-</object>

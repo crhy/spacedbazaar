@@ -7,10 +7,6 @@
   "sdk-extensions": [
     "org.freedesktop.Sdk.Extension.llvm20"
   ],
-  "tags": [
-    "nightly"
-  ],
-  "desktop-file-name-suffix": " (Nightly)",
   "finish-args": [
     "--share=network",
     "--share=ipc",
@@ -64,9 +60,9 @@
       ],
       "modules": [
         {
-          "name" : "libdex",
-          "buildsystem" : "meson",
-          "config-opts" : [
+          "name": "libdex",
+          "buildsystem": "meson",
+          "config-opts": [
             "--buildtype=debugoptimized",
             "-Ddocs=false",
             "-Dintrospection=enabled",
@@ -74,12 +70,12 @@
             "-Dtests=false",
             "-Dsysprof=false"
           ],
-          "sources" : [
+          "sources": [
             {
-              "type" : "git",
-              "url" : "https://gitlab.gnome.org/GNOME/libdex.git",
-              "commit" : "26d094f2d7a4561862cce3efa00bb5aa1e4b0720",
-              "tag" : "1.2.beta"
+              "type": "git",
+              "url": "https://gitlab.gnome.org/GNOME/libdex.git",
+              "commit": "26d094f2d7a4561862cce3efa00bb5aa1e4b0720",
+              "tag": "1.2.beta"
             }
           ]
         },

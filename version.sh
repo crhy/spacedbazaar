@@ -19,7 +19,7 @@ case "$INSTR" in
         ;;
     get-gh-release)
         TAG="v${VERSION}"
-        echo "https://github.com/bazaar-org/bazaar/releases/tag/${TAG}"
+        echo "https://github.com/crhy/spacedbazaar/releases/tag/${TAG}"
         ;;
     get-cache)
         echo "${CACHE_VERSION}"

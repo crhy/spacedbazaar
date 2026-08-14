@@ -1,5 +1,5 @@
 [Desktop Entry]
-Name=Bazaar
+Name=SpacedBazaar
 GenericName=App Store
 Comment=Add, remove or update flatpak software on this computer
 Exec=bazaar-daemon %U

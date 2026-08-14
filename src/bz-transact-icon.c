@@ -23,7 +23,6 @@
 #include "bz-application.h"
 #include "bz-lazy-wdgt.h"
 #include "bz-transact-icon.h"
-#include "progress-bar-designs/common.h"
 
 struct _BzTransactIcon
 {
@@ -35,8 +34,6 @@ struct _BzTransactIcon
   BzTransactionManager      *ts_manager;
   GListModel                *trackers;
   BzTransactionEntryTracker *tracker;
-
-  char *pride_class;
 
   BzLazyWdgt *wdgt;
 };
@@ -61,9 +58,6 @@ update_tracker (BzTransactIcon *self);
 
 static void
 check_tracker (BzTransactIcon *self);
-
-static void
-ensure_draw_css (BzTransactIcon *self);
 
 static void
 update_icon (BzTransactIcon *self);
@@ -95,11 +89,6 @@ tracker_notify (BzTransactIcon            *self,
                 GParamSpec                *pspec,
                 BzTransactionEntryTracker *tracker);
 
-static void
-pride_flag_changed (BzTransactIcon *self,
-                    const char     *key,
-                    GSettings      *settings);
-
 static gboolean
 next_frame_tick_cb (GtkWidget     *widget,
                     GdkFrameClock *frame_clock,
@@ -127,15 +116,10 @@ bz_transact_icon_dispose (GObject *object)
   if (self->tracker != NULL)
     g_signal_handlers_disconnect_by_func (
         self->tracker, tracker_notify, self);
-  if (self->settings != NULL)
-    g_signal_handlers_disconnect_by_func (
-        self->settings, pride_flag_changed, self);
   g_clear_object (&self->settings);
   g_clear_object (&self->ts_manager);
   g_clear_object (&self->trackers);
   g_clear_object (&self->tracker);
-
-  g_clear_pointer (&self->pride_class, g_free);
 
   G_OBJECT_CLASS (bz_transact_icon_parent_class)->dispose (object);
 }
@@ -274,9 +258,6 @@ apply_state (BzTransactIcon *self)
   if (self->tracker != NULL)
     g_signal_handlers_disconnect_by_func (
         self->tracker, tracker_notify, self);
-  if (self->settings != NULL)
-    g_signal_handlers_disconnect_by_func (
-        self->settings, pride_flag_changed, self);
   g_clear_object (&self->settings);
   g_clear_object (&self->ts_manager);
   g_clear_object (&self->trackers);
@@ -305,17 +286,10 @@ apply_state (BzTransactIcon *self)
                     self->trackers, "items-changed",
                     G_CALLBACK (trackers_items_changed), self);
             }
-          if (self->settings != NULL)
-            {
-              g_signal_connect_swapped (
-                  self->settings, "changed::global-progress-bar-theme",
-                  G_CALLBACK (pride_flag_changed), self);
-            }
         }
     }
 
   update_tracker (self);
-  ensure_draw_css (self);
 }
 
 static void
@@ -417,43 +391,6 @@ check_tracker (BzTransactIcon *self)
     bz_lazy_wdgt_set_wdgt_state (self->wdgt, state);
 
   update_icon (self);
-  ensure_draw_css (self);
-}
-
-static void
-ensure_draw_css (BzTransactIcon *self)
-{
-  GtkWidget *renderer          = NULL;
-  g_autoptr (GtkWidget) widget = NULL;
-  g_autofree char *id          = NULL;
-  g_autofree char *class       = NULL;
-
-  renderer = adw_bin_get_child (ADW_BIN (self->wdgt));
-  if (!BGE_IS_WDGT_RENDERER (renderer))
-    return;
-
-  widget = bge_wdgt_renderer_lookup_object (BGE_WDGT_RENDERER (renderer), "flag");
-
-  if (self->settings == NULL)
-    {
-      if (self->pride_class != NULL)
-        gtk_widget_remove_css_class (widget, self->pride_class);
-      g_clear_pointer (&self->pride_class, g_free);
-      return;
-    }
-
-  id    = g_settings_get_string (self->settings, "global-progress-bar-theme");
-  class = bz_dup_css_class_for_pride_id (id);
-
-  if (self->pride_class != NULL &&
-      g_strcmp0 (self->pride_class, class) == 0)
-    return;
-
-  if (self->pride_class != NULL)
-    gtk_widget_remove_css_class (widget, self->pride_class);
-  g_clear_pointer (&self->pride_class, g_free);
-  gtk_widget_add_css_class (widget, class);
-  self->pride_class = g_steal_pointer (&class);
 }
 
 static void
@@ -518,14 +455,6 @@ tracker_notify (BzTransactIcon            *self,
                 BzTransactionEntryTracker *tracker)
 {
   check_tracker (self);
-}
-
-static void
-pride_flag_changed (BzTransactIcon *self,
-                    const char     *key,
-                    GSettings      *settings)
-{
-  ensure_draw_css (self);
 }
 
 static gboolean

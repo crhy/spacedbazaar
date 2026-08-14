@@ -179,7 +179,6 @@ bz_sources = files(
   'update-worker.c',
   'util.c',
 )
-subdir('progress-bar-designs')
 
 bz_deps = [
   # Bazaar GTK Extensions; see ../bge/
@@ -252,9 +251,6 @@ gobject_specs = files(
   'bz-internal-config.txt',
   'bz-linear-function.txt',
   'bz-main-config.txt',
-  'bz-pride-flag-config.txt',
-  'bz-pride-flag-spec.txt',
-  'bz-pride-flag-stripe-spec.txt',
   'bz-release.txt',
   'bz-repository.txt',
   'bz-root-blocklist.txt',

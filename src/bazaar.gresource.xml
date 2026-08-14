@@ -5,14 +5,12 @@
     <file>style.css</file>
 
     <file>internal-config.yaml</file>
-    <file alias="pride-flags.yaml">progress-bar-designs/pride/pride-flags.yaml</file>
     <file alias="bazaar.desktop">bazaar-autostart.desktop</file>
 
     <file preprocess="xml-stripblanks">internal-config-schema.xml</file>
     <file preprocess="xml-stripblanks">main-config-schema.xml</file>
     <file preprocess="xml-stripblanks">blocklist-schema.xml</file>
     <file preprocess="xml-stripblanks">curated-config-schema.xml</file>
-    <file preprocess="xml-stripblanks">pride-flag-config-schema.xml</file>
     <file preprocess="xml-stripblanks">article-list-schema.xml</file>
     <file>release-notes.xml</file>
 

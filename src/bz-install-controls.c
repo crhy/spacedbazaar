@@ -28,7 +28,6 @@
 #include "bz-state-info.h"
 #include "template-callbacks.h"
 #include "util.h"
-#include "progress-bar-designs/common.h"
 
 struct _BzInstallControls
 {
@@ -44,7 +43,6 @@ struct _BzInstallControls
 
   GtkWidget *install_button;
   char      *install_btn_class;
-  char      *pride_class;
 
   /* Template widgets */
   GtkWidget *open_button;
@@ -72,14 +70,6 @@ enum
   LAST_SIGNAL,
 };
 static guint signals[LAST_SIGNAL];
-
-static void
-pride_flag_changed (BzInstallControls *self,
-                    const char        *key,
-                    GSettings         *settings);
-
-static void
-ensure_draw_css (BzInstallControls *self);
 
 static void
 update_tracker (BzInstallControls *self)
@@ -374,12 +364,6 @@ bz_install_controls_dispose (GObject *object)
 {
   BzInstallControls *self = BZ_INSTALL_CONTROLS (object);
 
-  if (self->settings != NULL)
-    g_signal_handlers_disconnect_by_func (
-        self->settings,
-        pride_flag_changed,
-        self);
-
   if (self->all_trackers != NULL)
     g_signal_handlers_disconnect_by_func (
         self->all_trackers,
@@ -392,7 +376,6 @@ bz_install_controls_dispose (GObject *object)
   g_clear_object (&self->tracker);
   g_clear_object (&self->install_button);
   g_clear_pointer (&self->install_btn_class, g_free);
-  g_clear_pointer (&self->pride_class, g_free);
   g_clear_object (&self->all_trackers);
 
   G_OBJECT_CLASS (bz_install_controls_parent_class)->dispose (object);
@@ -449,23 +432,8 @@ bz_install_controls_set_property (GObject      *object,
       break;
     case PROP_SETTINGS:
       {
-        if (self->settings != NULL)
-          g_signal_handlers_disconnect_by_func (
-              self->settings,
-              pride_flag_changed,
-              self);
         g_clear_object (&self->settings);
         self->settings = g_value_dup_object (value);
-
-        if (self->settings != NULL)
-          {
-            g_signal_connect_swapped (
-                self->settings,
-                "changed::global-progress-bar-theme",
-                G_CALLBACK (pride_flag_changed),
-                self);
-          }
-        ensure_draw_css (self);
       }
       break;
     default:
@@ -691,48 +659,4 @@ bz_install_controls_set_state (BzInstallControls *self,
 
   g_object_notify_by_pspec (G_OBJECT (self), props[PROP_STATE]);
   update_tracker (self);
-}
-
-static void
-pride_flag_changed (BzInstallControls *self,
-                    const char        *key,
-                    GSettings         *settings)
-{
-  ensure_draw_css (self);
-}
-
-static void
-ensure_draw_css (BzInstallControls *self)
-{
-  if (self->settings != NULL)
-    {
-      g_autofree char *id       = NULL;
-      g_autofree char *final_id = NULL;
-      g_autofree char *class    = NULL;
-
-      id = g_settings_get_string (self->settings, "global-progress-bar-theme");
-
-      if (g_strcmp0 (id, "accent-color") != 0)
-        final_id = g_strdup_printf ("%s-horizontal", id);
-      else
-        final_id = g_strdup (id);
-
-      class = bz_dup_css_class_for_pride_id (final_id);
-
-      if (self->pride_class != NULL &&
-          g_strcmp0 (self->pride_class, class) == 0)
-        return;
-
-      if (self->pride_class != NULL)
-        gtk_widget_remove_css_class (self->animated_button, self->pride_class);
-      g_clear_pointer (&self->pride_class, g_free);
-      gtk_widget_add_css_class (self->animated_button, class);
-      self->pride_class = g_steal_pointer (&class);
-    }
-  else
-    {
-      if (self->pride_class != NULL)
-        gtk_widget_remove_css_class (self->animated_button, self->pride_class);
-      g_clear_pointer (&self->pride_class, g_free);
-    }
 }

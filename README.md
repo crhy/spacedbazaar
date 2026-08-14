@@ -69,6 +69,5 @@ awesome desktop environment!
 
 #### Code of Conduct
 
-This project adheres to the [GNOME Code of Conduct](https://conduct.gnome.org/).
-By participating through any means, including PRs, Issues or Discussions, you
-are expected to uphold this code.
+SpacedLinux Code of Conduct:
+All facets of Spaced Linux are Free.  You can say and call anyone whatever you want.  We endorse absolute freedom of speech, including screaming fire in a theater.

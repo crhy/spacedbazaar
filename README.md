@@ -1,7 +1,7 @@
 <h1 align="center">
 <img src="data/icons/hicolor/scalable/apps/io.github.kolunmi.Bazaar.svg" width="128" height="128" />
 <br/>
-Bazaar
+SpacedBazaar
 </h1>
 
 > [!IMPORTANT]

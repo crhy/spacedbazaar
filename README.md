@@ -1,5 +1,5 @@
 <h1 align="center">
-<img src="data/icons/hicolor/scalable/apps/io.github.kolunmi.Bazaar.svg" width="128" height="128" />
+<img src="data/icons/SpacedBazaar.svg" width="128" height="128" />
 <br/>
 SpacedBazaar
 </h1>
@@ -16,6 +16,9 @@ SpacedBazaar
 >   (https://github.com/bazaar-org/bazaar/issues/1298), Spaced Linux issue #61),
 >   while user-installation installs work. System installations remain the
 >   preselected source when no user source exists and for removals.
+> - `SpacedBazaar.svg` icon: the app store's brand in the Spaced Linux colors.
+>   Releases ship as x86_64 Flatpak bundles on the
+>   [releases page](https://github.com/crhy/spacedbazaar/releases).
 
 > [!NOTE]
 > If you are a distributor/packager who would like to learn how to customize

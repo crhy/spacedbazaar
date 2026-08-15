@@ -753,6 +753,12 @@ bz_application_about_action (GSimpleAction *action,
     NULL
   };
 
+  const char *credits[] = {
+    "Rhy Thornton https://rhymusic.com/",
+    /* This array MUST be NULL terminated */
+    NULL
+  };
+
   g_assert (BZ_IS_APPLICATION (self));
 
   window = gtk_application_get_active_window (GTK_APPLICATION (self));
@@ -769,9 +775,14 @@ bz_application_about_action (GSimpleAction *action,
       "version", PACKAGE_VCS_VERSION,
       "copyright", "© 2025-2026 The Bazaar Contributors",
       "license-type", GTK_LICENSE_GPL_3_0,
-      "website", "https://usebazaar.org",
-      "issue-url", "https://github.com/bazaar-org/bazaar/issues",
+      "website", "https://spacedlinux.com",
+      "issue-url", "https://github.com/crhy/spacedbazaar/issues",
       NULL);
+
+  adw_about_dialog_add_credit_section (
+      ADW_ABOUT_DIALOG (dialog),
+      _ ("Credits"),
+      credits);
 
   adw_about_dialog_add_acknowledgement_section (
       ADW_ABOUT_DIALOG (dialog),
@@ -1287,7 +1298,6 @@ init_fiber (BzWeakRef *wr)
                   if (cache_has_flathub)
                     {
                       dex_promise_resolve_boolean (self->ready_to_open_files, TRUE);
-                      bz_state_info_set_busy (self->state, FALSE);
                     }
                 }
               else
@@ -1310,6 +1320,7 @@ init_fiber (BzWeakRef *wr)
       g_warning ("Unable to ensure cache directory: %s", local_error->message);
       g_clear_error (&local_error);
     }
+  bz_state_info_set_busy (self->state, FALSE);
 
   auth_state = bz_auth_state_new ();
   bz_state_info_set_auth_state (self->state, auth_state);

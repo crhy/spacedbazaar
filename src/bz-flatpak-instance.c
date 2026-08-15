@@ -1364,7 +1364,7 @@ load_local_ref_fiber (LoadLocalRefData *data)
       entry = bz_flatpak_entry_new_for_ref (
           FLATPAK_REF (bref),
           remote,
-          FALSE,
+          TRUE,
           component,
           NULL,
           &local_error);
@@ -1883,11 +1883,12 @@ retrieve_refs_for_remote_fiber (RetrieveRefsForRemoteData *data)
   if (strstr (remote_name, "fedora") != NULL)
     is_noenumerate = TRUE;
 
-#ifdef SANDBOXED_LIBFLATPAK
-  if (is_noenumerate || installation == self->user)
-#else
+  /* The user-installation flathub remote must be enumerated like any other
+     enumerable remote. Otherwise apps that are not installed yet have no
+     user-installation source, every install lands in the system installation
+     and fails with “Path does not exist” when driven from inside the
+     sandboxed app (the system installation cannot be written there). */
   if (is_noenumerate)
-#endif
     ret = retrieve_refs_for_noenumerable_remote (
         self, data->parent->cancellable,
         remote_name, installation, remote);
@@ -2011,6 +2012,7 @@ retrieve_updates_fiber (GatherRefsData *data)
 
   bz_weak_get_or_return_reject (self, data->self);
 
+  #ifndef SANDBOXED_LIBFLATPAK
   if (self->system != NULL)
     {
       system_refs = flatpak_installation_list_installed_refs_for_update (
@@ -2024,9 +2026,13 @@ retrieve_updates_fiber (GatherRefsData *data)
       n_sys_refs = system_refs->len;
     }
 
-#ifndef SANDBOXED_LIBFLATPAK
   if (self->user != NULL)
 #else
+  /* The system installation cannot be written to from the sandbox, so
+     discovering system update refs is dead weight: the startup update
+     check would resolve every system ref (including its appstream
+     lookups) while the ids are skipped below anyway.  Only the user
+     side is actionable. */
   if (self->user != NULL && g_getenv ("FLATPAK_BINARY") != NULL)
 #endif
     {
@@ -2050,8 +2056,11 @@ retrieve_updates_fiber (GatherRefsData *data)
 
       if (i < n_sys_refs)
         {
-          user = FALSE;
-          iref = g_ptr_array_index (system_refs, i);
+          /* The sandbox cannot write to the system installation, so
+             system-installed apps can never be updated from the store
+             ("Path does not exist" after the download); only user updates
+             are actionable. */
+          continue;
         }
       else
         {

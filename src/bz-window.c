@@ -1234,7 +1234,44 @@ transact (BzEntry   *entry,
       bz_state_info_get_transaction_manager (bz_state_info_get_default ()),
       transaction);
 }
+ 
+static DexFuture *
+transact_done_cb (DexFuture *future,
+                  gpointer   user_data)
+{
+  BzWindow *self                       = BZ_WINDOW (user_data);
+  g_autoptr (GError) error             = NULL;
+  const GValue *value                  = NULL;
+  gboolean success                     = FALSE;
 
+  value = dex_future_get_value (future, &error);
+
+  if (error != NULL)
+    success = FALSE;
+  else if (value != NULL && G_VALUE_HOLDS_BOOLEAN (value))
+    success = g_value_get_boolean (value);
+  else
+    success = FALSE;
+
+  if (!success)
+    {
+      if (error != NULL)
+        adw_toast_overlay_add_toast (
+            self->toasts,
+            adw_toast_new_format (_ ("Transaction failed: %s"), error->message));
+      else
+        adw_toast_overlay_add_toast (
+            self->toasts,
+            adw_toast_new (_ ("Transaction failed")));
+    }
+  else
+    adw_toast_overlay_add_toast (
+        self->toasts,
+        adw_toast_new (_ ("Transaction completed")));
+
+  return dex_future_new_for_boolean (success);
+}
+ 
 static void
 try_transact (BzWindow     *self,
               BzEntry      *entry,
@@ -1262,13 +1299,16 @@ try_transact (BzWindow     *self,
   data->auto_confirm = auto_confirm;
   data->source       = bz_object_maybe_ref (source);
 
-  dex_future_disown (dex_scheduler_spawn (
+  DexFuture *future = dex_scheduler_spawn (
       dex_scheduler_get_default (),
       bz_get_dex_stack_size (),
       (DexFiberFunc) transact_fiber,
-      transact_data_ref (data), transact_data_unref));
-}
+      transact_data_ref (data), transact_data_unref);
 
+  future = dex_future_then (future, (DexFutureCallback) transact_done_cb, self, NULL);
+  dex_future_disown (future);
+}
+ 
 static void
 bulk_install (BzWindow *self,
               BzEntry **installs,

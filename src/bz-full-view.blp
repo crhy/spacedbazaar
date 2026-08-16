@@ -689,8 +689,6 @@ template $BzFullView: Adw.Bin {
                             child-type: "BzAppTile";
                             child-prop: "group";
                             max-children-per-line: 3;
-                            bind-widget => $bind_app_tile_cb(template);
-                            unbind-widget => $unbind_app_tile_cb(template);
 
                             model: SliceListModel similar_apps_model {
                               offset: 0;
@@ -727,8 +725,6 @@ template $BzFullView: Adw.Bin {
                             child-type: "BzAppTile";
                             child-prop: "group";
                             max-children-per-line: 3;
-                            bind-widget => $bind_app_tile_cb(template);
-                            unbind-widget => $unbind_app_tile_cb(template);
 
                             model: SliceListModel other_apps_model {
                               offset: 0;

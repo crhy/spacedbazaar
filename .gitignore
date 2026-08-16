@@ -1,2 +1,5 @@
 build
 .cache
+.flatpak-builder/
+.flatpak-repo/
+*.flatpak

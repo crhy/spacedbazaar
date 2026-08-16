@@ -2,6 +2,38 @@ using Gtk 4.0;
 using Adw 1;
 
 template $BzScreenshotPage: Adw.Bin {
+  ShortcutController {
+    Shortcut {
+      trigger: "Left";
+      action: "action(screenshot.previous)";
+    }
+
+    Shortcut {
+      trigger: "Right";
+      action: "action(screenshot.next)";
+    }
+
+    Shortcut {
+      trigger: "<ctrl>plus|<ctrl>equal|<ctrl>KP_Add";
+      action: "action(screenshot.zoom-in)";
+    }
+
+    Shortcut {
+      trigger: "<ctrl>minus|<ctrl>KP_Subtract";
+      action: "action(screenshot.zoom-out)";
+    }
+
+    Shortcut {
+      trigger: "<ctrl>0|<ctrl>KP_0";
+      action: "action(screenshot.zoom-reset)";
+    }
+
+    Shortcut {
+      trigger: "<ctrl>c";
+      action: "action(screenshot.copy)";
+    }
+  }
+
   child: Adw.BreakpointBin {
     width-request: 360;
     height-request: 100;
@@ -10,7 +42,7 @@ template $BzScreenshotPage: Adw.Bin {
       condition ("max-width: 700px")
 
       setters {
-        mobile_caption_box.margin-bottom: 70;
+        mobile_caption_box.margin-bottom: 78;
       }
     }
 
@@ -53,8 +85,8 @@ template $BzScreenshotPage: Adw.Bin {
             orientation: horizontal;
             halign: start;
             valign: end;
-            margin-bottom: 12;
-            margin-start: 12;
+            margin-bottom: 18;
+            margin-start: 18;
             spacing: 6;
 
             Box navigation_controls {
@@ -69,7 +101,7 @@ template $BzScreenshotPage: Adw.Bin {
               Button previous_button {
                 icon-name: "go-previous-symbolic";
                 tooltip-text: _("Previous Screenshot");
-                clicked => $previous_clicked() swapped;
+                action-name: "screenshot.previous";
 
                 styles [
                   "flat",
@@ -79,7 +111,7 @@ template $BzScreenshotPage: Adw.Bin {
               Button next_button {
                 icon-name: "go-next-symbolic";
                 tooltip-text: _("Next Screenshot");
-                clicked => $next_clicked() swapped;
+                action-name: "screenshot.next";
 
                 styles [
                   "flat",
@@ -95,7 +127,7 @@ template $BzScreenshotPage: Adw.Bin {
               Button copy_button {
                 icon-name: "edit-copy-symbolic";
                 tooltip-text: _("Copy Image");
-                clicked => $copy_clicked() swapped;
+                action-name: "screenshot.copy";
 
                 styles [
                   "flat",
@@ -113,7 +145,7 @@ template $BzScreenshotPage: Adw.Bin {
             can-target: false;
 
             child: Box mobile_caption_box {
-              margin-bottom: 12;
+              margin-bottom: 18;
               styles [
                 "osd-box",
               ]
@@ -141,8 +173,8 @@ template $BzScreenshotPage: Adw.Bin {
             orientation: horizontal;
             halign: end;
             valign: end;
-            margin-bottom: 12;
-            margin-end: 12;
+            margin-bottom: 18;
+            margin-end: 18;
 
             Box zoom_controls {
               orientation: horizontal;
@@ -158,7 +190,7 @@ template $BzScreenshotPage: Adw.Bin {
                 Button reset_zoom_button {
                   icon-name: "zoom-original-symbolic";
                   tooltip-text: _("Reset View");
-                  clicked => $reset_zoom_clicked() swapped;
+                  action-name: "screenshot.zoom-reset";
 
                   styles [
                     "flat",
@@ -169,7 +201,7 @@ template $BzScreenshotPage: Adw.Bin {
               Button zoom_out_button {
                 icon-name: "zoom-minus-symbolic";
                 tooltip-text: _("Zoom Out");
-                clicked => $zoom_out_clicked() swapped;
+                action-name: "screenshot.zoom-out";
 
                 styles [
                   "flat",
@@ -179,7 +211,7 @@ template $BzScreenshotPage: Adw.Bin {
               Button zoom_in_button {
                 icon-name: "zoom-plus-symbolic";
                 tooltip-text: _("Zoom In");
-                clicked => $zoom_in_clicked() swapped;
+                action-name: "screenshot.zoom-in";
 
                 styles [
                   "flat",

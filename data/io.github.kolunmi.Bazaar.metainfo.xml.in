@@ -73,6 +73,22 @@
   </screenshots>
 
   <releases>
+    <release version="0.9.4" date="2026-08-14">
+      <url type="details">https://github.com/bazaar-org/bazaar/releases/tag/v0.9.4</url>
+      <description translate="no">
+        <p>
+          <em>Changes</em>
+        </p>
+        <ul>
+          <li>Added shortcuts for zoom actions in the screenshot viewer</li>
+          <li>Clicking other app tiles on an app page now creates a new page</li>
+          <li>Fixed keyboard navigation on the "Curated" page</li>
+        </ul>
+        <p>
+          Thanks for reading, and have a great day!
+        </p>
+      </description>
+    </release>
     <release version="0.9.3" date="2026-08-12">
       <url type="details">https://github.com/bazaar-org/bazaar/releases/tag/v0.9.3</url>
       <description translate="no">

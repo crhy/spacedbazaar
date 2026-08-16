@@ -321,34 +321,6 @@ more_apps_button_clicked_cb (BzFullView *self,
 }
 
 static void
-app_tile_clicked_cb (BzFullView *self,
-                     BzAppTile  *tile)
-{
-  BzEntryGroup *group = bz_app_tile_get_group (tile);
-  bz_full_view_set_entry_group (self, group);
-}
-
-static void
-bind_app_tile_cb (BzFullView        *self,
-                  BzAppTile         *tile,
-                  BzEntryGroup      *group,
-                  BzDynamicListView *view)
-{
-  g_signal_connect_swapped (tile, "clicked",
-                            G_CALLBACK (app_tile_clicked_cb),
-                            self);
-}
-
-static void
-unbind_app_tile_cb (BzFullView        *self,
-                    BzAppTile         *tile,
-                    BzEntryGroup      *group,
-                    BzDynamicListView *view)
-{
-  g_signal_handlers_disconnect_by_func (tile, G_CALLBACK (app_tile_clicked_cb), self);
-}
-
-static void
 open_url_cb (BzFullView   *self,
              AdwActionRow *row)
 {
@@ -772,8 +744,6 @@ bz_full_view_class_init (BzFullViewClass *klass)
   gtk_widget_class_bind_template_callback (widget_class, should_show_addon_overflow);
   gtk_widget_class_bind_template_callback (widget_class, install_addons_cb);
   gtk_widget_class_bind_template_callback (widget_class, addon_tile_activated_cb);
-  gtk_widget_class_bind_template_callback (widget_class, bind_app_tile_cb);
-  gtk_widget_class_bind_template_callback (widget_class, unbind_app_tile_cb);
   gtk_widget_class_bind_template_callback (widget_class, get_description_max_height);
   gtk_widget_class_bind_template_callback (widget_class, get_description_toggle_text);
   gtk_widget_class_bind_template_callback (widget_class, metainfo_banner_visible);

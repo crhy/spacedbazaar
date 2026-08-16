@@ -311,9 +311,6 @@ template $BzFlathubPage: Adw.Bin {
                           size: 9;
                           model: bind $get_category_by_name_cb(template.state as <$BzStateInfo>.flathub as <$BzFlathubState>.categories, "mobile") as <$BzFlathubCategory>.applications;
                         };
-
-                        bind-widget => $bind_widget_cb(template);
-                        unbind-widget => $unbind_widget_cb(template);
                       }
 
                       Button otg_more_button_bottom {
@@ -469,9 +466,6 @@ template $BzFlathubPage: Adw.Bin {
                                 size: 12;
                                 model: bind $get_category_by_name_cb(template.state as <$BzStateInfo>.flathub as <$BzFlathubState>.categories, "game-only") as <$BzFlathubCategory>.applications;
                               };
-
-                              bind-widget => $bind_widget_cb(template);
-                              unbind-widget => $unbind_widget_cb(template);
                             }
 
                             Button {

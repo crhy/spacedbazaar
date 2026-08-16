@@ -3,6 +3,7 @@
 INSTR="$1"
 
 VERSION=0.9.4
+RELEASE_TAG=0.9.4-spaced1
 CACHE_VERSION=2
 
 case "$INSTR" in
@@ -18,7 +19,7 @@ case "$INSTR" in
         fi
         ;;
     get-gh-release)
-        TAG="v${VERSION}"
+        TAG="${RELEASE_TAG}"
         echo "https://github.com/crhy/spacedbazaar/releases/tag/${TAG}"
         ;;
     get-cache)

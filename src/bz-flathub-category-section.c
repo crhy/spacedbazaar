@@ -55,15 +55,6 @@ enum
 
 static GParamSpec *props[LAST_PROP] = { 0 };
 
-
-static void
-tile_clicked (BzEntryGroup *group,
-              GtkButton    *button)
-{
-  gtk_widget_activate_action (GTK_WIDGET (button), "window.show-group", "s",
-                              bz_entry_group_get_id (group));
-}
-
 static void
 on_more_button_clicked (GtkButton                *button,
                         BzFlathubCategorySection *self)
@@ -88,24 +79,6 @@ on_more_button_clicked (GtkButton                *button,
     return;
 
   adw_navigation_view_push (ADW_NAVIGATION_VIEW (nav_view), apps_page);
-}
-
-static void
-bind_widget_cb (BzFlathubCategorySection *self,
-                GtkWidget                *tile,
-                BzEntryGroup             *group,
-                GtkWidget                *view)
-{
-  g_signal_connect_swapped (tile, "clicked", G_CALLBACK (tile_clicked), group);
-}
-
-static void
-unbind_widget_cb (BzFlathubCategorySection *self,
-                  GtkWidget                *tile,
-                  BzEntryGroup             *group,
-                  GtkWidget                *view)
-{
-  g_signal_handlers_disconnect_by_func (tile, G_CALLBACK (tile_clicked), group);
 }
 
 static int
@@ -268,8 +241,6 @@ bz_flathub_category_section_class_init (BzFlathubCategorySectionClass *klass)
   gtk_widget_class_bind_template_callback (widget_class, invert_boolean);
   gtk_widget_class_bind_template_callback (widget_class, is_null);
   gtk_widget_class_bind_template_callback (widget_class, on_more_button_clicked);
-  gtk_widget_class_bind_template_callback (widget_class, bind_widget_cb);
-  gtk_widget_class_bind_template_callback (widget_class, unbind_widget_cb);
   gtk_widget_class_bind_template_callback (widget_class, get_spacing);
 }
 

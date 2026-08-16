@@ -56,19 +56,6 @@
     --banner-color: var(--accent-bg-color);
 }
 
-.updates-amount {
-	background-color: white;
-	color: var(--accent-bg-color);
-	font-size: 0.60em;
-	border-radius: 9999px;
-	font-weight: 900;
-}
-
-.updates-amount-border {
-  background-color: var(--accent-bg-color);
-  	border-radius: 9999px;
-}
-
 .search-box {
   outline: 0 solid transparent;
   outline-offset: 6px;
@@ -141,23 +128,6 @@
 
 .screenshot {
     border-radius: 20px;
-}
-
-.browser-banner {
-    border-radius: 25px;
-    background-color: transparent;
-}
-.browser-banner-title {
-    font-size: 3.2em;
-    font-weight: bolder;
-}
-.browser-banner-subtitle {
-    font-size: 2.0em;
-    font-weight: bold;
-}
-.browser-banner-description {
-    font-size: 1.33em;
-    font-weight: normal;
 }
 
 .installed-size {
@@ -610,12 +580,6 @@ toggle-group.huge * {
   margin: 5px;
 }
 
-window,
-headerbar,
-.global-search {
-  transition: background-color 0.2s ease;
-}
-
 .header-osd windowcontrols button image {
   background-color: rgba(0, 0, 0, 0.65);
   color: white;
@@ -976,7 +940,6 @@ window.narrow .category-tile {
     padding: 0;
 }
 
-curated-list-view,
 curated-list-view list {
   background: var(--bg-color);
 }

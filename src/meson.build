@@ -165,6 +165,7 @@ bz_sources = files(
   'bz-yaml-parser.c',
   'bz-zoom.c',
   'context-tile-callbacks.c',
+  'dex-utils.c',
   'env.c',
   'error.c',
   'global-net.c',

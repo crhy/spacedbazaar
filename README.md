@@ -12,11 +12,13 @@ SpacedBazaar
 >   install dialog, shift-click install, and bulk-install paths now preselect
 >   the user-installation source whenever one exists. System-installation
 >   installs driven from inside the sandboxed app fail after the download with
->   "Path does not exist" ([bazaar-org/bazaar#1298]
->   (https://github.com/bazaar-org/bazaar/issues/1298), Spaced Linux issue #61),
+>   "Path does not exist" ([bazaar-org/bazaar#1298](https://github.com/bazaar-org/bazaar/issues/1298),
+>   Spaced Linux issue #61),
 >   while user-installation installs work. System installations remain the
 >   preselected source when no user source exists and for removals.
 > - `SpacedBazaar.svg` icon: the app store's brand in the Spaced Linux colors.
+> - `Portable Flatpak access`: the bundle uses the standard XDG data mount and
+>   contains no account-specific home-directory paths.
 >   Releases ship as x86_64 Flatpak bundles on the
 >   [releases page](https://github.com/crhy/spacedbazaar/releases).
 

@@ -86,10 +86,6 @@ is_null (gpointer object,
 }
 
 static void
-tile_clicked (BzEntryGroup *group,
-              GtkButton    *button);
-
-static void
 show_more_clicked (BzFlathubPage *self,
                    GtkButton     *button,
                    const char    *category_name);
@@ -165,23 +161,6 @@ get_curated_selection_by_slot (gpointer    object,
   return NULL;
 }
 
-static void
-bind_widget_cb (BzFlathubPage     *self,
-                BzAppTile         *tile,
-                BzEntryGroup      *group,
-                BzDynamicListView *view)
-{
-  g_signal_connect_swapped (tile, "clicked", G_CALLBACK (tile_clicked), group);
-}
-
-static void
-unbind_widget_cb (BzFlathubPage     *self,
-                  BzAppTile         *tile,
-                  BzEntryGroup      *group,
-                  BzDynamicListView *view)
-{
-  g_signal_handlers_disconnect_by_func (tile, G_CALLBACK (tile_clicked), group);
-}
 
 static void
 show_more_mobile_cb (BzFlathubPage *self,
@@ -239,14 +218,6 @@ open_search_cb (BzFlathubPage *self,
 }
 
 static void
-show_group_action (GtkWidget    *widget,
-                   BzEntryGroup *group)
-{
-  gtk_widget_activate_action (widget, "window.show-group", "s",
-                              bz_entry_group_get_id (group));
-}
-
-static void
 bz_flathub_page_class_init (BzFlathubPageClass *klass)
 {
   GObjectClass   *object_class = G_OBJECT_CLASS (klass);
@@ -288,8 +259,6 @@ bz_flathub_page_class_init (BzFlathubPageClass *klass)
   gtk_widget_class_bind_template_callback (widget_class, invert_boolean);
   gtk_widget_class_bind_template_callback (widget_class, is_null);
   gtk_widget_class_bind_template_callback (widget_class, get_curated_selection_by_slot);
-  gtk_widget_class_bind_template_callback (widget_class, bind_widget_cb);
-  gtk_widget_class_bind_template_callback (widget_class, unbind_widget_cb);
   gtk_widget_class_bind_template_callback (widget_class, get_category_by_name_cb);
   gtk_widget_class_bind_template_callback (widget_class, show_more_mobile_cb);
   gtk_widget_class_bind_template_callback (widget_class, show_more_gaming_cb);
@@ -373,13 +342,6 @@ show_more_clicked (BzFlathubPage *self,
   g_assert (nav_view != NULL);
 
   adw_navigation_view_push (ADW_NAVIGATION_VIEW (nav_view), apps_page);
-}
-
-static void
-tile_clicked (BzEntryGroup *group,
-              GtkButton    *button)
-{
-  show_group_action (GTK_WIDGET (button), group);
 }
 
 static void

@@ -54,40 +54,28 @@ template $BzCuratedView: Adw.Bin {
         name: "content";
 
         child: ScrolledWindow {
-          hscrollbar-policy: never;
 
-          child: Adw.ClampScrollable {
+          child: Adw.Clamp {
             maximum-size: 1500;
             tightening-threshold: 1400;
 
-            child: ListView content_box {
+            child: $BzDynamicListView content_box {
               css-name: "curated-list-view";
-              overflow: visible;
-
-              model: NoSelection {
-                model: bind template.state as <$BzStateInfo>.curated-provider;
-              };
-
+              hexpand: true;
               margin-start: 30;
               margin-end: 30;
               margin-bottom: 50;
 
-              factory: BuilderListItemFactory {
-                template ListItem {
-                  activatable: false;
-                  selectable: false;
-                  focusable: false;
+              scroll: false;
+              noscroll-kind: list-box;
 
-                  child: $BzDynamicListView {
-                    hexpand: true;
-                    scroll: false;
-                    noscroll-kind: list-box;
-                    child-type: "BzRowView";
-                    child-prop: "row";
-                    model: bind template.item as <$BzRootCuratedConfig>.rows;
-                  };
-                }
-              };
+              child-type: "BzDynamicListView";
+              object-prop: "rows";
+              child-prop: "model";
+
+              model: bind template.state as <$BzStateInfo>.curated-provider;
+              bind-widget => $bind_cb(template);
+              unbind-widget => $unbind_cb(template);
             };
           };
         };

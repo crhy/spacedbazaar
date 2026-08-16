@@ -257,16 +257,6 @@ template $BzWindow: Adw.ApplicationWindow {
                 }
               };
             }
-
-            Adw.NavigationPage {
-              tag: "view";
-              title: bind full_view.entry-group as <$BzEntryGroup>.title as <string>;
-
-              child: $BzFullView full_view {
-                state: bind template.state;
-                update => $update_cb(template);
-              };
-            }
           };
         };
 

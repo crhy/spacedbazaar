@@ -30,9 +30,6 @@ template $BzFlathubCategorySection : Box {
     child-prop: "group";
     row-spacing: bind $get_spacing(template.compact) as <int>;
     column-spacing: bind $get_spacing(template.compact) as <int>;
-
-    bind-widget => $bind_widget_cb();
-    unbind-widget => $unbind_widget_cb();
   }
 
   Button more_button {

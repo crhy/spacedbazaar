@@ -142,6 +142,26 @@ browse_flathub_cb (BzCuratedView *self,
 }
 
 static void
+bind_cb (BzCuratedView     *self,
+        BzDynamicListView  *widget,
+        GObject            *object,
+        BzDynamicListView  *list_view)
+{
+  bz_dynamic_list_view_set_noscroll_kind (widget, BZ_DYNAMIC_LIST_VIEW_KIND_VBOX);
+  bz_dynamic_list_view_set_child_type (widget, "BzRowView");
+  bz_dynamic_list_view_set_child_prop (widget, "row");
+}
+
+static void
+unbind_cb (BzCuratedView     *self,
+          BzDynamicListView  *widget,
+          GObject            *object,
+          BzDynamicListView  *list_view)
+{
+  bz_dynamic_list_view_set_model (widget, NULL);
+}
+
+static void
 bz_curated_view_class_init (BzCuratedViewClass *klass)
 {
   GObjectClass   *object_class = G_OBJECT_CLASS (klass);
@@ -178,6 +198,8 @@ bz_curated_view_class_init (BzCuratedViewClass *klass)
   gtk_widget_class_set_template_from_resource (widget_class, "/io/github/kolunmi/Bazaar/bz-curated-view.ui");
   gtk_widget_class_bind_template_child (widget_class, BzCuratedView, stack);
   gtk_widget_class_bind_template_callback (widget_class, browse_flathub_cb);
+  gtk_widget_class_bind_template_callback (widget_class, bind_cb);
+  gtk_widget_class_bind_template_callback (widget_class, unbind_cb);
 }
 
 static void

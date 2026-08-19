@@ -63,7 +63,7 @@ bz_error_dialog_class_init (BzErrorDialogClass *klass)
 {
   GtkWidgetClass *widget_class = GTK_WIDGET_CLASS (klass);
 
-  gtk_widget_class_set_template_from_resource (widget_class, "/io/github/kolunmi/Bazaar/bz-error-dialog.ui");
+  gtk_widget_class_set_template_from_resource (widget_class, "/io/github/crhy/SpacedBazaar/bz-error-dialog.ui");
   gtk_widget_class_bind_template_child (widget_class, BzErrorDialog, toast_overlay);
   gtk_widget_class_bind_template_child (widget_class, BzErrorDialog, error_title);
   gtk_widget_class_bind_template_child (widget_class, BzErrorDialog, text_view);

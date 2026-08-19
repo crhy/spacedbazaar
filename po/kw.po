@@ -25,33 +25,33 @@ msgstr ""
 "X-DL-Domain: po\n"
 "X-DL-State: Translating\n"
 
-#: data/io.github.kolunmi.Bazaar.desktop.in:2
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:7 src/bz-window.blp:47
+#: data/io.github.crhy.SpacedBazaar.desktop.in:2
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:7 src/bz-window.blp:47
 #: src/bz-window.blp:203 src/bz-window.c:387 src/bz-window.c:388
 msgid "Bazaar"
 msgstr "Basar"
 
-#: data/io.github.kolunmi.Bazaar.desktop.in:3
+#: data/io.github.crhy.SpacedBazaar.desktop.in:3
 msgid "App Store"
 msgstr "Gwerthji App"
 
-#: data/io.github.kolunmi.Bazaar.desktop.in:4
+#: data/io.github.crhy.SpacedBazaar.desktop.in:4
 msgid "Add, remove or update flatpak software on this computer"
 msgstr "Keworra, dilea, po nowedhi medhelweyth flatpak war'n amontyell ma"
 
-#: data/io.github.kolunmi.Bazaar.desktop.in:10
+#: data/io.github.crhy.SpacedBazaar.desktop.in:10
 msgid "System;Package;Manager;Discover;Flatpak;Software;App;Store;"
 msgstr "System;DyghtyerFardellow;Trovya;Flatpak;Medhelweyth;App;Gwerthji;"
 
-#: data/io.github.kolunmi.Bazaar.desktop.in:17
+#: data/io.github.crhy.SpacedBazaar.desktop.in:17
 msgid "New Window"
 msgstr "Fenester Nowydh"
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:8
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:8
 msgid "Discover and install apps"
 msgstr "Trovya ha lea appys"
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:10
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:10
 msgid ""
 "A fast and modern app store for Linux with a focus on discovering and "
 "installing Flatpak apps and add-ons, particularly from Flathub."
@@ -59,43 +59,43 @@ msgstr ""
 "Gwerthji appys snell hag arnowydh rag Linux gans fog war drovya ha lea appys "
 "hag ystynansow Flatpak, dres oll dhyworth Flathub."
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:15
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:15
 msgid "Queue multiple installs and keep browsing"
 msgstr "Lostya meur a leyansow ha pesya ow peuri"
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:16
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:16
 msgid "Easily view app permissions"
 msgstr "Gweles kummyasow app yn es"
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:17
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:17
 msgid "Sign in to Flathub to view and manage your favorites"
 msgstr "Omgelmi dhe Flathub rag gweles ha dyghtya agas appys drudh"
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:18
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:18
 msgid "Search apps directly from GNOME Shell"
 msgstr "Hwilas appys dhyworth GNOME Shell didro"
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:30 src/bz-application.c:766
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:30 src/bz-application.c:766
 msgid "The Bazaar Contributors"
 msgstr "An Kevriysi Vasar"
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:55
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:55
 msgid "The home page displaying Flathub apps"
 msgstr "An folen dre ow tispletya appys Flathub"
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:59
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:59
 msgid "Exhibit app page"
 msgstr "Folen app diskwedhyn"
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:63
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:63
 msgid "Library page"
 msgstr "Folen lyverva"
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:67
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:67
 msgid "Search page"
 msgstr "Folen hwithrans"
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:71
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:71
 msgid "Category page"
 msgstr "Folen glass"
 
@@ -767,7 +767,7 @@ msgid ""
 "\n"
 "You can then remove this Flatpak version with\n"
 "\n"
-"<tt>flatpak uninstall io.github.kolunmi.Bazaar</tt>"
+"<tt>flatpak uninstall io.github.crhy.SpacedBazaar</tt>"
 msgstr ""
 "An versyons moy diwettha a Ubuntu re skombla an rewlys diogeledh defowt, ow "
 "kul <b>analladow dhe lea appys</b> dhyworth an versyon Flatpak a Vasar, "
@@ -777,7 +777,7 @@ msgstr ""
 "\n"
 "Hwi a yll dilea an versyon Flatpak ma gans\n"
 "\n"
-"<tt>flatpak uninstall io.github.kolunmi.Bazaar</tt>"
+"<tt>flatpak uninstall io.github.crhy.SpacedBazaar</tt>"
 
 #: src/bz-application.c:1036
 msgid "Continue Anyway"

@@ -1,8 +1,8 @@
 [Unit]
-Description=Bazaar Service
+Description=SpacedBazaar Service
 PartOf=graphical-session.target
 
 [Service]
 Type=dbus
-BusName=io.github.kolunmi.Bazaar
+BusName=io.github.crhy.SpacedBazaar
 ExecStart=@bindir@/bazaar-daemon --no-window

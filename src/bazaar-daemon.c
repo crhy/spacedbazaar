@@ -33,9 +33,9 @@
 
 #include "search-index.h"
 
-#define BUS_NAME            "io.github.kolunmi.Bazaar.SearchProvider"
-#define OBJECT_PATH         "/io/github/kolunmi/Bazaar/SearchProvider"
-#define DAEMON_IFACE        "io.github.kolunmi.Bazaar.Daemon"
+#define BUS_NAME            "io.github.crhy.SpacedBazaar.SearchProvider"
+#define OBJECT_PATH         "/io/github/crhy/SpacedBazaar/SearchProvider"
+#define DAEMON_IFACE        "io.github.crhy.SpacedBazaar.Daemon"
 #define MAX_SEARCH_RESULTS  25
 #define ACTIVATE_TIMEOUT_US 2000000
 
@@ -212,7 +212,7 @@ auto_update_enabled (void)
   char  buf[8]  = { 0 };
   int   enabled = 0;
 
-  fp = popen ("gsettings get io.github.kolunmi.Bazaar auto-update", "r");
+  fp = popen ("gsettings get io.github.crhy.SpacedBazaar auto-update", "r");
   if (fp == NULL)
     return 0;
 
@@ -373,7 +373,7 @@ build_index_path (void)
   if (cache_home != NULL && *cache_home != '\0')
     {
       snprintf (buf, sizeof (buf),
-                "%s/io.github.kolunmi.Bazaar/core/search-index",
+                "%s/io.github.crhy.SpacedBazaar/core/search-index",
                 cache_home);
       return strdup (buf);
     }
@@ -382,7 +382,7 @@ build_index_path (void)
   if (home != NULL && *home != '\0')
     {
       snprintf (buf, sizeof (buf),
-                "%s/.cache/io.github.kolunmi.Bazaar/core/search-index",
+                "%s/.cache/io.github.crhy.SpacedBazaar/core/search-index",
                 home);
       return strdup (buf);
     }

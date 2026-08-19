@@ -130,7 +130,7 @@ bz_all_apps_page_class_init (BzAllAppsPageClass *klass)
 
   g_type_ensure (BZ_TYPE_APP_TILE);
 
-  gtk_widget_class_set_template_from_resource (widget_class, "/io/github/kolunmi/Bazaar/bz-all-apps-page.ui");
+  gtk_widget_class_set_template_from_resource (widget_class, "/io/github/crhy/SpacedBazaar/bz-all-apps-page.ui");
   gtk_widget_class_bind_template_child (widget_class, BzAllAppsPage, grid_view);
 }
 

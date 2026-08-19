@@ -176,7 +176,7 @@ bz_stats_dialog_class_init (BzStatsDialogClass *klass)
   g_type_ensure (BZ_TYPE_DATA_GRAPH);
   g_type_ensure (BZ_TYPE_WORLD_MAP);
 
-  gtk_widget_class_set_template_from_resource (widget_class, "/io/github/kolunmi/Bazaar/bz-stats-dialog.ui");
+  gtk_widget_class_set_template_from_resource (widget_class, "/io/github/crhy/SpacedBazaar/bz-stats-dialog.ui");
 
   bz_widget_class_bind_all_util_callbacks (widget_class);
 

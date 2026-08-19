@@ -475,9 +475,9 @@ bz_application_command_line (GApplication            *app,
           g_autofree char *help_text = NULL;
 
           if (self->running)
-            g_application_command_line_printerr (cmdline, "The Bazaar service is running.\n\n");
+            g_application_command_line_printerr (cmdline, "The SpacedBazaar service is running.\n\n");
           else
-            g_application_command_line_printerr (cmdline, "The Bazaar service is not running.\n\n");
+            g_application_command_line_printerr (cmdline, "The SpacedBazaar service is not running.\n\n");
 
           help_text = g_option_context_get_help (context, TRUE, NULL);
           g_application_command_line_printerr (cmdline, "%s\n", help_text);
@@ -699,6 +699,7 @@ bz_application_about_action (GSimpleAction *action,
   AdwDialog     *dialog = NULL;
 
   const char *developers[] = {
+    "Rhy Thornton https://rhymusic.com/",
     "Adam Masciola <kolunmi@posteo.net>",
     "Alexander Vanhee",
     NULL
@@ -711,7 +712,7 @@ bz_application_about_action (GSimpleAction *action,
   };
 
   const char *credits[] = {
-    "Rhy Thornton https://rhymusic.com/",
+    "Bazaar contributors https://github.com/bazaar-org/bazaar",
     /* This array MUST be NULL terminated */
     NULL
   };
@@ -724,13 +725,13 @@ bz_application_about_action (GSimpleAction *action,
   g_object_set (
       dialog,
       "application-name", "SpacedBazaar",
-      "application-icon", "io.github.kolunmi.Bazaar",
-      "developer-name", _ ("The Bazaar Contributors"),
+      "application-icon", "io.github.crhy.SpacedBazaar",
+      "developer-name", _ ("Spaced Linux"),
       "developers", developers,
       // Translators: Put one translator per line, in the form NAME <EMAIL>, YEAR1, YEAR2
       "translator-credits", _ ("translator-credits"),
       "version", PACKAGE_VCS_VERSION,
-      "copyright", "© 2025-2026 The Bazaar Contributors",
+      "copyright", "© 2025-2026 The Bazaar and Spaced Linux Contributors",
       "license-type", GTK_LICENSE_GPL_3_0,
       "website", "https://spacedlinux.com",
       "issue-url", "https://github.com/crhy/spacedbazaar/issues",
@@ -833,9 +834,9 @@ bz_application_quit_action (GSimpleAction *action,
   conn = g_bus_get_sync (G_BUS_TYPE_SESSION, NULL, &error);
   if (conn != NULL)
     g_dbus_connection_call_sync (
-        conn, "io.github.kolunmi.Bazaar.SearchProvider",
-        "/io/github/kolunmi/Bazaar/SearchProvider",
-        "io.github.kolunmi.Bazaar.Daemon",
+        conn, "io.github.crhy.SpacedBazaar.SearchProvider",
+        "/io/github/crhy/SpacedBazaar/SearchProvider",
+        "io.github.crhy.SpacedBazaar.Daemon",
         "Quit", NULL, NULL, G_DBUS_CALL_FLAGS_NONE,
         -1, NULL, &error);
 
@@ -1015,7 +1016,7 @@ init_fiber (BzWeakRef *wr)
                  "of Bazaar, please just use the normal package for now by using\n\n"
                  "<tt>sudo apt install bazaar</tt>\n\n"
                  "You can then remove this Flatpak version with\n\n"
-                 "<tt>flatpak uninstall io.github.kolunmi.Bazaar</tt>"));
+                 "<tt>flatpak uninstall io.github.crhy.SpacedBazaar</tt>"));
           adw_alert_dialog_add_response (ADW_ALERT_DIALOG (alert), "ok", _ ("Continue Anyway"));
           adw_alert_dialog_set_default_response (ADW_ALERT_DIALOG (alert), "ok");
           adw_alert_dialog_set_close_response (ADW_ALERT_DIALOG (alert), "ok");
@@ -1134,10 +1135,10 @@ init_fiber (BzWeakRef *wr)
           _ ("Set Up System Flathub?"));
       adw_alert_dialog_format_body (
           ADW_ALERT_DIALOG (alert),
-          _ ("The system Flathub remote is not set up. Bazaar requires "
+          _ ("The system Flathub remote is not set up. SpacedBazaar requires "
              "Flathub to be configured on the system Flatpak installation "
              "to browse and install applications.\n\n"
-             "You can still use Bazaar to browse and remove already installed apps."));
+             "You can still use SpacedBazaar to browse and remove already installed apps."));
 #else
       adw_alert_dialog_format_heading (
           ADW_ALERT_DIALOG (alert),
@@ -1145,8 +1146,8 @@ init_fiber (BzWeakRef *wr)
       adw_alert_dialog_format_body (
           ADW_ALERT_DIALOG (alert),
           _ ("Flathub is not set up on this system. "
-             "You will not be able to browse and install applications in Bazaar if its unavailable.\n\n"
-             "You can still use Bazaar to browse and remove already installed apps."));
+             "You will not be able to browse and install applications in SpacedBazaar if its unavailable.\n\n"
+             "You can still use SpacedBazaar to browse and remove already installed apps."));
 #endif
       adw_alert_dialog_add_responses (
           ADW_ALERT_DIALOG (alert),
@@ -3246,12 +3247,12 @@ init_service_struct (BzApplication *self,
 
   g_type_ensure (BZ_TYPE_INTERNAL_CONFIG);
   internal_config_bytes = g_resources_lookup_data (
-      "/io/github/kolunmi/Bazaar/internal-config.yaml",
+      "/io/github/crhy/SpacedBazaar/internal-config.yaml",
       G_RESOURCE_LOOKUP_FLAGS_NONE,
       NULL);
   g_assert (internal_config_bytes != NULL);
   internal_config_parser = bz_yaml_parser_new_for_resource_schema (
-      "/io/github/kolunmi/Bazaar/internal-config-schema.xml");
+      "/io/github/crhy/SpacedBazaar/internal-config-schema.xml");
   g_assert (internal_config_parser != NULL);
   internal_config_parse_results = bz_parser_process_bytes (
       BZ_PARSER (internal_config_parser), internal_config_bytes, &local_error);
@@ -3271,7 +3272,7 @@ init_service_struct (BzApplication *self,
       g_autoptr (GHashTable) parse_results = NULL;
 
       parser = bz_yaml_parser_new_for_resource_schema (
-          "/io/github/kolunmi/Bazaar/main-config-schema.xml");
+          "/io/github/crhy/SpacedBazaar/main-config-schema.xml");
 
       parse_results = bz_parser_process_bytes (
           BZ_PARSER (parser), config_bytes, &local_error);
@@ -3426,7 +3427,7 @@ init_service_struct (BzApplication *self,
   g_type_ensure (BZ_TYPE_BLOCKLIST);
   g_type_ensure (BZ_TYPE_BLOCKLIST_CONDITION);
   self->blocklist_parser = bz_yaml_parser_new_for_resource_schema (
-      "/io/github/kolunmi/Bazaar/blocklist-schema.xml");
+      "/io/github/crhy/SpacedBazaar/blocklist-schema.xml");
 
   self->txt_blocklist_parser = bz_newline_parser_new (
       TRUE, MAX_IDS_PER_BLOCKLIST);
@@ -3436,7 +3437,7 @@ init_service_struct (BzApplication *self,
   g_type_ensure (BZ_TYPE_CURATED_SECTION);
   g_type_ensure (BZ_TYPE_CURATED_ARTICLE);
   self->curated_parser = bz_yaml_parser_new_for_resource_schema (
-      "/io/github/kolunmi/Bazaar/curated-config-schema.xml");
+      "/io/github/crhy/SpacedBazaar/curated-config-schema.xml");
 
   self->cache = bz_entry_cache_manager_new ();
 

@@ -255,7 +255,7 @@ bz_addon_tile_class_init (BzAddonTileClass *klass)
   g_type_ensure (BZ_TYPE_LIST_TILE);
   g_type_ensure (BZ_TYPE_ENTRY_GROUP);
 
-  gtk_widget_class_set_template_from_resource (widget_class, "/io/github/kolunmi/Bazaar/bz-addon-tile.ui");
+  gtk_widget_class_set_template_from_resource (widget_class, "/io/github/crhy/SpacedBazaar/bz-addon-tile.ui");
   gtk_widget_class_bind_template_child (widget_class, BzAddonTile, install_remove_button);
   gtk_widget_class_bind_template_callback (widget_class, is_zero);
   gtk_widget_class_bind_template_callback (widget_class, invert_boolean);

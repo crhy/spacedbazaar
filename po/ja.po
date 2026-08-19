@@ -19,33 +19,33 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Generator: Poedit 3.0.1\n"
 
-#: data/io.github.kolunmi.Bazaar.desktop.in:3
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:7 src/bz-window.blp:47
+#: data/io.github.crhy.SpacedBazaar.desktop.in:3
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:7 src/bz-window.blp:47
 #: src/bz-window.blp:203 src/bz-window.c:387 src/bz-window.c:388
 msgid "Bazaar"
 msgstr "Bazaar"
 
-#: data/io.github.kolunmi.Bazaar.desktop.in:4
+#: data/io.github.crhy.SpacedBazaar.desktop.in:4
 msgid "App Store"
 msgstr "アプリストア"
 
-#: data/io.github.kolunmi.Bazaar.desktop.in:5
+#: data/io.github.crhy.SpacedBazaar.desktop.in:5
 msgid "Add, remove or update flatpak software on this computer"
 msgstr "Flatpakのソフトウェアをこのコンピューターに追加、削除します"
 
-#: data/io.github.kolunmi.Bazaar.desktop.in:11
+#: data/io.github.crhy.SpacedBazaar.desktop.in:11
 msgid "System;Package;Manager;Discover;Flatpak;Software;App;Store;"
 msgstr ""
 
-#: data/io.github.kolunmi.Bazaar.desktop.in:18
+#: data/io.github.crhy.SpacedBazaar.desktop.in:18
 msgid "New Window"
 msgstr "新しいウィンドウ"
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:8
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:8
 msgid "Discover and install apps"
 msgstr "アプリケーションを検索したり、管理したりする"
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:10
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:10
 msgid ""
 "A fast and modern app store for Linux with a focus on discovering and "
 "installing Flatpak apps and add-ons, particularly from Flathub."
@@ -53,344 +53,344 @@ msgstr ""
 "Linux 用の高速でモダンなアプリストアです。Flatpak のアプリケーションやアドオ"
 "ンを検索、インストールすることに特化していて、主に Flathub を利用します。"
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:15
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:15
 msgid "Queue multiple installs and keep browsing"
 msgstr "ダウンロードタスクをキューに入れて、ブラウジングを続行しよう"
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:16
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:16
 msgid "Easily view app permissions"
 msgstr "簡単にアプリの権限を表示して、編集する"
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:17
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:17
 msgid "Sign in to Flathub to view and manage your favorites"
 msgstr "Flathub にログインしてお気に入りを管理、表示する"
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:18
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:18
 msgid "Search apps directly from GNOME Shell"
 msgstr "GNOME シェルから直接検索する"
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:55
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:55
 msgid "The home page displaying Flathub apps"
 msgstr "Flathub のアプリを表示しているホームページ"
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:59
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:59
 msgid "Exhibit app page"
 msgstr "Exhibit のアプリページ"
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:63
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:63
 msgid "Library page"
 msgstr "ライブラリーページ"
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:67
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:67
 msgid "Search page"
 msgstr "検索ページ"
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:71
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:71
 msgid "Category page"
 msgstr "カテゴリーページ"
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:79
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:101
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:162
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:187
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:212
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:79
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:101
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:162
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:187
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:212
 msgid "<em>New Features</em>"
 msgstr "<em>新機能</em>"
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:83
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:83
 msgid "Added a \"Similar Apps\" section"
 msgstr ""
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:85
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:111
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:248
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:278
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:85
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:111
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:248
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:278
 msgid "<em>Bug Fixes</em>"
 msgstr "<em>バグ修正</em>"
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:89
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:89
 msgid "Fixed a crash when opening a second window while logged in"
 msgstr ""
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:90
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:90
 msgid "Only start on the Curated section if it is not empty"
 msgstr ""
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:91
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:91
 msgid ""
 "Stopped the carousel from changing the layout while screenshots are loading"
 msgstr ""
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:93
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:117
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:135
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:154
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:179
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:204
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:229
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:93
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:117
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:135
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:154
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:179
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:204
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:229
 msgid "Thanks for reading, and have a great day!"
 msgstr "読んでくれてありがとう! 良い一日を!"
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:105
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:105
 msgid "Added three new tabs to the \"We ❤️ Games\" section"
 msgstr ""
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:106
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:106
 msgid "App links can now span two columns"
 msgstr ""
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:107
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:107
 msgid "Improved the apps startup time"
 msgstr ""
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:108
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:108
 msgid "Improved the image viewer opening animation"
 msgstr ""
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:109
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:109
 msgid "Made many accessibility improvements"
 msgstr ""
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:115
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:115
 msgid ""
 "Fixed an issue where the app page would sometimes not update when busy "
 "refreshing"
 msgstr ""
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:125
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:125
 msgid "<em>Maintenance Release</em>"
 msgstr ""
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:129
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:129
 msgid "Add mobile search filter"
 msgstr ""
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:130
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:130
 msgid "Fix infinite fetching of user data folder size"
 msgstr ""
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:131
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:131
 msgid "Add Network subcategories"
 msgstr ""
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:132
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:132
 msgid "Remove tag list SEO-ism"
 msgstr ""
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:133
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:133
 msgid "Rework some UI components"
 msgstr ""
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:143
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:143
 msgid ""
 "Hot fix for an issue where updates would not show. Also adds a cancel button "
 "to the app tiles on the search page."
 msgstr ""
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:146
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:146
 msgid "<em>Other Fixes</em>"
 msgstr "<em>その他の修正</em>"
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:150
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:150
 msgid "Fix Flathub page svg graphics being rendered with a solid fill"
 msgstr ""
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:151
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:151
 msgid "Disable broken graphs for very new Flathub apps"
 msgstr ""
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:152
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:152
 msgid "Add workaround for KRunner sending broken app IDs"
 msgstr ""
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:166
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:166
 msgid "Add support for installing (.flatpak) bundles"
 msgstr ""
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:167
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:167
 msgid "New progress indicators"
 msgstr ""
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:168
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:168
 msgid "The ability to view and delete app caches"
 msgstr ""
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:170
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:195
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:222
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:170
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:195
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:222
 msgid "<em>Fixes</em>"
 msgstr "<em>バグ修正</em>"
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:174
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:174
 msgid ""
 "Fix the download context tile not displaying a label for non-Flathub apps"
 msgstr ""
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:175
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:175
 msgid "Reduce RAM usage when no windows are open"
 msgstr ""
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:176
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:176
 msgid ""
 "Fix an issue where a window could open at the wrong size while a transaction "
 "was running"
 msgstr ""
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:177
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:202
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:177
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:202
 msgid "Many other bug fixes"
 msgstr ""
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:191
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:191
 msgid "Add support for previewing metainfo files"
 msgstr ""
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:192
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:192
 msgid "Show total installed apps number in the library view"
 msgstr ""
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:193
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:193
 msgid "Make exported desktop search provider app icon sizes adjustable"
 msgstr ""
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:199
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:199
 msgid "Fix download timeline graph rerendering too much"
 msgstr ""
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:200
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:200
 msgid "Fix animated widget ticks not being in sync with fps"
 msgstr ""
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:201
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:201
 msgid "Fix progress animation for vertical pride flag stripes"
 msgstr ""
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:216
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:216
 msgid "Rework the add-ons dialog"
 msgstr ""
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:217
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:217
 msgid "Add a gradient under the download timeline"
 msgstr ""
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:218
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:218
 msgid "Add a filter button to the search page"
 msgstr ""
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:219
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:219
 msgid "Add a button to show the EULA for some proprietary apps"
 msgstr ""
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:220
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:220
 msgid "Make the names of verified developers clickable links"
 msgstr ""
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:226
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:226
 msgid "Fix the colours of the update card"
 msgstr ""
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:227
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:227
 msgid "Make the update banner follow the accent colour"
 msgstr ""
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:237
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:269
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:237
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:269
 msgid "<em>Changes</em>"
 msgstr "<em>変更点</em>"
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:241
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:241
 msgid "Update to GNOME 50 Runtime"
 msgstr ""
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:242
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:242
 msgid "Force Adwaita icon theme to ensure consistency"
 msgstr ""
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:243
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:243
 msgid "Add support for clickable links in app descriptions"
 msgstr ""
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:244
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:244
 msgid ""
 "Add timed lingering cache to async textures, thereby reducing image "
 "flickering"
 msgstr ""
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:245
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:245
 msgid "Add ability to sort installed apps by size in library view"
 msgstr ""
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:246
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:246
 msgid "Add BAZAAR_N_DOWNLOAD_WORKERS envvar support"
 msgstr ""
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:252
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:252
 msgid "Fix double shadow around update cards"
 msgstr ""
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:253
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:253
 msgid "Fix global progress button displaying a focus ring when invisible"
 msgstr ""
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:254
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:254
 msgid "Fix incorrect total size displayed on update tasks"
 msgstr ""
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:255
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:255
 msgid "Fix empty UI when Flathub hasn't finished syncing yet"
 msgstr ""
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:257
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:287
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:257
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:287
 msgid "Thanks for reading and have a great day!"
 msgstr "読んでくれてありがとう! 良い一日を!"
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:265
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:265
 msgid ""
 "This release contains many technical improvements. This changelog reflects "
 "roughly 2 weeks of work."
 msgstr ""
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:273
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:273
 msgid "Respect system parental controls settings"
 msgstr ""
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:274
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:274
 msgid ""
 "Reap download workers when all windows are closed, reducing total memory "
 "usage"
 msgstr ""
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:275
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:275
 msgid "Add mnemonics to full app view"
 msgstr ""
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:276
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:276
 msgid "Many updates to language translations"
 msgstr ""
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:282
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:282
 msgid "Fix broken library page when backing installed apps model is empty"
 msgstr ""
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:283
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:283
 msgid ""
 "Fix int casting bug that was causing RetroDeck to appear to be 18.4 exabytes"
 msgstr ""
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:284
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:284
 msgid "Make \"all apps\" category pages respect global filters"
 msgstr ""
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:285
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:285
 msgid "Fix some text wrapping issues"
 msgstr ""
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:295
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:295
 msgid "This release fixes some bugs and greatly improves search functionality."
 msgstr ""
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:299
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:299
 msgid ""
 "If you missed the previous release, in 0.7.9 we also added the ability to "
 "cancel transactions in the library view, a brand new screenshots carousel, "
@@ -398,333 +398,333 @@ msgid ""
 "now skip confirmation dialogs by holding shift as you start a transaction."
 msgstr ""
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:306
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:306
 msgid "Thanks for reading!"
 msgstr "読んでくれてありがとう!"
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:314
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:314
 msgid "**New Features**"
 msgstr "**新機能**"
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:316
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:316
 msgid "Search suggestion pills"
 msgstr ""
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:317
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:317
 #, fuzzy
 msgid "**Cancel installation** transactions"
 msgstr "現在進行中のダウンロードを停止"
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:318
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:318
 msgid "Skip dialogs by pressing shift"
 msgstr ""
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:319
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:319
 msgid "Runtime size info for app pages"
 msgstr ""
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:321
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:321
 msgid "**Updated**"
 msgstr "**更新点**"
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:323
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:323
 msgid "Redesigned \"What's New\" dialog"
 msgstr ""
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:324
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:324
 msgid "Improved search results by utilizing Flathub rankings"
 msgstr ""
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:325
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:325
 #, fuzzy
 msgid "Improved screenshots carousel"
 msgstr "スクリーンショット カルーセル"
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:332
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:332
 msgid ""
 "This release lets you view and remove user-scoped installed apps from the "
 "library page in the Flatpak version of the app. Installing from user remotes "
 "is not supported yet."
 msgstr ""
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:341
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:355
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:377
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:389
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:410
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:429
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:460
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:471
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:341
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:355
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:377
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:389
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:410
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:429
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:460
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:471
 msgid "This release comes with the following improvements:"
 msgstr "このリリースには以下の改善点が含まれています:"
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:343
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:343
 msgid "Merges the task sidebar and install page into the library page"
 msgstr ""
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:344
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:344
 msgid "Add installed version numbers of each app on the library and app pages"
 msgstr ""
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:345
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:345
 #, fuzzy
 msgid "Add donations dialog"
 msgstr "年齢レーティングダイアログ"
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:346
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:346
 msgid "Fix broken add-on and runtime eol detection"
 msgstr ""
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:347
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:347
 msgid "Add `enable-bulk-install` key to curated sections"
 msgstr ""
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:348
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:348
 msgid "Add `override-eol-markings` main config string list"
 msgstr ""
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:357
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:357
 msgid "Improve context dialogs"
 msgstr ""
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:358
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:358
 msgid "Fix leftover data bar being shown prematurely"
 msgstr ""
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:359
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:359
 msgid "Have a rotation toggle for flags"
 msgstr ""
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:360
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:360
 msgid "Add hard check to prevent removing Bazaar flatpak"
 msgstr ""
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:361
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:361
 #, fuzzy
 msgid "Improve download statistics tooltips"
 msgstr "ダウンロードの統計"
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:362
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:362
 msgid "Add read support for flatpak bundles"
 msgstr ""
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:363
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:363
 msgid "Fix critical output sometimes during transactions"
 msgstr ""
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:364
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:364
 msgid "Fix error popover refusing to spawn in transaction sidebar"
 msgstr ""
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:371
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:371
 msgid "Minor bugfix release"
 msgstr ""
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:379
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:379
 msgid "Fix issue where installed page is empty on opening second window"
 msgstr ""
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:380
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:380
 msgid "Fix screenshot flickering in search results"
 msgstr ""
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:381
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:381
 msgid "Fix pride flags sometimes not showing on certain locales"
 msgstr ""
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:382
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:382
 msgid "Add \"Install all\" to favorites page"
 msgstr ""
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:391
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:391
 msgid "Trash user data instead of deleting"
 msgstr ""
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:392
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:392
 msgid "Tweaks to permissions dialog"
 msgstr ""
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:393
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:393
 msgid "Fix broken EOL filtering"
 msgstr ""
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:394
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:394
 msgid "Add text filter to installed page"
 msgstr ""
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:395
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:395
 msgid ""
 "Add optional translations mappings for string properties in YAML configs"
 msgstr ""
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:396
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:396
 msgid "Hide EOL apps by default"
 msgstr "更新終了のアプリをデフォルトで非表示"
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:397
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:397
 msgid "Many other minor bug fixes and improvements"
 msgstr ""
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:404
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:404
 msgid ""
 "This small release ensures the new icon is rendered correctly on KDE Plasma."
 msgstr ""
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:412
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:412
 msgid "New market stall icon"
 msgstr ""
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:413
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:413
 msgid "Remove Flathub styling"
 msgstr ""
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:414
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:414
 msgid "Add horizontal versions of pride flags"
 msgstr ""
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:415
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:415
 msgid "Text selection in app descriptions can be made across paragraph breaks"
 msgstr ""
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:416
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:416
 msgid "Support YAML anchors and aliases in config parsing"
 msgstr ""
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:417
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:417
 msgid ""
 "Drastically reduce disk cache writes over time by skipping unchanged entries"
 msgstr ""
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:418
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:418
 msgid "Show background status in popover"
 msgstr ""
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:419
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:419
 msgid "Add app permission system"
 msgstr ""
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:420
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:420
 msgid "Add back release URLs"
 msgstr ""
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:421
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:421
 msgid "Fix sync-remotes action in shortcut dialog"
 msgstr ""
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:422
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:422
 msgid "Fix visual hiccups in comet animations"
 msgstr ""
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:431
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:431
 msgid "Flathub account support with the ability to manage bookmarks"
 msgstr ""
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:432
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:432
 msgid ""
 "Flathub bookmarks replace star count; you can add or remove bookmarks from "
 "app pages"
 msgstr ""
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:433
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:433
 msgid "An \"Only Show Verified\" option"
 msgstr ""
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:434
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:434
 msgid "Exhaustive category pages for most categories"
 msgstr ""
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:435
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:435
 msgid "An \"Adwaita\" or \"KDE\" category shown based on desktop environment"
 msgstr ""
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:436
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:436
 msgid "Updated installed indicator for app tiles"
 msgstr ""
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:437
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:437
 msgid "3 new flag options"
 msgstr ""
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:438
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:438
 msgid "Fixed GNOME search provider to show the app page instead of search"
 msgstr ""
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:439
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:439
 msgid ""
 "Fixed issue where flatpakref URIs did not open when the app wasn't running "
 "in the background"
 msgstr ""
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:440
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:440
 msgid ""
 "Fixed issue where some proprietary apps were marked as \"Special License\""
 msgstr ""
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:441
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:441
 msgid "Fixed issue where graphs did not work with touch"
 msgstr ""
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:448
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:448
 msgid ""
 "Another quick release to restore alphabetical sorting on the installed page"
 msgstr ""
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:454
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:454
 msgid "Quick release to allow manual refresh if flathub is being flaky"
 msgstr ""
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:462
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:462
 msgid ""
 "Fix frequent disk writes; set refresh frequency to 1 day rather than 1 hour"
 msgstr ""
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:463
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:463
 msgid "Add \"Delete User Data\" option when uninstalling an app"
 msgstr ""
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:464
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:464
 msgid "Version cache to prevent incompatibility between Bazaar versions"
 msgstr ""
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:473
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:473
 msgid ""
 "Reworked loading to be substantially faster after first start via async "
 "loading"
 msgstr ""
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:474
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:474
 msgid "A gaming section on the Flathub page"
 msgstr ""
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:475
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:475
 msgid "Improved UI on mobile, especially on app pages"
 msgstr ""
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:476
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:476
 msgid "Verified badges next to most places where apps are shown"
 msgstr ""
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:477
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:477
 msgid "A popover that explains what verification and non-verification mean"
 msgstr ""
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:478
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:478
 msgid "An \"other apps by\" page for when a developer has more than 6 apps"
 msgstr ""
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:479
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:479
 msgid "Tags that show other apps with the same tag when pressed"
 msgstr ""
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:480
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:480
 msgid "An age rating dialog"
 msgstr "年齢レーティングダイアログ"
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:481
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:481
 msgid "Changed search filters into global content filters"
 msgstr ""
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:482
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:482
 msgid "5 new pride flags"
 msgstr ""
 
@@ -1402,7 +1402,7 @@ msgid ""
 "\n"
 "You can then remove this Flatpak version with\n"
 "\n"
-"<tt>flatpak uninstall io.github.kolunmi.Bazaar</tt>"
+"<tt>flatpak uninstall io.github.crhy.SpacedBazaar</tt>"
 msgstr ""
 "Ubuntu の最新バージョンではデフォルトのセキュリティ設定のせいで、Flatpak 版"
 "の Bazaar で<b>アプリをインストールすることが不可能</b>になっています。そのた"
@@ -1412,7 +1412,7 @@ msgstr ""
 "\n"
 "その後に、Flatpak 版を次のコマンドで削除してください\n"
 "\n"
-"<tt>flatpak uninstall io.github.kolunmi.Bazaar</tt>"
+"<tt>flatpak uninstall io.github.crhy.SpacedBazaar</tt>"
 
 #: src/bz-application.c:1036
 msgid "Continue Anyway"

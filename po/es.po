@@ -22,29 +22,29 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Gtranslator 50.0\n"
 
-#: data/io.github.kolunmi.Bazaar.desktop.in:2
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:7 src/bz-window.blp:46
+#: data/io.github.crhy.SpacedBazaar.desktop.in:2
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:7 src/bz-window.blp:46
 #: src/bz-window.blp:202 src/bz-window.c:373 src/bz-window.c:374
 msgid "Bazaar"
 msgstr "Bazar"
 
-#: data/io.github.kolunmi.Bazaar.desktop.in:3
+#: data/io.github.crhy.SpacedBazaar.desktop.in:3
 msgid "Add, remove or update flatpak software on this computer"
 msgstr "Añada, elimine o actualice programas flatpak en este ordenador"
 
-#: data/io.github.kolunmi.Bazaar.desktop.in:9
+#: data/io.github.crhy.SpacedBazaar.desktop.in:9
 msgid "GTK;System;PackageManager;Discover;Flatpak;Software;Store;"
 msgstr "GTK;Sistema;GestorDePaquetes;Discover;Flatpak;Software;Store;"
 
-#: data/io.github.kolunmi.Bazaar.desktop.in:16
+#: data/io.github.crhy.SpacedBazaar.desktop.in:16
 msgid "New Window"
 msgstr "Ventana nueva"
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:8
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:8
 msgid "Discover and install apps"
 msgstr "Descubrir e instalar aplicaciones"
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:10
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:10
 msgid ""
 "A fast and modern app store for Linux with a focus on discovering and "
 "installing Flatpak apps and add-ons, particularly from Flathub."
@@ -52,43 +52,43 @@ msgstr ""
 "Una tienda de aplicaciones rápida y moderna para Linux enfocada en descubrir "
 "e instalar aplicaciones y complementos Flatpak, particularmente de Flathub."
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:15
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:15
 msgid "Queue multiple installs and keep browsing"
 msgstr "Poner en cola varias instalaciones y seguir explorando"
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:16
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:16
 msgid "Easily view app permissions"
 msgstr "Ver fácilmente los permisos de la aplicación"
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:17
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:17
 msgid "Sign in to Flathub to view and manage your favorites"
 msgstr "Inicie sesión en Flathub para ver y gestionar sus favoritos"
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:18
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:18
 msgid "Search apps directly from GNOME Shell"
 msgstr "Buscar aplicaciones directamente desde GNOME Shell"
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:30 src/bz-application.c:786
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:30 src/bz-application.c:786
 msgid "The Bazaar Contributors"
 msgstr "Los colaboradores de Bazar"
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:55
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:55
 msgid "The home page displaying Flathub apps"
 msgstr "La página de inicio que muestra las aplicaciones de Flathub"
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:59
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:59
 msgid "Exhibit app page"
 msgstr "Página de exhibición de la aplicación"
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:63
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:63
 msgid "Library page"
 msgstr "Página de la biblioteca"
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:67
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:67
 msgid "Search page"
 msgstr "Página de búsqueda"
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:71
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:71
 msgid "Category page"
 msgstr "Página de categoría"
 

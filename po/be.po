@@ -18,28 +18,28 @@ msgstr ""
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 "X-Generator: Poedit 3.8\n"
 
-#: data/io.github.kolunmi.Bazaar.desktop.in:2 data/io.github.kolunmi.Bazaar.metainfo.xml.in:7 src/bz-window.blp:6
+#: data/io.github.crhy.SpacedBazaar.desktop.in:2 data/io.github.crhy.SpacedBazaar.metainfo.xml.in:7 src/bz-window.blp:6
 #: src/bz-window.blp:110
 msgid "Bazaar"
 msgstr "Bazaar"
 
-#: data/io.github.kolunmi.Bazaar.desktop.in:3
+#: data/io.github.crhy.SpacedBazaar.desktop.in:3
 msgid "Add, remove or update flatpak software on this computer"
 msgstr "Дадавайце, выдаляйце або абнаўляйце праграмы ў фармаце flatpak на гэтым камп’ютары"
 
-#: data/io.github.kolunmi.Bazaar.desktop.in:9
+#: data/io.github.crhy.SpacedBazaar.desktop.in:9
 msgid "GTK;System;PackageManager;Discover;Flatpak;Software;Store;"
 msgstr "GTK;System;PackageManager;Discover;Flatpak;Software;Store;Сістэма;ПакетныМенеджар;Пакеты;Магазін;Крама;Флатпак;Праграмы;ПЗ;"
 
-#: data/io.github.kolunmi.Bazaar.desktop.in:15
+#: data/io.github.crhy.SpacedBazaar.desktop.in:15
 msgid "New Window"
 msgstr "Новае акно"
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:8
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:8
 msgid "Discover and install applications"
 msgstr "Знаходзьце і ўсталёўвайце праграмы"
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:10
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:10
 msgid ""
 "A new app store for Linux with a focus on discovering and installing applications and addons from Flatpak remotes, particularly "
 "Flathub."
@@ -47,7 +47,7 @@ msgstr ""
 "Новая крама праграм для Linux з фокусам на тым, каб адкрываць і ўсталёўваць праграмы і дадаткі з аддаленых сервераў Flatpak (у "
 "прыватнасці — Flathub)."
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:14
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:14
 msgid ""
 "It emphasizes supporting the developers who make the Linux desktop possible. Bazaar features a \"curated\" tab that can be "
 "configured by distributors to allow for a more localized experience."
@@ -55,27 +55,27 @@ msgstr ""
 "Яна робіць акцэнт на падтрымцы распрацоўшчыкаў, якія робяць магчымым Linux для настольных камп’ютараў. Bazaar вылучае ўкладку "
 "\"падабраныя\" праграмы, якую могуць канфігураваць пастаўшчыкі для больш цэласнага вопыту карыстання дыстрыбутывам."
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:29 src/bz-application.c:699
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:29 src/bz-application.c:699
 msgid "Adam Masciola"
 msgstr "Adam Masciola"
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:54
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:54
 msgid "The home page displaying Flathub apps"
 msgstr "Галоўная старонка паказвае праграмы з Flathub"
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:58
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:58
 msgid "Exhibit app page"
 msgstr "Дэманстрацыйная старонка праграмы"
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:62
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:62
 msgid "Library page"
 msgstr "Старонка бібліятэкі"
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:66
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:66
 msgid "Search page"
 msgstr "Старонка пошуку"
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:70
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:70
 msgid "Category page"
 msgstr "Старонка катэгорыі"
 

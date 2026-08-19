@@ -281,7 +281,7 @@ create_entry_group_preview_page (BzEntryGroup *group)
   BzFlathubState *flathub                   = NULL;
 
   builder = gtk_builder_new_from_resource (
-      "/io/github/kolunmi/Bazaar/bz-metainfo-preview-page.ui");
+      "/io/github/crhy/SpacedBazaar/bz-metainfo-preview-page.ui");
 
   page              = ADW_NAVIGATION_PAGE (gtk_builder_get_object (builder, "page"));
   carousel          = BZ_FEATURED_CAROUSEL (gtk_builder_get_object (builder, "carousel"));

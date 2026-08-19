@@ -61,7 +61,7 @@ rows:
       disable-auto-rotate: true
       appids:
         list:
-          - io.github.kolunmi.Bazaar
+          - io.github.crhy.SpacedBazaar
           - be.alexandervanhee.gradia
   - section:
       title: "Web Browsers"

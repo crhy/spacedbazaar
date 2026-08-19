@@ -298,7 +298,7 @@ bz_releases_dialog_class_init (BzReleasesDialogClass *klass)
   object_class->dispose = bz_releases_dialog_dispose;
 
   gtk_widget_class_set_template_from_resource (widget_class,
-                                               "/io/github/kolunmi/Bazaar/bz-releases-dialog.ui");
+                                               "/io/github/crhy/SpacedBazaar/bz-releases-dialog.ui");
   gtk_widget_class_bind_template_child (widget_class, BzReleasesDialog, releases_box);
 }
 
@@ -512,7 +512,7 @@ bz_releases_list_class_init (BzReleasesListClass *klass)
   g_type_ensure (BZ_TYPE_APPSTREAM_DESCRIPTION_RENDER);
 
   gtk_widget_class_set_template_from_resource (widget_class,
-                                               "/io/github/kolunmi/Bazaar/bz-releases-list.ui");
+                                               "/io/github/crhy/SpacedBazaar/bz-releases-list.ui");
   bz_widget_class_bind_all_util_callbacks (widget_class);
   gtk_widget_class_bind_template_child (widget_class, BzReleasesList, preview_box);
   gtk_widget_class_bind_template_child (widget_class, BzReleasesList, show_all_box);

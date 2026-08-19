@@ -388,10 +388,10 @@ static char *
 format_title (gpointer    object,
               const char *title)
 {
-  if (title == NULL || *title == '\0' || g_strcmp0 (title, _ ("Bazaar")) == 0)
-    return g_strdup (_ ("Bazaar"));
+  if (title == NULL || *title == '\0' || g_strcmp0 (title, _ ("SpacedBazaar")) == 0)
+    return g_strdup (_ ("SpacedBazaar"));
   /* Translators: %s is the title of the current page */
-  return g_strdup_printf (_ ("Bazaar — %s"), title);
+  return g_strdup_printf (_ ("SpacedBazaar — %s"), title);
 }
 
 static BzEntryGroup *
@@ -776,7 +776,7 @@ bz_window_class_init (BzWindowClass *klass)
   g_type_ensure (BZ_TYPE_LIBRARY_PAGE);
   g_type_ensure (BZ_TYPE_FLATHUB_PAGE);
 
-  gtk_widget_class_set_template_from_resource (widget_class, "/io/github/kolunmi/Bazaar/bz-window.ui");
+  gtk_widget_class_set_template_from_resource (widget_class, "/io/github/crhy/SpacedBazaar/bz-window.ui");
   bz_widget_class_bind_all_util_callbacks (widget_class);
 
   gtk_widget_class_bind_template_child (widget_class, BzWindow, navigation_view);
@@ -926,7 +926,7 @@ transact_fiber (TransactData *data)
         {
           GtkWidget *window = NULL;
           window = GTK_WIDGET (gtk_application_get_active_window (GTK_APPLICATION (g_application_get_default ())));
-          bz_show_error_for_widget (window, _ ("You can't remove Bazaar from Bazaar!"), _ ("You can't remove Bazaar from Bazaar!"));
+          bz_show_error_for_widget (window, _ ("You can't remove SpacedBazaar from SpacedBazaar!"), _ ("You can't remove SpacedBazaar from SpacedBazaar!"));
           return dex_future_new_false ();
         }
     }

@@ -21,30 +21,30 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Generator: Gtranslator 50.0\n"
 
-#: data/io.github.kolunmi.Bazaar.desktop.in:2
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:7 src/bz-window.blp:47
+#: data/io.github.crhy.SpacedBazaar.desktop.in:2
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:7 src/bz-window.blp:47
 #: src/bz-window.blp:203 src/bz-window.c:386 src/bz-window.c:387
 msgid "Bazaar"
 msgstr "Bazaar"
 
-#: data/io.github.kolunmi.Bazaar.desktop.in:3
+#: data/io.github.crhy.SpacedBazaar.desktop.in:3
 msgid "Add, remove or update flatpak software on this computer"
 msgstr "Tambah, hapus atau perbarui aplikasi Flatpak pada komputer ini"
 
 # Added "Aplikasi" and "Pusat Aplikasi" (App Center) to search queries
-#: data/io.github.kolunmi.Bazaar.desktop.in:9
+#: data/io.github.crhy.SpacedBazaar.desktop.in:9
 msgid "GTK;System;PackageManager;Discover;Flatpak;Software;Store;"
 msgstr "GTK;Sistem;PackageManager;Discover;Flatpak;Aplikasi;Toko;PerangkatLunak;PusatAplikasi;ManajerPaket;"
 
-#: data/io.github.kolunmi.Bazaar.desktop.in:16
+#: data/io.github.crhy.SpacedBazaar.desktop.in:16
 msgid "New Window"
 msgstr "Jendela Baru"
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:8
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:8
 msgid "Discover and install apps"
 msgstr "Temukan dan pasang aplikasi"
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:10
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:10
 msgid ""
 "A fast and modern app store for Linux with a focus on discovering and "
 "installing Flatpak apps and add-ons, particularly from Flathub."
@@ -52,43 +52,43 @@ msgstr ""
 "Toko aplikasi Linux yang cepat dan modern, berfokus pada kemudahan menemukan "
 "serta memasang aplikasi dan modul tambahan Flatpak, terutama dari Flathub."
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:15
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:15
 msgid "Queue multiple installs and keep browsing"
 msgstr "Pasang beberapa aplikasi sekaligus dan lanjut menjelajah"
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:16
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:16
 msgid "Easily view app permissions"
 msgstr "Dapat melihat izin aplikasi secara mudah"
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:17
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:17
 msgid "Sign in to Flathub to view and manage your favorites"
 msgstr "Masuk dengan Flathub untuk lihat dan kelola aplikasi favoritmu"
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:18
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:18
 msgid "Search apps directly from GNOME Shell"
 msgstr "Cari aplikasi langsung dari bilah pencarian GNOME"
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:30 src/bz-application.c:787
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:30 src/bz-application.c:787
 msgid "The Bazaar Contributors"
 msgstr "Kontributor Bazaar"
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:55
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:55
 msgid "The home page displaying Flathub apps"
 msgstr "Tampilan muka dengan daftar aplikasi dari Flathub"
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:59
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:59
 msgid "Exhibit app page"
 msgstr "Tampilan halaman detail aplikasi"
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:63
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:63
 msgid "Library page"
 msgstr "Halaman pustaka aplikasi"
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:67
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:67
 msgid "Search page"
 msgstr "Tampilan pencarian aplikasi"
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:71
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:71
 msgid "Category page"
 msgstr "Tampilan kategori aplikasi"
 
@@ -768,7 +768,7 @@ msgid ""
 "\n"
 "You can then remove this Flatpak version with\n"
 "\n"
-"<tt>flatpak uninstall io.github.kolunmi.Bazaar</tt>"
+"<tt>flatpak uninstall io.github.crhy.SpacedBazaar</tt>"
 msgstr ""
 "Versi terbaru Ubuntu telah merubah peraturan keamanan umum, sehingga "
 "instalasi aplikasi tidak dapat dilakukan melalui versi Flatpak pada Bazaar. "
@@ -778,7 +778,7 @@ msgstr ""
 "\n"
 "Kemudian Anda dapat menghapus versi Flatpak ini dengan\n"
 "\n"
-"<tt>flatpak uninstall io.github.kolunmi.Bazaar</tt>"
+"<tt>flatpak uninstall io.github.crhy.SpacedBazaar</tt>"
 
 #: src/bz-application.c:1047
 msgid "Continue Anyway"

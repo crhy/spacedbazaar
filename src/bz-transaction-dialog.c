@@ -50,6 +50,45 @@ should_skip_entry (BzEntry *entry,
   return (!remove && is_installed) || (remove && !is_installed);
 }
 
+static void
+prefer_user_installation (GListStore *store)
+{
+  guint    n_entries = 0;
+  gboolean has_user  = FALSE;
+
+  if (store == NULL)
+    return;
+
+  n_entries = g_list_model_get_n_items (G_LIST_MODEL (store));
+  for (guint i = 0; i < n_entries; i++)
+    {
+      g_autoptr (BzEntry) entry = NULL;
+
+      entry = g_list_model_get_item (G_LIST_MODEL (store), i);
+      if (!should_skip_entry (entry, FALSE) &&
+          bz_flatpak_entry_is_user (BZ_FLATPAK_ENTRY (entry)))
+        {
+          has_user = TRUE;
+          break;
+        }
+    }
+
+  if (!has_user)
+    return;
+
+  /* SpacedBazaar installs apps for the current user. Drop equivalent system
+     sources from install transactions so clicking Install does not show a
+     redundant “this user / all users” scope chooser. */
+  for (guint i = n_entries; i > 0; i--)
+    {
+      g_autoptr (BzEntry) entry = NULL;
+
+      entry = g_list_model_get_item (G_LIST_MODEL (store), i - 1);
+      if (!bz_flatpak_entry_is_user (BZ_FLATPAK_ENTRY (entry)))
+        g_list_store_remove (store, i - 1);
+    }
+}
+
 static GtkWidget *
 create_entry_radio_button (BzEntry    *entry,
                            GtkWidget **out_radio)
@@ -352,6 +391,9 @@ show_dialog_fiber (ShowDialogData *data)
               (!data->remove || !bz_entry_is_installed (entry)))
             g_list_store_remove (store, i - 1);
         }
+
+      if (!data->remove)
+        prefer_user_installation (store);
 
       title = bz_entry_group_get_title (data->group);
       id    = bz_entry_group_get_id (data->group);

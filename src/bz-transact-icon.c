@@ -185,7 +185,7 @@ bz_transact_icon_init (BzTransactIcon *self)
   GtkWidget *placeholder_icon = NULL;
 
   self->wdgt = bz_lazy_wdgt_new ();
-  bz_lazy_wdgt_set_wdgt_resource (self->wdgt, "/io/github/kolunmi/Bazaar/bz-transact-icon.wdgt");
+  bz_lazy_wdgt_set_wdgt_resource (self->wdgt, "/io/github/crhy/SpacedBazaar/bz-transact-icon.wdgt");
   g_object_bind_property (self, "info", self->wdgt, "wdgt-reference", G_BINDING_DEFAULT);
   adw_bin_set_child (ADW_BIN (self), GTK_WIDGET (self->wdgt));
 

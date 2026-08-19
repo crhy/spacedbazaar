@@ -179,7 +179,7 @@ bz_user_data_page_class_init (BzUserDataPageClass *klass)
 
   g_type_ensure (BZ_TYPE_USER_DATA_TILE);
 
-  gtk_widget_class_set_template_from_resource (widget_class, "/io/github/kolunmi/Bazaar/bz-user-data-page.ui");
+  gtk_widget_class_set_template_from_resource (widget_class, "/io/github/crhy/SpacedBazaar/bz-user-data-page.ui");
   gtk_widget_class_bind_template_child (widget_class, BzUserDataPage, stack);
   gtk_widget_class_bind_template_callback (widget_class, is_zero);
 }

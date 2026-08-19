@@ -82,7 +82,7 @@ bz_transaction_list_dialog_class_init (BzTransactionListDialogClass *klass)
 
   object_class->dispose = bz_transaction_list_dialog_dispose;
 
-  gtk_widget_class_set_template_from_resource (widget_class, "/io/github/kolunmi/Bazaar/bz-transaction-list-dialog.ui");
+  gtk_widget_class_set_template_from_resource (widget_class, "/io/github/crhy/SpacedBazaar/bz-transaction-list-dialog.ui");
   gtk_widget_class_bind_template_child (widget_class, BzTransactionListDialog, selection_model);
   gtk_widget_class_bind_template_child (widget_class, BzTransactionListDialog, secondary_label);
   gtk_widget_class_bind_template_callback (widget_class, invert_boolean);

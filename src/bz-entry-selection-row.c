@@ -141,7 +141,7 @@ bz_entry_selection_row_class_init (BzEntrySelectionRowClass *klass)
 
   g_type_ensure (BZ_TYPE_REPOSITORY);
 
-  gtk_widget_class_set_template_from_resource (widget_class, "/io/github/kolunmi/Bazaar/bz-entry-selection-row.ui");
+  gtk_widget_class_set_template_from_resource (widget_class, "/io/github/crhy/SpacedBazaar/bz-entry-selection-row.ui");
   bz_widget_class_bind_all_util_callbacks (widget_class);
   gtk_widget_class_bind_template_callback (widget_class, get_subtitle);
 

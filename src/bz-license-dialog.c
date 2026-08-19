@@ -313,7 +313,7 @@ bz_license_dialog_class_init (BzLicenseDialogClass *klass)
   g_type_ensure (BZ_TYPE_LOZENGE);
   gtk_widget_class_set_template_from_resource (
       widget_class,
-      "/io/github/kolunmi/Bazaar/bz-license-dialog.ui");
+      "/io/github/crhy/SpacedBazaar/bz-license-dialog.ui");
 
   gtk_widget_class_bind_template_callback (widget_class, invert_boolean);
   gtk_widget_class_bind_template_callback (widget_class, get_label_cb);

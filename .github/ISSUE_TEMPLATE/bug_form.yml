@@ -1,5 +1,5 @@
 name: Bug Report
-description: Report an issue about using Bazaar
+description: Report an issue about using SpacedBazaar
 body:
   - type: markdown
     attributes:
@@ -30,8 +30,8 @@ body:
     attributes:
       label: Version
       description: |
-        Please check the current version of Bazaar (Main Window > About Bazaar) so we can more easily indentify issues.
-        Output of `flatpak info io.github.kolunmi.Bazaar`. If you are on Bazzite or secureblue please run `rpm -qi bazaar`
+        Please check the current version of SpacedBazaar (Main Window > About SpacedBazaar) so we can more easily identify issues.
+        Include the output of `flatpak info io.github.crhy.SpacedBazaar`.
     validations:
       required: true
 

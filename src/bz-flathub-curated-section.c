@@ -164,7 +164,7 @@ bz_flathub_curated_section_class_init (BzFlathubCuratedSectionClass *klass)
 
   g_type_ensure (BZ_TYPE_DYNAMIC_LIST_VIEW);
 
-  gtk_widget_class_set_template_from_resource (widget_class, "/io/github/kolunmi/Bazaar/bz-flathub-curated-section.ui");
+  gtk_widget_class_set_template_from_resource (widget_class, "/io/github/crhy/SpacedBazaar/bz-flathub-curated-section.ui");
   gtk_widget_class_bind_template_child (widget_class, BzFlathubCuratedSection, root_box);
   gtk_widget_class_bind_template_child (widget_class, BzFlathubCuratedSection, title_label);
   gtk_widget_class_bind_template_child (widget_class, BzFlathubCuratedSection, subtitle_label);

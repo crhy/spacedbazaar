@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component type="desktop-application">
+  <id>io.github.crhy.SpacedBazaar</id>
+  <metadata_license>CC0-1.0</metadata_license>
+  <project_license>GPL-3.0-or-later</project_license>
+
+  <name>SpacedBazaar</name>
+  <summary>Discover and install apps</summary>
+  <description>
+    <p>
+      A fast and modern app store for Linux with a focus on discovering
+      and installing Flatpak apps and add-ons, particularly from Flathub.
+    </p>
+    <ul>
+      <li>Queue multiple installs and keep browsing</li>
+      <li>Easily view app permissions</li>
+      <li>Sign in to Flathub to view and manage your favorites</li>
+      <li>Search apps directly from GNOME Shell</li>
+    </ul>
+  </description>
+
+  <supports>
+    <control>pointing</control>
+    <control>keyboard</control>
+    <control>touch</control>
+    <display_length compare="ge">360</display_length>
+  </supports>
+
+  <developer id="io.github.crhy">
+    <name>Spaced Linux</name>
+  </developer>
+
+  <url type="homepage">https://spacedlinux.com/</url>
+  <url type="vcs-browser">https://github.com/crhy/spacedbazaar</url>
+  <url type="bugtracker">https://github.com/crhy/spacedbazaar/issues</url>
+  <url type="translate">https://l10n.gnome.org/module/bazaar/</url>
+  <url type="faq">https://github.com/crhy/spacedbazaar#readme</url>
+  <url type="help">https://github.com/crhy/spacedbazaar/issues</url>
+  <url type="donation">https://spacedlinux.com/#donate</url>
+  <url type="contact">https://github.com/crhy</url>
+  <url type="contribute">https://github.com/crhy/spacedbazaar</url>
+
+  <translation type="gettext">bazaar</translation>
+  <launchable type="desktop-id">io.github.crhy.SpacedBazaar.desktop</launchable>
+  <content_rating type="oars-1.1" />
+
+  <branding>
+    <color type="primary" scheme_preference="light">#ffbe6f</color>
+    <color type="primary" scheme_preference="dark">#c11c2b</color>
+  </branding>
+
+  <screenshots>
+    <screenshot type="default">
+      <image>https://github.com/user-attachments/assets/e67f35f0-9566-4068-93f5-cb814db0aedd</image>
+      <caption>The home page displaying Flathub apps</caption>
+    </screenshot>
+    <screenshot>
+      <image>https://github.com/user-attachments/assets/3de5d9a0-9c5d-461a-964c-7d680cc5f1a2</image>
+      <caption>App page for Exhibit</caption>
+    </screenshot>
+    <screenshot>
+      <image>https://github.com/user-attachments/assets/18424ebc-73a1-41b5-956e-57dcbcb592e6</image>
+      <caption>Library page</caption>
+    </screenshot>
+    <screenshot>
+      <image>https://github.com/user-attachments/assets/73fa606d-9a54-4169-a692-a14375183b0c</image>
+      <caption>Search page</caption>
+    </screenshot>
+    <screenshot>
+      <image>https://github.com/user-attachments/assets/e38681c0-a064-4075-8a11-3d5f5d84703c</image>
+      <caption>Category page</caption>
+    </screenshot>
+  </screenshots>
+
+  <releases>
+    <release version="0.1" date="2026-08-19">
+      <url type="details">https://github.com/crhy/spacedbazaar/releases/tag/0.1</url>
+      <description translate="no">
+        <p>Initial independent SpacedBazaar release.</p>
+        <ul>
+          <li>Uses its own Flatpak identity so it can coexist with Bazaar</li>
+          <li>Installs applications for the current user without a scope chooser</li>
+          <li>Provides downloadable x86_64 and aarch64 Flatpak bundles on GitHub</li>
+        </ul>
+      </description>
+    </release>
+  </releases>
+</component>

@@ -379,7 +379,7 @@ bz_bundle_install_dialog_class_init (BzBundleInstallDialogClass *klass)
 
   g_object_class_install_properties (object_class, LAST_PROP, props);
 
-  gtk_widget_class_set_template_from_resource (widget_class, "/io/github/kolunmi/Bazaar/bz-bundle-install-dialog.ui");
+  gtk_widget_class_set_template_from_resource (widget_class, "/io/github/crhy/SpacedBazaar/bz-bundle-install-dialog.ui");
   bz_widget_class_bind_all_util_callbacks (widget_class);
   bz_widget_class_bind_all_context_tile_callbacks (widget_class);
 

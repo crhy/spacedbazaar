@@ -137,7 +137,7 @@ bz_donations_dialog_class_init (BzDonationsDialogClass *klass)
 
   g_type_ensure (BZ_TYPE_APPSTREAM_DESCRIPTION_RENDER);
 
-  gtk_widget_class_set_template_from_resource (widget_class, "/io/github/kolunmi/Bazaar/bz-donations-dialog.ui");
+  gtk_widget_class_set_template_from_resource (widget_class, "/io/github/crhy/SpacedBazaar/bz-donations-dialog.ui");
   bz_widget_class_bind_all_util_callbacks (widget_class);
   gtk_widget_class_bind_template_child (widget_class, BzDonationsDialog, title);
   gtk_widget_class_bind_template_child (widget_class, BzDonationsDialog, subtitle);
@@ -181,7 +181,7 @@ bz_donations_dialog_init (BzDonationsDialog *self)
   g_signal_connect (self, "map", G_CALLBACK (on_map), NULL);
 
   release_notes_bytes = g_resources_lookup_data (
-      "/io/github/kolunmi/Bazaar/release-notes.xml",
+      "/io/github/crhy/SpacedBazaar/release-notes.xml",
       G_RESOURCE_LOOKUP_FLAGS_NONE,
       &error);
 

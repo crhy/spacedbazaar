@@ -188,7 +188,7 @@ bz_banner_view_class_init (BzBannerViewClass *klass)
 
   g_type_ensure (BZ_TYPE_ASYNC_TEXTURE);
 
-  gtk_widget_class_set_template_from_resource (widget_class, "/io/github/kolunmi/Bazaar/bz-banner-view.ui");
+  gtk_widget_class_set_template_from_resource (widget_class, "/io/github/crhy/SpacedBazaar/bz-banner-view.ui");
   gtk_widget_class_bind_template_child (widget_class, BzBannerView, picture);
   gtk_widget_class_bind_template_child (widget_class, BzBannerView, box);
   gtk_widget_class_bind_template_callback (widget_class, invert_boolean);

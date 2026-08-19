@@ -278,7 +278,7 @@ bz_apps_page_class_init (BzAppsPageClass *klass)
   g_type_ensure (BZ_TYPE_APP_TILE);
   g_type_ensure (BZ_TYPE_SUBCATEGORY_LIST);
 
-  gtk_widget_class_set_template_from_resource (widget_class, "/io/github/kolunmi/Bazaar/bz-apps-page.ui");
+  gtk_widget_class_set_template_from_resource (widget_class, "/io/github/crhy/SpacedBazaar/bz-apps-page.ui");
   gtk_widget_class_bind_template_callback (widget_class, is_not_null);
   gtk_widget_class_bind_template_callback (widget_class, is_not_empty_string);
   gtk_widget_class_bind_template_callback (widget_class, is_not_empty_list);

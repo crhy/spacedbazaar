@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <schemalist gettext-domain="bazaar">
-  <schema id="io.github.kolunmi.Bazaar" path="/io/github/kolunmi/Bazaar/">
+  <schema id="io.github.crhy.SpacedBazaar" path="/io/github/crhy/SpacedBazaar/">
     <key name="hide-eol" type="b">
       <default>true</default>
       <summary>Hide EOL Entries</summary>
@@ -24,7 +24,7 @@
     <key name="window-dimensions" type="(ii)">
       <default>(1220, 900)</default>
       <summary>Saved Window Dimensions</summary>
-      <description>The window dimensions to be used by the next Bazaar window</description>
+      <description>The window dimensions to be used by the next SpacedBazaar window</description>
     </key>
     <key name="force-adwaita-icons" type="b">
       <default>true</default>

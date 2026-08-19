@@ -237,7 +237,7 @@ load_articles_fiber (BzCuratedArticlesInfo *info)
 
   g_type_ensure (BZ_TYPE_CURATED_ARTICLE);
   parser = bz_yaml_parser_new_for_resource_schema (
-      "/io/github/kolunmi/Bazaar/article-list-schema.xml");
+      "/io/github/crhy/SpacedBazaar/article-list-schema.xml");
   results = bz_parser_process_bytes (BZ_PARSER (parser), bytes, &local_error);
   if (results == NULL)
     {

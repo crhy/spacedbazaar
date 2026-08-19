@@ -20,36 +20,36 @@ msgstr ""
 "X-Generator: Poedit 3.8\n"
 "X-Poedit-SourceCharset: UTF-8\n"
 
-#: data/io.github.kolunmi.Bazaar.desktop.in:2
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:7 src/bz-window.blp:47
+#: data/io.github.crhy.SpacedBazaar.desktop.in:2
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:7 src/bz-window.blp:47
 #: src/bz-window.blp:203 src/bz-window.c:387 src/bz-window.c:388
 msgid "Bazaar"
 msgstr "Bazar"
 
-#: data/io.github.kolunmi.Bazaar.desktop.in:3
+#: data/io.github.crhy.SpacedBazaar.desktop.in:3
 msgid "App Store"
 msgstr "Trgovina programov"
 
-#: data/io.github.kolunmi.Bazaar.desktop.in:4
+#: data/io.github.crhy.SpacedBazaar.desktop.in:4
 msgid "Add, remove or update flatpak software on this computer"
 msgstr ""
 "Dodajajte, odstranjujte in posodabljajte programsko opremo flatpak na tem "
 "računalniku"
 
-#: data/io.github.kolunmi.Bazaar.desktop.in:10
+#: data/io.github.crhy.SpacedBazaar.desktop.in:10
 msgid "System;Package;Manager;Discover;Flatpak;Software;App;Store;"
 msgstr ""
 "sistem;paket;upravitelj;odkrij;Flatpak;pogramska oprema;aplikacija;trgovina;"
 
-#: data/io.github.kolunmi.Bazaar.desktop.in:17
+#: data/io.github.crhy.SpacedBazaar.desktop.in:17
 msgid "New Window"
 msgstr "Novo okno"
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:8
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:8
 msgid "Discover and install apps"
 msgstr "Odkrijte in namestite programe"
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:10
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:10
 msgid ""
 "A fast and modern app store for Linux with a focus on discovering and "
 "installing Flatpak apps and add-ons, particularly from Flathub."
@@ -57,43 +57,43 @@ msgstr ""
 "Hitra in sodobna trgovina s programi za Linux, namenjena predvsem odkrivanju "
 "in namestitvi programov ter dodatkov v obliki Flatpak, zlasti iz Flathuba."
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:15
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:15
 msgid "Queue multiple installs and keep browsing"
 msgstr "Postavite več namestitev v vrsto in nadaljujte z brskanjem"
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:16
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:16
 msgid "Easily view app permissions"
 msgstr "Enostavno preglejte pravice programa"
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:17
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:17
 msgid "Sign in to Flathub to view and manage your favorites"
 msgstr "Vpišite se v Flathub, da vidite in upravljate svoje priljubljene"
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:18
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:18
 msgid "Search apps directly from GNOME Shell"
 msgstr "Programe iščite neposredno iz lupine GNOME"
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:30 src/bz-application.c:771
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:30 src/bz-application.c:771
 msgid "The Bazaar Contributors"
 msgstr "Avtorji prispevkov Bazarja"
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:55
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:55
 msgid "The home page displaying Flathub apps"
 msgstr "Domača stran, ki prikaže programe Flathub"
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:59
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:59
 msgid "App page for Exhibit"
 msgstr "Stran predstavitve programa"
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:63
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:63
 msgid "Library page"
 msgstr "Stran knjižnic"
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:67
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:67
 msgid "Search page"
 msgstr "Iskalna stran"
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:71
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:71
 msgid "Category page"
 msgstr "Stran kategorij"
 
@@ -772,7 +772,7 @@ msgid ""
 "\n"
 "You can then remove this Flatpak version with\n"
 "\n"
-"<tt>flatpak uninstall io.github.kolunmi.Bazaar</tt>"
+"<tt>flatpak uninstall io.github.crhy.SpacedBazaar</tt>"
 msgstr ""
 "V Ubuntu 25.10 in novejših različicah so privzeta varnostna pravila napačno "
 "nastavljena, zaradi česar <b>ni možno namestiti programov</b> iz različice "
@@ -783,7 +783,7 @@ msgstr ""
 "\n"
 "To različico za Flatpak lahko nato odstranite z ukazom\n"
 "\n"
-"<tt>flatpak uninstall io.github.kolunmi.Bazaar</tt>"
+"<tt>flatpak uninstall io.github.crhy.SpacedBazaar</tt>"
 
 #: src/bz-application.c:1057
 msgid "Continue Anyway"

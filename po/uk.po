@@ -21,35 +21,35 @@ msgstr ""
 "2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
 "X-Generator: Lokalize 25.12.1\n"
 
-#: data/io.github.kolunmi.Bazaar.desktop.in:2
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:7 src/bz-window.blp:47
+#: data/io.github.crhy.SpacedBazaar.desktop.in:2
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:7 src/bz-window.blp:47
 #: src/bz-window.blp:203 src/bz-window.c:387 src/bz-window.c:388
 msgid "Bazaar"
 msgstr "Базар"
 
-#: data/io.github.kolunmi.Bazaar.desktop.in:3
+#: data/io.github.crhy.SpacedBazaar.desktop.in:3
 msgid "App Store"
 msgstr "Крамниця програм"
 
-#: data/io.github.kolunmi.Bazaar.desktop.in:4
+#: data/io.github.crhy.SpacedBazaar.desktop.in:4
 msgid "Add, remove or update flatpak software on this computer"
 msgstr "Встановлюйте, видаляйте та оновлюйте пакунки Flatpak на Ваш компʼютер"
 
-#: data/io.github.kolunmi.Bazaar.desktop.in:10
+#: data/io.github.crhy.SpacedBazaar.desktop.in:10
 msgid "System;Package;Manager;Discover;Flatpak;Software;App;Store;"
 msgstr ""
 "System;Package;Manager;Discover;Flatpak;Software;App;Store;система;пакунок;ке"
 "рування;виявлення;програми;застосунок;крамниця;"
 
-#: data/io.github.kolunmi.Bazaar.desktop.in:17
+#: data/io.github.crhy.SpacedBazaar.desktop.in:17
 msgid "New Window"
 msgstr "Нове вікно"
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:8
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:8
 msgid "Discover and install apps"
 msgstr "Пошук і встановлення програм"
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:10
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:10
 msgid ""
 "A fast and modern app store for Linux with a focus on discovering and "
 "installing Flatpak apps and add-ons, particularly from Flathub."
@@ -57,43 +57,43 @@ msgstr ""
 "Швидка та сучасна крамниця застосунків для Linux, зосереджена на знаходженні "
 "та встановленні застосунків і розширень зі сховищ Flatpak, зокрема Flathub."
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:15
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:15
 msgid "Queue multiple installs and keep browsing"
 msgstr "Шукайте та завантажуйте водночас"
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:16
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:16
 msgid "Easily view app permissions"
 msgstr "Легко переглядайте дозволи застосунків"
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:17
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:17
 msgid "Sign in to Flathub to view and manage your favorites"
 msgstr "Увійдіть із допомогою Flathub, аби керувати вподобаннями"
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:18
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:18
 msgid "Search apps directly from GNOME Shell"
 msgstr "Шукайте застосунки безпосередньо з оболонки GNOME"
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:30 src/bz-application.c:775
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:30 src/bz-application.c:775
 msgid "The Bazaar Contributors"
 msgstr "Внесники Базару"
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:55
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:55
 msgid "The home page displaying Flathub apps"
 msgstr "Домашня сторінка із застосунками з Flathub"
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:59
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:59
 msgid "App page for Exhibit"
 msgstr "Сторінка програми для Exhibit"
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:63
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:63
 msgid "Library page"
 msgstr "Сторінка бібліотеки"
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:67
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:67
 msgid "Search page"
 msgstr "Сторінка пошуку"
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:71
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:71
 msgid "Category page"
 msgstr "Сторінка пошуку з категоріями"
 
@@ -779,7 +779,7 @@ msgid ""
 "\n"
 "You can then remove this Flatpak version with\n"
 "\n"
-"<tt>flatpak uninstall io.github.kolunmi.Bazaar</tt>"
+"<tt>flatpak uninstall io.github.crhy.SpacedBazaar</tt>"
 msgstr ""
 "У Ubuntu 25.10 та новіших версіях порушені стандартні правила безпеки, що "
 "робить <b>неможливим встановлення програм</b> з версії Bazaar для Flatpak. "
@@ -790,7 +790,7 @@ msgstr ""
 "\n"
 "Потім ви можете вилучити цю версію Flatpak за допомогою команди\n"
 "\n"
-"<tt>flatpak uninstall io.github.kolunmi.Bazaar</tt>"
+"<tt>flatpak uninstall io.github.crhy.SpacedBazaar</tt>"
 
 #: src/bz-application.c:1061
 msgid "Continue Anyway"

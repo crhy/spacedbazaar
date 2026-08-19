@@ -23,7 +23,7 @@
 #include "bz-async-texture.h"
 #include "bz-auth-state.h"
 
-#define SECRET_SCHEMA_NAME "io.github.kolunmi.Bazaar.FlathubAuth"
+#define SECRET_SCHEMA_NAME "io.github.crhy.SpacedBazaar.FlathubAuth"
 #define SECRET_LABEL       "Flathub Authentication"
 
 struct _BzAuthState

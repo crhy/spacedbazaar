@@ -8,18 +8,20 @@ SpacedBazaar
 > This is **space**dbazaar, the [Spaced Linux](https://github.com/crhy/spaced)
 > fork of Bazaar. It tracks upstream `main` and carries Spaced Linux-specific
 > fixes that upstream has not yet merged. Current delta:
-> - `Prefer user-installation sources when installing from the sandbox`: the
->   install dialog, shift-click install, and bulk-install paths now preselect
->   the user-installation source whenever one exists. System-installation
+> - `Install apps for the current user`: normal installs go directly to the
+>   user installation and no longer show a redundant “this user / all users”
+>   chooser. System-installation
 >   installs driven from inside the sandboxed app fail after the download with
 >   "Path does not exist" ([bazaar-org/bazaar#1298](https://github.com/bazaar-org/bazaar/issues/1298),
 >   Spaced Linux issue #61),
->   while user-installation installs work. System installations remain the
->   preselected source when no user source exists and for removals.
+>   while user-installation installs work. Existing system installs remain
+>   visible and removable.
+> - `Independent Flatpak identity`: `io.github.crhy.SpacedBazaar` can be
+>   installed alongside the original Bazaar without replacing or launching it.
 > - `SpacedBazaar.svg` icon: the app store's brand in the Spaced Linux colors.
 > - `Portable Flatpak access`: the bundle uses the standard XDG data mount and
 >   contains no account-specific home-directory paths.
->   Releases ship as x86_64 Flatpak bundles on the
+>   Releases ship as x86_64 and aarch64 Flatpak bundles on the
 >   [releases page](https://github.com/crhy/spacedbazaar/releases).
 
 > [!NOTE]
@@ -34,13 +36,13 @@ SpacedBazaar
 > If you are interested in contributing translations to Bazaar (Thank you!),
 > please see the [Damned Lies Module](https://l10n.gnome.org/module/bazaar/).
 
-Bazaar is a new app store for GNOME with a focus on discovering and installing
+SpacedBazaar is an app store for Linux with a focus on discovering and installing
 apps and add-ons from Flatpak remotes, particularly
 [Flathub](https://flathub.org/). The UX emphasizes supporting the developers who
-make the Linux desktop possible. Bazaar features a "curated" tab that can be
+make the Linux desktop possible. SpacedBazaar features a "curated" tab that can be
 configured by distributors.
 
-Bazaar implements the gnome-shell search provider dbus interface. A krunner
+SpacedBazaar implements the GNOME Shell search-provider D-Bus interface. A KRunner
 [plugin](https://github.com/bazaar-org/krunner-bazaar) is available for use on
 the KDE Plasma desktop.
 
@@ -50,21 +52,23 @@ Bazaar's market stall icon.
 
 ### Installing
 
-Pre-built binaries are distributed via Flathub and GitHub actions:
+Download the bundle for your architecture from the
+[latest GitHub release](https://github.com/crhy/spacedbazaar/releases/latest),
+then install it for your user:
 
-<a href='https://flathub.org/apps/details/io.github.kolunmi.Bazaar'><img width='240' alt='Get it on Flathub' src='https://flathub.org/api/badge?svg&locale=en'/></a>
+```sh
+flatpak install --user ./SpacedBazaar-x86_64.flatpak
+```
 
-[![Build Flatpak and Upload Artifact](https://github.com/bazaar-org/bazaar/actions/workflows/build-flatpak.yml/badge.svg)](https://github.com/bazaar-org/bazaar/actions/workflows/build-flatpak.yml)
+The aarch64 bundle is named `SpacedBazaar-aarch64.flatpak`. The release is not
+the Flathub Bazaar package: it has its own ID and may be installed alongside it.
 
-There also exist packages for [Debian](https://tracker.debian.org/pkg/bazaar)
-and [Arch](https://archlinux.org/packages/extra/x86_64/bazaar/). These are not
-directly supported but should work fine. If you encounter a bug on any package
-of Bazaar other than the flatpak, ensure the bug also exists on the flatpak
-before reporting it here.
+[![Build Flatpak](https://github.com/crhy/spacedbazaar/actions/workflows/build-flatpak.yml/badge.svg)](https://github.com/crhy/spacedbazaar/actions/workflows/build-flatpak.yml)
 
 ### Supporting
 
-You can support rhY and his work at links for venmo and bitcoin on SpacedLinux.com  Note: If you support him, he will eventually build OpenAirShips.com and make governments and corporations obsolete and irrelevant.
+You can support Spaced Linux development at
+[spacedlinux.com](https://spacedlinux.com/#donate).
 
 #### Code of Conduct
 

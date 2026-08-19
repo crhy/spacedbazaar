@@ -18,33 +18,33 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Poedit 3.9\n"
 
-#: data/io.github.kolunmi.Bazaar.desktop.in:2
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:7 src/bz-window.blp:47
+#: data/io.github.crhy.SpacedBazaar.desktop.in:2
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:7 src/bz-window.blp:47
 #: src/bz-window.blp:203 src/bz-window.c:387 src/bz-window.c:388
 msgid "Bazaar"
 msgstr "Bazaar"
 
-#: data/io.github.kolunmi.Bazaar.desktop.in:3
+#: data/io.github.crhy.SpacedBazaar.desktop.in:3
 msgid "App Store"
 msgstr "Programbutik"
 
-#: data/io.github.kolunmi.Bazaar.desktop.in:4
+#: data/io.github.crhy.SpacedBazaar.desktop.in:4
 msgid "Add, remove or update flatpak software on this computer"
 msgstr "Lägg till, ta bort eller uppdatera flatpak-programvara på denna dator"
 
-#: data/io.github.kolunmi.Bazaar.desktop.in:10
+#: data/io.github.crhy.SpacedBazaar.desktop.in:10
 msgid "System;Package;Manager;Discover;Flatpak;Software;App;Store;"
 msgstr "System;Paket;Hanterare;Upptäck;Flatpak;Programvara;App;Store;Butik;Affär;"
 
-#: data/io.github.kolunmi.Bazaar.desktop.in:17
+#: data/io.github.crhy.SpacedBazaar.desktop.in:17
 msgid "New Window"
 msgstr "Nytt fönster"
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:8
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:8
 msgid "Discover and install apps"
 msgstr "Upptäck och installera program"
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:10
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:10
 msgid ""
 "A fast and modern app store for Linux with a focus on discovering and "
 "installing Flatpak apps and add-ons, particularly from Flathub."
@@ -52,44 +52,44 @@ msgstr ""
 "En snabb och modern programbutik för Linux med fokus på upptäckt och "
 "installation av Flatpak-program och tillägg, främst från Flathub."
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:15
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:15
 msgid "Queue multiple installs and keep browsing"
 msgstr "Köa flera installationer och fortsätt bläddra"
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:16
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:16
 msgid "Easily view app permissions"
 msgstr "Se lätt programrättigheter"
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:17
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:17
 msgid "Sign in to Flathub to view and manage your favorites"
 msgstr "Logga in med Flathub för att visa och hantera favoriter"
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:18
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:18
 msgid "Search apps directly from GNOME Shell"
 msgstr "Sök program direkt från GNOME Shell"
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:30 src/bz-application.c:771
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:30 src/bz-application.c:771
 msgid "The Bazaar Contributors"
 msgstr "Bidragsgivarna till Bazaar"
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:55
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:55
 msgid "The home page displaying Flathub apps"
 msgstr "Startsidan som visar Flathub-program"
 
 # TODO: Translatornote om att det är ett namn på https://flathub.org/en/apps/io.github.nokse22.Exhibit
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:59
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:59
 msgid "Exhibit app page"
 msgstr "Programsida för Exhibit"
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:63
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:63
 msgid "Library page"
 msgstr "Bibliotekssida"
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:67
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:67
 msgid "Search page"
 msgstr "Söksida"
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:71
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:71
 msgid "Category page"
 msgstr "Kategorisida"
 
@@ -769,7 +769,7 @@ msgid ""
 "\n"
 "You can then remove this Flatpak version with\n"
 "\n"
-"<tt>flatpak uninstall io.github.kolunmi.Bazaar</tt>"
+"<tt>flatpak uninstall io.github.crhy.SpacedBazaar</tt>"
 msgstr ""
 "Ubuntu 25.10 och nyare har felaktiga standardsäkerhetsregler, vilket gör det "
 "<b>omöjligt att installera program</b> från Flatpak-versionen av Bazaar, använd "
@@ -779,7 +779,7 @@ msgstr ""
 "\n"
 "Du kan sedan ta bort denna Flatpak-version med\n"
 "\n"
-"<tt>flatpak uninstall io.github.kolunmi.Bazaar</tt>"
+"<tt>flatpak uninstall io.github.crhy.SpacedBazaar</tt>"
 
 #: src/bz-application.c:1057
 msgid "Continue Anyway"

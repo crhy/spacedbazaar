@@ -232,7 +232,7 @@ bz_flathub_category_section_class_init (BzFlathubCategorySectionClass *klass)
 
   g_object_class_install_properties (object_class, LAST_PROP, props);
 
-  gtk_widget_class_set_template_from_resource (widget_class, "/io/github/kolunmi/Bazaar/bz-flathub-category-section.ui");
+  gtk_widget_class_set_template_from_resource (widget_class, "/io/github/crhy/SpacedBazaar/bz-flathub-category-section.ui");
 
   gtk_widget_class_bind_template_child (widget_class, BzFlathubCategorySection, section_title);
   gtk_widget_class_bind_template_child (widget_class, BzFlathubCategorySection, section_list);

@@ -342,7 +342,7 @@ bz_age_rating_dialog_class_init (BzAgeRatingDialogClass *klass)
 
   g_type_ensure (BZ_TYPE_LOZENGE);
 
-  gtk_widget_class_set_template_from_resource (widget_class, "/io/github/kolunmi/Bazaar/bz-age-rating-dialog.ui");
+  gtk_widget_class_set_template_from_resource (widget_class, "/io/github/crhy/SpacedBazaar/bz-age-rating-dialog.ui");
 
   gtk_widget_class_bind_template_child (widget_class, BzAgeRatingDialog, lozenge);
   gtk_widget_class_bind_template_child (widget_class, BzAgeRatingDialog, list);

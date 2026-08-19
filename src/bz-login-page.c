@@ -77,7 +77,7 @@ get_shared_network_session (void)
       g_autoptr (WebKitNetworkSession) session = NULL;
 
       data_dir = g_build_filename (g_get_user_data_dir (),
-                                   "io.github.kolunmi.Bazaar",
+                                   "io.github.crhy.SpacedBazaar",
                                    "webkit-data",
                                    NULL);
       session  = webkit_network_session_new (data_dir, NULL);
@@ -543,7 +543,7 @@ on_providers_loaded (GObject      *source_object,
       method       = json_object_get_string_member (provider_obj, "method");
       name         = json_object_get_string_member (provider_obj, "name");
       row          = adw_action_row_new ();
-      icon_name    = g_strdup_printf ("io.github.kolunmi.Bazaar.%s", method);
+      icon_name    = g_strdup_printf ("io.github.crhy.SpacedBazaar.%s", method);
 
       bz_flathub_auth_provider_set_name (provider, name);
       bz_flathub_auth_provider_set_method (provider, method);
@@ -685,7 +685,7 @@ bz_login_page_class_init (BzLoginPageClass *klass)
   g_object_class_install_properties (object_class, N_PROPS, properties);
 
   gtk_widget_class_set_template_from_resource (widget_class,
-                                               "/io/github/kolunmi/Bazaar/bz-login-page.ui");
+                                               "/io/github/crhy/SpacedBazaar/bz-login-page.ui");
   bz_widget_class_bind_all_util_callbacks (widget_class);
 
   gtk_widget_class_bind_template_child (widget_class, BzLoginPage, main_stack);

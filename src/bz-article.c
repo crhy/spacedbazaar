@@ -172,7 +172,7 @@ bz_article_class_init (BzArticleClass *klass)
 
   g_object_class_install_properties (object_class, LAST_PROP, props);
 
-  gtk_widget_class_set_template_from_resource (widget_class, "/io/github/kolunmi/Bazaar/bz-article.ui");
+  gtk_widget_class_set_template_from_resource (widget_class, "/io/github/crhy/SpacedBazaar/bz-article.ui");
   gtk_widget_class_bind_template_child (widget_class, BzArticle, stack);
   gtk_widget_class_bind_template_child (widget_class, BzArticle, render);
   gtk_widget_class_bind_template_callback (widget_class, markdown_bind_inline_uri);

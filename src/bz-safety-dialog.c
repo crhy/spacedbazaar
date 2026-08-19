@@ -249,7 +249,7 @@ bz_safety_dialog_class_init (BzSafetyDialogClass *klass)
   g_type_ensure (BZ_TYPE_LOZENGE);
 
   gtk_widget_class_set_template_from_resource (widget_class,
-                                               "/io/github/kolunmi/Bazaar/bz-safety-dialog.ui");
+                                               "/io/github/crhy/SpacedBazaar/bz-safety-dialog.ui");
   bz_widget_class_bind_all_util_callbacks (widget_class);
 
   gtk_widget_class_bind_template_child (widget_class, BzSafetyDialog, lozenge);

@@ -63,7 +63,7 @@ main (int   argc,
           BZ_TYPE_APPLICATION,
           "application-id", APPLICATION_ID,
           "flags", G_APPLICATION_HANDLES_COMMAND_LINE,
-          "resource-base-path", "/io/github/kolunmi/Bazaar",
+          "resource-base-path", "/io/github/crhy/SpacedBazaar",
           NULL);
       result = g_application_run (G_APPLICATION (app), argc, argv);
     }

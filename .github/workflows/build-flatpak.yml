@@ -1,6 +1,7 @@
 on:
   push:
-    branches: [main]
+    branches: [main, "release/**"]
+    tags: ["*"]
   pull_request:
     paths-ignore:
       - "**.md"
@@ -10,7 +11,8 @@ on:
       - ".github/ISSUE_TEMPLATE/**"
   workflow_dispatch:
 
-permissions: {}
+permissions:
+  contents: read
 
 name: CI Build Flatpak
 jobs:
@@ -49,8 +51,8 @@ jobs:
     - name: Build Flatpak
       uses: flatpak/flatpak-github-actions/flatpak-builder@401fe28a8384095fc1531b9d320b292f0ee45adb # v6.7
       with:
-        bundle: Bazaar.flatpak
-        manifest-path: build-aux/flatpak/io.github.kolunmi.Bazaar.json
+        bundle: SpacedBazaar-${{ matrix.variant.arch }}.flatpak
+        manifest-path: build-aux/flatpak/io.github.crhy.SpacedBazaar.json
         # caching is broken upstream
         # https://github.com/flatpak/flatpak-github-actions/issues/239
         # this is only true because there is no other way to call fb with --ccache
@@ -64,3 +66,29 @@ jobs:
       with:
         path: .flatpak-builder
         key: flatpak-builder-046f9ec-${{ matrix.variant.arch }}-${{ github.run_id }}
+
+  release:
+    name: "GitHub Release"
+    if: startsWith(github.ref, 'refs/tags/')
+    needs: flatpak
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Download Flatpak bundles
+        uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131 # v7.0.0
+        with:
+          pattern: SpacedBazaar-*.flatpak
+          path: release
+          merge-multiple: true
+
+      - name: Publish release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: >-
+          gh release create "$GITHUB_REF_NAME"
+          release/SpacedBazaar-*.flatpak
+          --repo "$GITHUB_REPOSITORY"
+          --verify-tag
+          --title "SpacedBazaar $GITHUB_REF_NAME"
+          --generate-notes

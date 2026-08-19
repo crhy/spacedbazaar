@@ -5,16 +5,16 @@
          xmlns:gnome="http://api.gnome.org/doap-extensions#"
          xmlns="http://usefulinc.com/ns/doap#">
 
-  <name>bazaar</name>
+  <name>SpacedBazaar</name>
   <shortdesc xml:lang="en">Discover and install applications</shortdesc>
   <description xml:lang="en">
     A new app store for Linux with a focus on discovering and installing
     apps and add-ons from Flatpak remotes, particularly Flathub.
   </description>
 
-  <homepage rdf:resource="https://usebazaar.org" />
-  <download-page rdf:resource="https://github.com/bazaar-org/bazaar/releases" />
-  <bug-database rdf:resource="https://github.com/bazaar-org/bazaar/issues" />
+  <homepage rdf:resource="https://spacedlinux.com" />
+  <download-page rdf:resource="https://github.com/crhy/spacedbazaar/releases" />
+  <bug-database rdf:resource="https://github.com/crhy/spacedbazaar/issues" />
 
   <programming-language>C</programming-language>
 
@@ -25,13 +25,11 @@
 
   <maintainer>
     <foaf:Person>
-      <foaf:name>Kolunmi</foaf:name>
-      <gnome:userid>kolunmi</gnome:userid>
-      <foaf:mbox rdf:resource="mailto:kolunmi@posteo.net" />
+      <foaf:name>Rhy Thornton</foaf:name>
       <foaf:account>
         <foaf:OnlineAccount>
           <foaf:accountServiceHomepage rdf:resource="https://github.com" />
-          <foaf:accountName>kolunmi</foaf:accountName>
+          <foaf:accountName>crhy</foaf:accountName>
         </foaf:OnlineAccount>
       </foaf:account>
     </foaf:Person>

@@ -354,7 +354,7 @@ blueprints = custom_target('blueprints',
 
 release_notes = custom_target('release-notes.xml',
   output: 'release-notes.xml',
-  input: meson.project_source_root() / 'data' / 'io.github.kolunmi.Bazaar.metainfo.xml.in',
+  input: meson.project_source_root() / 'data' / 'io.github.crhy.SpacedBazaar.metainfo.xml.in',
   command: [
     'sh', '-c',
     xmllint.full_path() + ' --xpath "//releases/release[1]" "$1" > "$2"',

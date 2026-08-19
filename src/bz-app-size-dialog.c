@@ -167,7 +167,7 @@ bz_app_size_dialog_class_init (BzAppSizeDialogClass *klass)
 
   g_type_ensure (BZ_TYPE_LOZENGE);
 
-  gtk_widget_class_set_template_from_resource (widget_class, "/io/github/kolunmi/Bazaar/bz-app-size-dialog.ui");
+  gtk_widget_class_set_template_from_resource (widget_class, "/io/github/crhy/SpacedBazaar/bz-app-size-dialog.ui");
   bz_widget_class_bind_all_util_callbacks (widget_class);
   gtk_widget_class_bind_template_callback (widget_class, is_app_id);
   gtk_widget_class_bind_template_callback (widget_class, format_size);

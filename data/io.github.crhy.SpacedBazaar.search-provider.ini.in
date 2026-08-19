@@ -1,0 +1,5 @@
+[Shell Search Provider]
+DesktopId=io.github.crhy.SpacedBazaar.desktop
+BusName=io.github.crhy.SpacedBazaar.SearchProvider
+ObjectPath=/io/github/crhy/SpacedBazaar/SearchProvider
+Version=2

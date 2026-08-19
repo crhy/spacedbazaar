@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <gresources>
-  <gresource prefix="/io/github/kolunmi/Bazaar/">
+  <gresource prefix="/io/github/crhy/SpacedBazaar/">
 
     <file>style.css</file>
 
@@ -210,11 +210,11 @@
     <file preprocess="xml-stripblanks">icons/io.github.kolumni.Bazaar.Adwaita.svg</file>
     <file preprocess="xml-stripblanks">icons/io.github.kolumni.Bazaar.Kde.svg</file>
 
-    <file preprocess="xml-stripblanks">icons/io.github.kolunmi.Bazaar.github.svg</file>
-    <file preprocess="xml-stripblanks">icons/io.github.kolunmi.Bazaar.gitlab.svg</file>
-    <file preprocess="xml-stripblanks">icons/io.github.kolunmi.Bazaar.gnome.svg</file>
-    <file preprocess="xml-stripblanks">icons/io.github.kolunmi.Bazaar.kde.svg</file>
-    <file preprocess="xml-stripblanks">icons/io.github.kolunmi.Bazaar.google.svg</file>
+    <file preprocess="xml-stripblanks">icons/io.github.crhy.SpacedBazaar.github.svg</file>
+    <file preprocess="xml-stripblanks">icons/io.github.crhy.SpacedBazaar.gitlab.svg</file>
+    <file preprocess="xml-stripblanks">icons/io.github.crhy.SpacedBazaar.gnome.svg</file>
+    <file preprocess="xml-stripblanks">icons/io.github.crhy.SpacedBazaar.kde.svg</file>
+    <file preprocess="xml-stripblanks">icons/io.github.crhy.SpacedBazaar.google.svg</file>
 
     <file>bz-install-controls.wdgt</file>
     <file>bz-transact-icon.wdgt</file>

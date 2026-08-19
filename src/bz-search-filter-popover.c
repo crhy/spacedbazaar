@@ -190,7 +190,7 @@ bz_search_filter_popover_class_init (BzSearchFilterPopoverClass *klass)
 
   g_object_class_install_properties (object_class, LAST_PROP, props);
 
-  gtk_widget_class_set_template_from_resource (widget_class, "/io/github/kolunmi/Bazaar/bz-search-filter-popover.ui");
+  gtk_widget_class_set_template_from_resource (widget_class, "/io/github/crhy/SpacedBazaar/bz-search-filter-popover.ui");
   gtk_widget_class_bind_template_child (widget_class, BzSearchFilterPopover, wrap_box);
   gtk_widget_class_bind_template_child (widget_class, BzSearchFilterPopover, verified_button);
   gtk_widget_class_bind_template_child (widget_class, BzSearchFilterPopover, free_button);

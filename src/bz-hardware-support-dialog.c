@@ -303,7 +303,7 @@ bz_hardware_support_dialog_class_init (BzHardwareSupportDialogClass *klass)
 
   g_type_ensure (BZ_TYPE_LOZENGE);
 
-  gtk_widget_class_set_template_from_resource (widget_class, "/io/github/kolunmi/Bazaar/bz-hardware-support-dialog.ui");
+  gtk_widget_class_set_template_from_resource (widget_class, "/io/github/crhy/SpacedBazaar/bz-hardware-support-dialog.ui");
 
   gtk_widget_class_bind_template_child (widget_class, BzHardwareSupportDialog, lozenge);
   gtk_widget_class_bind_template_child (widget_class, BzHardwareSupportDialog, list);

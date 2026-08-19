@@ -228,7 +228,7 @@ bz_addons_dialog_class_init (BzAddonsDialogClass *klass)
   g_type_ensure (BZ_TYPE_RESULT);
   g_type_ensure (BZ_TYPE_SHARE_LIST);
 
-  gtk_widget_class_set_template_from_resource (widget_class, "/io/github/kolunmi/Bazaar/bz-addons-dialog.ui");
+  gtk_widget_class_set_template_from_resource (widget_class, "/io/github/crhy/SpacedBazaar/bz-addons-dialog.ui");
 
   bz_widget_class_bind_all_util_callbacks (widget_class);
   bz_widget_class_bind_all_context_tile_callbacks (widget_class);

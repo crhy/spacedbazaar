@@ -18,29 +18,29 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: data/io.github.kolunmi.Bazaar.desktop.in:2
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:7 src/bz-window.blp:5
+#: data/io.github.crhy.SpacedBazaar.desktop.in:2
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:7 src/bz-window.blp:5
 #: src/bz-window.blp:233
 msgid "Bazaar"
 msgstr "Bazaar"
 
-#: data/io.github.kolunmi.Bazaar.desktop.in:3
+#: data/io.github.crhy.SpacedBazaar.desktop.in:3
 msgid "Add, remove or update flatpak software on this computer"
 msgstr "Adicionar, remover ou atualizar software flatpak neste computador"
 
-#: data/io.github.kolunmi.Bazaar.desktop.in:9
+#: data/io.github.crhy.SpacedBazaar.desktop.in:9
 msgid "GTK;System;PackageManager;Discover;Flatpak;Software;Store;"
 msgstr "GTK;Sistema;GestorDePacotes;Discover;Flatpak;Aplicações;Loja;"
 
-#: data/io.github.kolunmi.Bazaar.desktop.in:15
+#: data/io.github.crhy.SpacedBazaar.desktop.in:15
 msgid "New Window"
 msgstr "Nova Janela"
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:8
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:8
 msgid "Discover and install applications"
 msgstr "Descobrir e instalar aplicações"
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:10
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:10
 #, fuzzy
 msgid ""
 "A new app store for Linux with a focus on discovering and installing "
@@ -50,7 +50,7 @@ msgstr ""
 "aplicações e extensões (add-ons) a partir de repositórios Flatpak, "
 "principalmente do Flathub."
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:14
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:14
 #, fuzzy
 msgid ""
 "It emphasizes supporting the developers who make the Linux desktop possible. "
@@ -62,25 +62,25 @@ msgstr ""
 "ser configurada pelos distribuidores para permitir uma experiência mais "
 "personalizada."
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:29 src/bz-application.c:706
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:29 src/bz-application.c:706
 msgid "Adam Masciola"
 msgstr "Adam Masciola"
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:54
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:54
 #, fuzzy
 msgid "The home page displaying Flathub apps"
 msgstr "A vista inicial a demonstrar apps do Flathub"
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:58
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:58
 msgid "Nucleus app page"
 msgstr "Página da app Nucleus"
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:62
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:62
 #, fuzzy
 msgid "Search page"
 msgstr "Página de pesquisa"
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:66
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:66
 msgid "Category page"
 msgstr "Página das categorias"
 

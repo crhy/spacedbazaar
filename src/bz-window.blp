@@ -44,7 +44,7 @@ template $BzWindow: Adw.ApplicationWindow {
 
             Adw.NavigationPage {
               tag: "main";
-              title: _("Bazaar");
+              title: _("SpacedBazaar");
 
               child: Adw.ToolbarView toolbar_view {
                 top-bar-style: flat;
@@ -154,7 +154,7 @@ template $BzWindow: Adw.ApplicationWindow {
 
                       Button {
                         has-tooltip: true;
-                        tooltip-text: "Open Bazaar Inspector";
+                        tooltip-text: "Open SpacedBazaar Inspector";
                         icon-name: "bug-symbolic";
                         action-name: "app.bazaar-inspector";
                       }
@@ -200,7 +200,7 @@ template $BzWindow: Adw.ApplicationWindow {
                         visible: bind $invert_boolean(template.state as <$BzStateInfo>.busy) as <bool>;
                       }
                       Label {
-                        label: _("Bazaar");
+                        label: _("SpacedBazaar");
                         visible: bind template.state as <$BzStateInfo>.busy as <bool>;
                         styles [
                           "title",
@@ -224,7 +224,7 @@ template $BzWindow: Adw.ApplicationWindow {
                     ]
 
                     revealed: bind $invert_boolean(template.state as <$BzStateInfo>.donation-prompt-dismissed as <bool>) as <bool>;
-                    title: _("You are running a new version of Bazaar!");
+                    title: _("You are running a new version of SpacedBazaar!");
                     button-label: _("See What's New");
                     action-name: "app.donate";
                   }
@@ -317,7 +317,7 @@ menu primary_menu {
   }
   section {
     item {
-      label: _("_Quit Bazaar");
+      label: _("_Quit SpacedBazaar");
       action: "app.quit";
     }
   }
@@ -326,7 +326,7 @@ menu primary_menu {
 menu debug_menu {
   section {
     item {
-      label: "Open Bazaar Inspector";
+      label: "Open SpacedBazaar Inspector";
       action: "app.bazaar-inspector";
     }
   }

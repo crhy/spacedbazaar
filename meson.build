@@ -96,7 +96,7 @@ else
     config_h.set_quoted('PACKAGE_VCS_VERSION', bz_vcs_version)
     config_h.set_quoted('CACHE_VERSION', bz_cache_version)
     config_h.set_quoted('GETTEXT_PACKAGE', 'bazaar')
-    config_h.set_quoted('APPLICATION_ID', 'io.github.kolunmi.Bazaar')
+    config_h.set_quoted('APPLICATION_ID', 'io.github.crhy.SpacedBazaar')
     config_h.set_quoted('LOCALEDIR', get_option('prefix') / get_option('localedir'))
     config_h.set_quoted('DONATE_LINK', 'https://spacedlinux.com/#donate')
     config_h.set_quoted('RELEASE_PAGE', run_command('version.sh', 'get-gh-release').stdout().strip())

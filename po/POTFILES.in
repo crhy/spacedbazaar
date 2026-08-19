@@ -1,7 +1,7 @@
 # List of source files containing translatable strings.
 # Please keep this file sorted alphabetically.
-data/io.github.kolunmi.Bazaar.desktop.in
-data/io.github.kolunmi.Bazaar.metainfo.xml.in
+data/io.github.crhy.SpacedBazaar.desktop.in
+data/io.github.crhy.SpacedBazaar.metainfo.xml.in
 src/bz-addon-tile.blp
 src/bz-addon-tile.c
 src/bz-addons-dialog.blp

@@ -1,4 +1,4 @@
-application_id = 'io.github.kolunmi.Bazaar'
+application_id = 'io.github.crhy.SpacedBazaar'
 
 scalable_dir = 'hicolor' / 'scalable' / 'apps'
 if get_option('development')

@@ -253,7 +253,7 @@ bz_section_view_class_init (BzSectionViewClass *klass)
 
   g_type_ensure (BZ_TYPE_DYNAMIC_LIST_VIEW);
 
-  gtk_widget_class_set_template_from_resource (widget_class, "/io/github/kolunmi/Bazaar/bz-section-view.ui");
+  gtk_widget_class_set_template_from_resource (widget_class, "/io/github/crhy/SpacedBazaar/bz-section-view.ui");
   gtk_widget_class_bind_template_child (widget_class, BzSectionView, subtitle);
   gtk_widget_class_bind_template_callback (widget_class, invert_boolean);
   gtk_widget_class_bind_template_callback (widget_class, is_null);

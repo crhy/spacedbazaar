@@ -29,7 +29,7 @@
 #include "util.h"
 
 #define AUTOSTART_DESKTOP_FILE_NAME     "bazaar.desktop"
-#define AUTOSTART_DESKTOP_RESOURCE_PATH "/io/github/kolunmi/Bazaar/bazaar.desktop"
+#define AUTOSTART_DESKTOP_RESOURCE_PATH "/io/github/crhy/SpacedBazaar/bazaar.desktop"
 
 
 struct _BzPreferencesDialog
@@ -273,7 +273,7 @@ bz_preferences_dialog_class_init (BzPreferencesDialogClass *klass)
 
   g_object_class_install_properties (object_class, LAST_PROP, props);
 
-  gtk_widget_class_set_template_from_resource (widget_class, "/io/github/kolunmi/Bazaar/bz-preferences-dialog.ui");
+  gtk_widget_class_set_template_from_resource (widget_class, "/io/github/crhy/SpacedBazaar/bz-preferences-dialog.ui");
 
   bz_widget_class_bind_all_util_callbacks (widget_class);
 

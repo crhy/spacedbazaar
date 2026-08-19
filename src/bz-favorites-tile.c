@@ -217,7 +217,7 @@ bz_favorites_tile_class_init (BzFavoritesTileClass *klass)
   g_type_ensure (BZ_TYPE_LIST_TILE);
   g_type_ensure (BZ_TYPE_ENTRY_GROUP);
 
-  gtk_widget_class_set_template_from_resource (widget_class, "/io/github/kolunmi/Bazaar/bz-favorites-tile.ui");
+  gtk_widget_class_set_template_from_resource (widget_class, "/io/github/crhy/SpacedBazaar/bz-favorites-tile.ui");
   gtk_widget_class_bind_template_child (widget_class, BzFavoritesTile, title_label);
   gtk_widget_class_bind_template_child (widget_class, BzFavoritesTile, description_label);
   gtk_widget_class_bind_template_child (widget_class, BzFavoritesTile, install_remove_button);

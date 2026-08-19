@@ -19,35 +19,35 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Generator: Gtranslator 49.0\n"
 
-#: data/io.github.kolunmi.Bazaar.desktop.in:3
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:7 src/bz-window.blp:5
+#: data/io.github.crhy.SpacedBazaar.desktop.in:3
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:7 src/bz-window.blp:5
 #: src/bz-window.blp:234
 msgid "Bazaar"
 msgstr "Bazaar"
 
-#: data/io.github.kolunmi.Bazaar.desktop.in:4
+#: data/io.github.crhy.SpacedBazaar.desktop.in:4
 msgid "Add, remove or update flatpak software on this computer"
 msgstr "Thêm, xóa hoặc cập nhật phần mềm Flatpak trên máy tính này"
 
-#: data/io.github.kolunmi.Bazaar.desktop.in:10
+#: data/io.github.crhy.SpacedBazaar.desktop.in:10
 msgid "GTK;System;PackageManager;Discover;Flatpak;Software;Store;"
 msgstr ""
 "GTK;System;PackageManager;Discover;Flatpak;Software;Store;Trình quản lý gói; "
 "Khám phá; Phần mềm; Cửa hàng;"
 
-#: data/io.github.kolunmi.Bazaar.gschema.xml:6
+#: data/io.github.crhy.SpacedBazaar.gschema.xml:6
 msgid "Hide EOL Entries"
 msgstr "Ẩn các mục EOL"
 
-#: data/io.github.kolunmi.Bazaar.gschema.xml:7
+#: data/io.github.crhy.SpacedBazaar.gschema.xml:7
 msgid "Hide EOL entries and entries depending on them"
 msgstr "Ẩn các mục EOL và các mục phụ thuộc vào chúng"
 
-#: data/io.github.kolunmi.Bazaar.gschema.xml:11
+#: data/io.github.crhy.SpacedBazaar.gschema.xml:11
 msgid "Show Git Forge Star Counts"
 msgstr "Hiển thị số sao trên Git Forge"
 
-#: data/io.github.kolunmi.Bazaar.gschema.xml:12
+#: data/io.github.crhy.SpacedBazaar.gschema.xml:12
 msgid ""
 "Whether to attempt to detect and show \"star counts\" for projects in the "
 "full view"
@@ -55,51 +55,51 @@ msgstr ""
 "Có cố gắng phát hiện và hiển thị \"số sao\" cho các dự án trong chế độ xem "
 "chi tiết hay không"
 
-#: data/io.github.kolunmi.Bazaar.gschema.xml:16
+#: data/io.github.crhy.SpacedBazaar.gschema.xml:16
 msgid "Only Show Free Software"
 msgstr "Chỉ hiển thị phần mềm miễn phí"
 
-#: data/io.github.kolunmi.Bazaar.gschema.xml:17
+#: data/io.github.crhy.SpacedBazaar.gschema.xml:17
 msgid "Hide proprietary software"
 msgstr "Ẩn phần mềm độc quyền"
 
-#: data/io.github.kolunmi.Bazaar.gschema.xml:21
+#: data/io.github.crhy.SpacedBazaar.gschema.xml:21
 msgid "Show Only Flathub Content"
 msgstr "Chỉ hiển thị nội dung Flathub"
 
-#: data/io.github.kolunmi.Bazaar.gschema.xml:22
+#: data/io.github.crhy.SpacedBazaar.gschema.xml:22
 msgid "Hide applications which do not originate from Flathub"
 msgstr "Ẩn các ứng dụng không có nguồn gốc từ Flathub"
 
-#: data/io.github.kolunmi.Bazaar.gschema.xml:26
+#: data/io.github.crhy.SpacedBazaar.gschema.xml:26
 msgid "Debounce Search Inputs"
 msgstr "Trì hoãn tìm kiếm"
 
-#: data/io.github.kolunmi.Bazaar.gschema.xml:27
+#: data/io.github.crhy.SpacedBazaar.gschema.xml:27
 msgid "Add a delay before searching to prevent instant replies while typing"
 msgstr "Thêm độ trễ trước khi tìm kiếm để tránh phản hồi tức thì khi đang gõ"
 
-#: data/io.github.kolunmi.Bazaar.gschema.xml:51
+#: data/io.github.crhy.SpacedBazaar.gschema.xml:51
 msgid "Global Progress Bar Theme"
 msgstr "Chủ đề thanh tiến trình toàn cục"
 
-#: data/io.github.kolunmi.Bazaar.gschema.xml:52
+#: data/io.github.crhy.SpacedBazaar.gschema.xml:52
 msgid "Describes the look of the global progress bar"
 msgstr "Mô tả giao diện của thanh tiến trình toàn cục"
 
-#: data/io.github.kolunmi.Bazaar.gschema.xml:56
+#: data/io.github.crhy.SpacedBazaar.gschema.xml:56
 msgid "Saved Window Dimensions"
 msgstr "Kích thước cửa sổ đã lưu"
 
-#: data/io.github.kolunmi.Bazaar.gschema.xml:57
+#: data/io.github.crhy.SpacedBazaar.gschema.xml:57
 msgid "The window dimensions to be used by the next Bazaar window"
 msgstr "Kích thước cửa sổ sẽ được sử dụng cho cửa sổ Bazaar tiếp theo"
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:8
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:8
 msgid "Discover and install applications"
 msgstr "Khám phá và cài đặt ứng dụng"
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:10
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:10
 msgid ""
 "A new app store for GNOME with a focus on discovering and installing "
 "applications and addons from Flatpak remotes, particularly Flathub."
@@ -107,7 +107,7 @@ msgstr ""
 "Một cửa hàng ứng dụng mới cho GNOME tập trung vào việc khám phá và cài đặt "
 "ứng dụng cùng tiện ích mở rộng từ các remote Flatpak, đặc biệt là Flathub."
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:14
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:14
 msgid ""
 "It emphasizes supporting the developers who make the Linux desktop possible. "
 "Bazaar features a \"curated\" tab that can be configured by distributors to "
@@ -117,23 +117,23 @@ msgstr ""
 "Linux. Bazaar có tab \"chọn lọc\" có thể được nhà phân phối cấu hình để mang "
 "lại trải nghiệm địa phương hóa tốt hơn."
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:29 src/bz-application.c:661
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:29 src/bz-application.c:661
 msgid "Adam Masciola"
 msgstr "Adam Masciola"
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:54
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:54
 msgid "The home page displaying Flathub apps"
 msgstr "Trang chủ hiển thị các ứng dụng Flathub"
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:58
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:58
 msgid "Nucleus app page"
 msgstr "Trang ứng dụng Nucleus"
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:62
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:62
 msgid "Search page"
 msgstr "Trang tìm kiếm"
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:66
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:66
 msgid "Category page"
 msgstr "Trang danh mục"
 

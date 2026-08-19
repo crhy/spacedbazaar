@@ -178,7 +178,7 @@ bz_appstream_description_render_class_init (BzAppstreamDescriptionRenderClass *k
 
   g_object_class_install_properties (object_class, LAST_PROP, props);
 
-  gtk_widget_class_set_template_from_resource (widget_class, "/io/github/kolunmi/Bazaar/bz-appstream-description-render.ui");
+  gtk_widget_class_set_template_from_resource (widget_class, "/io/github/crhy/SpacedBazaar/bz-appstream-description-render.ui");
   gtk_widget_class_bind_template_child (widget_class, BzAppstreamDescriptionRender, text_view);
   gtk_widget_class_bind_template_callback (widget_class, text_focus_cb);
 }

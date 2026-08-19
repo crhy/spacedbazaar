@@ -233,7 +233,7 @@ com\.place\..*
 Check that the path of the blocklist exists and that Bazaar can access it. This command is useful for debugging this:
 
 ```
-flatpak run --command=bash io.github.kolunmi.Bazaar
+flatpak run --command=bash io.github.crhy.SpacedBazaar
 ```
 
 The `/etc` of the host system accessed from a Flatpak requires the `host-etc` permission.
@@ -249,7 +249,7 @@ the value of `XDG_CURRENT_DESKTOP`:
 ```yaml
 blocklists:
   - block:
-      - io.github.kolunmi.Bazaar
+      - io.github.crhy.SpacedBazaar
       - com.valvesoftware.Steam
 
   - block:
@@ -265,7 +265,7 @@ Let's add another for GNOME:
 ```yaml
 blocklists:
   - block:
-      - io.github.kolunmi.Bazaar
+      - io.github.crhy.SpacedBazaar
       - com.valvesoftware.Steam
 
   - block:
@@ -295,7 +295,7 @@ priority:
 blocklists:
   - priority: 1
     block:
-      - io.github.kolunmi.Bazaar
+      - io.github.crhy.SpacedBazaar
       - com.valvesoftware.Steam
 
   - block:
@@ -325,7 +325,7 @@ You could also make a new blocklist matching both `KDE` and `GNOME`:
 blocklists:
   - priority: 1
     block:
-      - io.github.kolunmi.Bazaar
+      - io.github.crhy.SpacedBazaar
       - com.valvesoftware.Steam
 
   - block:
@@ -386,9 +386,9 @@ An example can be found in docs/example.yaml
 
 For more practical examples check out the configuration from [Bluefin](https://github.com/projectbluefin/common/tree/a868eba107b91c4eae60b6d1d6d2e2cdf05eb1c8/system_files/bluefin/etc/bazaar) and [Aurora](https://github.com/get-aurora-dev/common/tree/0d86028dd0d737d1d0eee08205c33fc91997f155/system_files/shared/etc/bazaar).
 
-Bazaar by default looks for a config file in `/etc/bazaar` or `/run/host/etc/bazaar` inside the sandbox, this is [configured on build time](https://github.com/flathub/io.github.kolunmi.Bazaar/blob/709faccd8c4198c5fdabf20eb4a98db98a5aa1c6/io.github.kolunmi.Bazaar.yaml#L43-L46) This needs permission to `/etc` which can be granted with the `filesystem=host-etc` permission, the build on Flathub doesn't have this permission by default.
+Bazaar by default looks for a config file in `/etc/bazaar` or `/run/host/etc/bazaar` inside the sandbox, this is [configured at build time](https://github.com/flathub/io.github.kolunmi.Bazaar/blob/709faccd8c4198c5fdabf20eb4a98db98a5aa1c6/io.github.kolunmi.Bazaar.yaml#L43-L46). This needs permission to `/etc` which can be granted with the `filesystem=host-etc` permission; the build on Flathub doesn't have this permission by default.
 
-This is not super straightforward to setup currently as Flatpak doesn't support overriding permissions in `/etc` or `/usr` yet, so you have to resort to `systemd-tmpfiles` to create this permission override in `/var/lib/flatpak/overrides/io.github.kolunmi.Bazaar`.
+This is not super straightforward to setup currently as Flatpak doesn't support overriding permissions in `/etc` or `/usr` yet, so you have to resort to `systemd-tmpfiles` to create this permission override in `/var/lib/flatpak/overrides/io.github.crhy.SpacedBazaar`.
 
 Here is how they did it:
 

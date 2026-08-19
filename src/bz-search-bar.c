@@ -216,7 +216,7 @@ bz_search_bar_class_init (BzSearchBarClass *klass)
   GObjectClass   *object_class = G_OBJECT_CLASS (klass);
   GtkWidgetClass *widget_class = GTK_WIDGET_CLASS (klass);
 
-  gtk_widget_class_set_template_from_resource (widget_class, "/io/github/kolunmi/Bazaar/bz-search-bar.ui");
+  gtk_widget_class_set_template_from_resource (widget_class, "/io/github/crhy/SpacedBazaar/bz-search-bar.ui");
 
   object_class->dispose      = bz_search_bar_dispose;
   object_class->get_property = bz_search_bar_get_property;

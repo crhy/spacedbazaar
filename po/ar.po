@@ -19,29 +19,29 @@ msgstr ""
 "&& n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5);\n"
 "X-Generator: Poedit 3.8\n"
 
-#: data/io.github.kolunmi.Bazaar.desktop.in:2
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:7 src/bz-window.blp:6
+#: data/io.github.crhy.SpacedBazaar.desktop.in:2
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:7 src/bz-window.blp:6
 #: src/bz-window.blp:111
 msgid "Bazaar"
 msgstr "بازار"
 
-#: data/io.github.kolunmi.Bazaar.desktop.in:3
+#: data/io.github.crhy.SpacedBazaar.desktop.in:3
 msgid "Add, remove or update flatpak software on this computer"
 msgstr "أضِف، أو أزل، أو حدث برمجيات فلاتباك على هذا الحاسوب"
 
-#: data/io.github.kolunmi.Bazaar.desktop.in:9
+#: data/io.github.crhy.SpacedBazaar.desktop.in:9
 msgid "GTK;System;PackageManager;Discover;Flatpak;Software;Store;"
 msgstr "GTK؛ النظام؛ مدير الحزم؛ اكتشاف؛ فلات باك؛ البرامج؛ المتجر؛"
 
-#: data/io.github.kolunmi.Bazaar.desktop.in:15
+#: data/io.github.crhy.SpacedBazaar.desktop.in:15
 msgid "New Window"
 msgstr "نافذة جديدة"
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:8
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:8
 msgid "Discover and install applications"
 msgstr "استكشف ونصِّب التطبيقات"
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:10
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:10
 msgid ""
 "A new app store for Linux with a focus on discovering and installing "
 "applications and addons from Flatpak remotes, particularly Flathub."
@@ -49,7 +49,7 @@ msgstr ""
 "متجر تطبيقات جديد للينوكس يركز على استكشاف وتنصيب التطبيقات والإضافات من "
 "فلاتباك، وبالأخص مستودع فلاتهَب."
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:14
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:14
 msgid ""
 "It emphasizes supporting the developers who make the Linux desktop possible. "
 "Bazaar features a \"curated\" tab that can be configured by distributors to "
@@ -58,27 +58,27 @@ msgstr ""
 "يُشدِّد «بازار» على دعم المطورين الواقفين وراء إتاحة سطح مكتب لينكس، ويضم لسانًا "
 "للمحتوى المنتقى يمكن للموزِّعين إعداده لتوفير تجربة استخدام أكثر مواءمة."
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:29 src/bz-application.c:703
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:29 src/bz-application.c:703
 msgid "Adam Masciola"
 msgstr "Adam Masciola"
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:54
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:54
 msgid "The home page displaying Flathub apps"
 msgstr "الصفحة الرئيسية وهي تعرض تطبيقات فلاتهَب"
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:58
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:58
 msgid "Exhibit app page"
 msgstr "صفحة معرض التطبيق"
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:62
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:62
 msgid "Library page"
 msgstr "صفحة المكتبة"
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:66
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:66
 msgid "Search page"
 msgstr "صفحة البحث"
 
-#: data/io.github.kolunmi.Bazaar.metainfo.xml.in:70
+#: data/io.github.crhy.SpacedBazaar.metainfo.xml.in:70
 msgid "Category page"
 msgstr "صفحة التصنيفات"
 

@@ -168,7 +168,7 @@ bz_favorite_button_class_init (BzFavoriteButtonClass *klass)
 
   g_object_class_install_properties (object_class, LAST_PROP, props);
 
-  gtk_widget_class_set_template_from_resource (widget_class, "/io/github/kolunmi/Bazaar/bz-favorite-button.ui");
+  gtk_widget_class_set_template_from_resource (widget_class, "/io/github/crhy/SpacedBazaar/bz-favorite-button.ui");
   gtk_widget_class_bind_template_child (widget_class, BzFavoriteButton, box);
   gtk_widget_class_bind_template_child (widget_class, BzFavoriteButton, icon);
   gtk_widget_class_bind_template_child (widget_class, BzFavoriteButton, count_revealer);

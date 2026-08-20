@@ -722,6 +722,11 @@ bz_application_about_action (GSimpleAction *action,
   window = gtk_application_get_active_window (GTK_APPLICATION (self));
   dialog = adw_about_dialog_new ();
 
+  /* Keep the desktop dialog balanced and give the Legal and Credits pages
+     enough width to avoid the cramped, tall layout shown by the defaults. */
+  adw_dialog_set_content_width (dialog, 560);
+  adw_dialog_set_content_height (dialog, 520);
+
   g_object_set (
       dialog,
       "application-name", "SpacedBazaar",

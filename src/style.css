@@ -464,7 +464,8 @@ button.context-tile {
 }
 
 .screenshot-carousel.frame {
-	border-width: 1px 0;
+	border: 1px solid alpha(var(--window-fg-color), 0.16);
+	border-radius: 18px;
 }
 
 .screenshot-carousel button{
@@ -473,6 +474,25 @@ button.context-tile {
 
 .carousel-box {
   background-color: var(--view-bg-color);
+}
+
+.transaction-progress-button {
+  padding: 5px 9px;
+}
+
+.transaction-progress-button progressbar trough {
+  min-height: 6px;
+  border-radius: 9999px;
+}
+
+.transaction-progress-button progressbar progress {
+  min-height: 6px;
+  border-radius: 9999px;
+  background: var(--flag-gradient, var(--accent-bg-color));
+}
+
+.spaced-link-row {
+  min-height: 56px;
 }
 
 toggle-group.huge,

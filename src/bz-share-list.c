@@ -298,12 +298,15 @@ create_url_action_row (BzShareList *self,
     }
 
   action_row = ADW_ACTION_ROW (adw_action_row_new ());
+  gtk_widget_add_css_class (GTK_WIDGET (action_row), "spaced-link-row");
   adw_preferences_row_set_use_markup (ADW_PREFERENCES_ROW (action_row), FALSE);
   adw_preferences_row_set_title (ADW_PREFERENCES_ROW (action_row),
                                  info ? g_dpgettext2 (NULL, "Project URL Type", info->display_name)
                                       : url_string);
   adw_action_row_set_subtitle (action_row, display);
+  adw_action_row_set_title_lines (action_row, 1);
   adw_action_row_set_subtitle_lines (action_row, 1);
+  gtk_widget_set_tooltip_text (GTK_WIDGET (action_row), url_string);
   gtk_list_box_row_set_activatable (GTK_LIST_BOX_ROW (action_row), TRUE);
 
   g_object_set_data_full (G_OBJECT (action_row), "url", g_strdup (url_string), g_free);

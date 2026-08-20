@@ -216,6 +216,52 @@ template $BzWindow: Adw.ApplicationWindow {
                       tooltip-text: _("Main Menu");
                       menu-model: primary_menu;
                     }
+
+                    [end]
+                    Button transaction_progress_button {
+                      visible: bind template.state as <$BzStateInfo>.transaction-manager as <$BzTransactionManager>.active;
+                      action-name: "window.open-library";
+                      has-tooltip: true;
+                      tooltip-text: _("App activity — open Library for details");
+
+                      styles [
+                        "flat",
+                        "transaction-progress-button",
+                      ]
+
+                      child: Box {
+                        spacing: 7;
+                        valign: center;
+
+                        Adw.Spinner {
+                          width-request: 16;
+                          height-request: 16;
+                          visible: bind template.state as <$BzStateInfo>.transaction-manager as <$BzTransactionManager>.pending;
+                        }
+
+                        Label transaction_progress_label {
+                          label: _("Working…");
+                          styles [
+                            "caption-heading",
+                          ]
+                        }
+
+                        $BzProgressBar {
+                          width-request: 96;
+                          visible: bind $invert_boolean(template.state as <$BzStateInfo>.transaction-manager as <$BzTransactionManager>.pending) as <bool>;
+                          fraction: bind template.state as <$BzStateInfo>.transaction-manager as <$BzTransactionManager>.current-progress;
+                        }
+
+                        Label {
+                          label: bind $format_progress(template.state as <$BzStateInfo>.transaction-manager as <$BzTransactionManager>.current-progress) as <string>;
+                          visible: bind $invert_boolean(template.state as <$BzStateInfo>.transaction-manager as <$BzTransactionManager>.pending) as <bool>;
+                          styles [
+                            "caption",
+                            "numeric",
+                          ]
+                        }
+                      };
+                    }
                   }
 
                   Adw.Banner {
@@ -266,6 +312,7 @@ template $BzWindow: Adw.ApplicationWindow {
           setters {
             top_header_bar.title-widget: null;
             toolbar_view.reveal-bottom-bars: true;
+            transaction_progress_label.visible: false;
           }
 
           apply => $breakpoint_apply_cb(template);

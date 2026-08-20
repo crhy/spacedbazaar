@@ -73,6 +73,17 @@
   </screenshots>
 
   <releases>
+    <release version="0.1.1" date="2026-08-19">
+      <url type="details">https://github.com/crhy/spacedbazaar/releases/tag/0.1.1</url>
+      <description translate="no">
+        <p>Interface polish and clearer installation feedback.</p>
+        <ul>
+          <li>Adds a persistent header indicator for downloads and installs</li>
+          <li>Makes Library and app-details layouts wider and easier to scan</li>
+          <li>Improves About, Legal, screenshot, and project-link presentation</li>
+        </ul>
+      </description>
+    </release>
     <release version="0.1" date="2026-08-19">
       <url type="details">https://github.com/crhy/spacedbazaar/releases/tag/0.1</url>
       <description translate="no">

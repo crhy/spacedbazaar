@@ -108,8 +108,8 @@ template $BzFullView: Adw.Bin {
                   }
 
                   Adw.Clamp {
-                    maximum-size: 910;
-                    tightening-threshold: 576;
+                    maximum-size: 1080;
+                    tightening-threshold: 720;
                     margin-top: 15;
 
                     child: Box top_box {
@@ -470,6 +470,9 @@ template $BzFullView: Adw.Bin {
                   $BzScreenshotsCarousel screenshots {
                     vexpand: true;
                     hexpand: true;
+                    margin-start: 20;
+                    margin-end: 20;
+                    overflow: hidden;
                     light-accent-color: bind template.ui-entry as <$BzResult>.object as <$BzEntry>.light-accent-color;
                     dark-accent-color: bind template.ui-entry as <$BzResult>.object as <$BzEntry>.dark-accent-color;
 
@@ -478,8 +481,8 @@ template $BzFullView: Adw.Bin {
                   }
 
                   Adw.Clamp {
-                    maximum-size: 910;
-                    tightening-threshold: 576;
+                    maximum-size: 1080;
+                    tightening-threshold: 720;
 
                     child: Box {
                       orientation: vertical;

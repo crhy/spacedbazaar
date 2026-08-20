@@ -9,6 +9,43 @@ template $BzFullView: Adw.Bin {
     Adw.HeaderBar header_bar {
       overflow: hidden;
 
+      [end]
+      Button app_transaction_progress_button {
+        visible: bind template.state as <$BzStateInfo>.transaction-manager as <$BzTransactionManager>.active;
+        action-name: "window.open-library";
+        has-tooltip: true;
+        tooltip-text: _("Installing — open Library for details");
+
+        styles [
+          "flat",
+          "transaction-progress-button",
+        ]
+
+        child: Box {
+          spacing: 7;
+          valign: center;
+
+          Adw.Spinner {
+            width-request: 16;
+            height-request: 16;
+            visible: bind template.state as <$BzStateInfo>.transaction-manager as <$BzTransactionManager>.pending;
+          }
+
+          Label app_transaction_progress_label {
+            label: _("Installing…");
+            styles [
+              "caption-heading",
+            ]
+          }
+
+          $BzProgressBar app_transaction_progress_bar {
+            width-request: 96;
+            visible: bind $invert_boolean(template.state as <$BzStateInfo>.transaction-manager as <$BzTransactionManager>.pending) as <bool>;
+            fraction: bind template.state as <$BzStateInfo>.transaction-manager as <$BzTransactionManager>.current-progress;
+          }
+        };
+      }
+
       [title]
       Revealer {
         reveal-child: bind $is_scrolled_down(main_scroll.vadjustment as <Adjustment>.value) as <bool>;
@@ -61,6 +98,8 @@ template $BzFullView: Adw.Bin {
               screenshots.compact: true;
               header_bar.show-title: false;
               link_list.dual-column: false;
+              app_transaction_progress_label.visible: false;
+              app_transaction_progress_bar.width-request: 72;
             }
           }
 

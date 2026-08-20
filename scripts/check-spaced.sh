@@ -23,8 +23,8 @@ PY
 version=$($repo_root/version.sh get-version)
 release_url=$($repo_root/version.sh get-gh-release)
 
-test "$version" = "0.1.1"
-test "$release_url" = "https://github.com/crhy/spacedbazaar/releases/tag/0.1.1"
+test "$version" = "0.1.2"
+test "$release_url" = "https://github.com/crhy/spacedbazaar/releases/tag/0.1.2"
 
 grep -q 'installation == self->user' "$repo_root/src/bz-flatpak-instance.c" || {
     echo "user-installation source enumeration fix is missing" >&2
@@ -48,6 +48,11 @@ grep -Fq 'SpacedBazaar-${{ matrix.variant.arch }}.flatpak' "$repo_root/.github/w
 
 grep -q 'transaction_progress_button' "$repo_root/src/bz-window.blp" || {
     echo "global transaction progress indicator is missing" >&2
+    exit 1
+}
+
+grep -q 'app_transaction_progress_button' "$repo_root/src/bz-full-view.blp" || {
+    echo "app-page transaction progress indicator is missing" >&2
     exit 1
 }
 

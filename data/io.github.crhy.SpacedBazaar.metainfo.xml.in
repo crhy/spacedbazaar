@@ -73,6 +73,17 @@
   </screenshots>
 
   <releases>
+    <release version="0.1.2" date="2026-08-19">
+      <url type="details">https://github.com/crhy/spacedbazaar/releases/tag/0.1.2</url>
+      <description translate="no">
+        <p>Makes installation activity visible from app pages.</p>
+        <ul>
+          <li>Shows an Installing indicator in the app-page header</li>
+          <li>Displays estimation and download progress states</li>
+          <li>Opens Library task details when the indicator is clicked</li>
+        </ul>
+      </description>
+    </release>
     <release version="0.1.1" date="2026-08-19">
       <url type="details">https://github.com/crhy/spacedbazaar/releases/tag/0.1.1</url>
       <description translate="no">

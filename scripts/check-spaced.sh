@@ -23,8 +23,8 @@ PY
 version=$($repo_root/version.sh get-version)
 release_url=$($repo_root/version.sh get-gh-release)
 
-test "$version" = "0.2.0"
-test "$release_url" = "https://github.com/crhy/spacedbazaar/releases/tag/0.2.0"
+test "$version" = "0.1.3"
+test "$release_url" = "https://github.com/crhy/spacedbazaar/releases/tag/0.1.3"
 
 grep -q 'installation == self->user' "$repo_root/src/bz-flatpak-instance.c" || {
     echo "user-installation source enumeration fix is missing" >&2

@@ -1,0 +1,144 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://crhy.github.io/spacedbazaar/catalog/crhy-flatpaks.schema.json",
+  "title": "Spaced Linux GitHub Flatpak catalog",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "publisher",
+    "remote",
+    "policy",
+    "apps"
+  ],
+  "properties": {
+    "$schema": {
+      "type": "string"
+    },
+    "schema_version": {
+      "const": 1
+    },
+    "publisher": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["github_owner", "name", "homepage"],
+      "properties": {
+        "github_owner": {"type": "string", "minLength": 1},
+        "name": {"type": "string", "minLength": 1},
+        "homepage": {"type": "string", "format": "uri"}
+      }
+    },
+    "remote": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "name",
+        "title",
+        "comment",
+        "description",
+        "descriptor_url",
+        "repository_url",
+        "icon",
+        "default_branch"
+      ],
+      "properties": {
+        "name": {"const": "spaced-github"},
+        "title": {"type": "string", "minLength": 1},
+        "comment": {"type": "string", "minLength": 1},
+        "description": {"type": "string", "minLength": 1},
+        "descriptor_url": {"type": "string", "format": "uri"},
+        "repository_url": {"type": "string", "format": "uri"},
+        "icon": {"type": "string", "format": "uri"},
+        "default_branch": {"type": "string", "minLength": 1}
+      }
+    },
+    "policy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "channel",
+        "require_exactly_one_asset",
+        "require_github_sha256",
+        "require_appstream_metadata",
+        "unverified_github_assets"
+      ],
+      "properties": {
+        "channel": {"const": "latest-stable"},
+        "require_exactly_one_asset": {"const": true},
+        "require_github_sha256": {"const": true},
+        "require_appstream_metadata": {"const": true},
+        "unverified_github_assets": {"const": "never-install-automatically"}
+      }
+    },
+    "apps": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"$ref": "#/$defs/app"}
+    }
+  },
+  "$defs": {
+    "runtime": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "branch", "repository"],
+      "properties": {
+        "id": {"type": "string", "minLength": 1},
+        "branch": {"type": "string", "minLength": 1},
+        "repository": {"type": "string", "format": "uri"}
+      }
+    },
+    "asset": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["arch", "pattern"],
+      "properties": {
+        "arch": {"enum": ["aarch64", "x86_64"]},
+        "pattern": {
+          "type": "string",
+          "minLength": 9,
+          "pattern": "\\.flatpak$"
+        }
+      }
+    },
+    "app": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "name",
+        "summary",
+        "repository",
+        "homepage",
+        "branch",
+        "runtime",
+        "publish",
+        "assets"
+      ],
+      "properties": {
+        "id": {"type": "string", "pattern": "^[A-Za-z0-9_-]+(\\.[A-Za-z0-9_-]+)+$"},
+        "name": {"type": "string", "minLength": 1},
+        "summary": {"type": "string", "minLength": 1},
+        "repository": {"type": "string", "pattern": "^crhy/[A-Za-z0-9_.-]+$"},
+        "homepage": {"type": "string", "format": "uri"},
+        "branch": {"type": "string", "minLength": 1},
+        "runtime": {"$ref": "#/$defs/runtime"},
+        "publish": {"type": "boolean"},
+        "blocked_reason": {"type": "string", "minLength": 1},
+        "assets": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"$ref": "#/$defs/asset"}
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {"publish": {"const": false}},
+            "required": ["publish"]
+          },
+          "then": {"required": ["blocked_reason"]}
+        }
+      ]
+    }
+  }
+}

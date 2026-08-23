@@ -1,0 +1,154 @@
+name: Verify and publish Spaced GitHub Flatpak repository
+
+on:
+  pull_request:
+    paths:
+      - "catalog/**"
+      - "scripts/spaced_github_repo.py"
+      - "scripts/configure-spaced-github-remote.sh"
+      - "tests/test_spaced_github_repo.py"
+      - ".github/workflows/publish-spaced-github-repo.yml"
+  push:
+    branches: [main]
+    paths:
+      - "catalog/**"
+      - "scripts/spaced_github_repo.py"
+      - "scripts/configure-spaced-github-remote.sh"
+      - "tests/test_spaced_github_repo.py"
+      - ".github/workflows/publish-spaced-github-repo.yml"
+  schedule:
+    - cron: "17 4 * * *"
+  workflow_dispatch:
+
+concurrency:
+  group: spaced-github-pages
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: Catalog tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Compile and test repository tooling
+        run: |
+          python3 -m py_compile scripts/spaced_github_repo.py tests/test_spaced_github_repo.py
+          python3 -m unittest discover -s tests -v
+          python3 scripts/spaced_github_repo.py validate
+          sh -n scripts/configure-spaced-github-remote.sh
+
+  build:
+    name: Build verified repository
+    needs: test
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    env:
+      PUBLISH_REPOSITORY: ${{ github.ref == 'refs/heads/main' && github.event_name != 'pull_request' }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Flatpak repository tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install --yes flatpak libostree-1-1 ostree gnupg
+
+      - name: Restore verified bundle cache
+        uses: actions/cache/restore@v4
+        with:
+          path: .cache/spaced-github-assets
+          key: spaced-github-assets-${{ runner.os }}-${{ github.run_id }}
+          restore-keys: |
+            spaced-github-assets-${{ runner.os }}-
+
+      - name: Import publication signing key
+        id: signing
+        if: env.PUBLISH_REPOSITORY == 'true'
+        env:
+          PRIVATE_KEY_B64: ${{ secrets.SPACED_FLATPAK_GPG_PRIVATE_KEY_B64 }}
+          SIGNING_KEY: ${{ secrets.SPACED_FLATPAK_GPG_SIGNING_KEY }}
+        run: |
+          test -n "$PRIVATE_KEY_B64" || {
+            echo "SPACED_FLATPAK_GPG_PRIVATE_KEY_B64 is required for publication." >&2
+            exit 1
+          }
+          test -n "$SIGNING_KEY" || {
+            echo "SPACED_FLATPAK_GPG_SIGNING_KEY is required for publication." >&2
+            exit 1
+          }
+          install -d -m 0700 "$RUNNER_TEMP/spaced-flatpak-gnupg"
+          printf '%s' "$PRIVATE_KEY_B64" | base64 --decode |
+            gpg --batch --homedir "$RUNNER_TEMP/spaced-flatpak-gnupg" --import
+          gpg --batch --homedir "$RUNNER_TEMP/spaced-flatpak-gnupg" \
+            --list-secret-keys "$SIGNING_KEY"
+          echo "key=$SIGNING_KEY" >> "$GITHUB_OUTPUT"
+
+      - name: Resolve, verify, and build
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          signing_args=()
+          if [ "$PUBLISH_REPOSITORY" = true ]; then
+            signing_args+=(--gpg-sign "${{ steps.signing.outputs.key }}")
+            signing_args+=(--gpg-homedir "$RUNNER_TEMP/spaced-flatpak-gnupg")
+            signing_args+=(--require-signing)
+          fi
+          python3 scripts/spaced_github_repo.py build \
+            --output-dir public \
+            --cache-dir .cache/spaced-github-assets \
+            "${signing_args[@]}"
+          if [ "$PUBLISH_REPOSITORY" = true ]; then
+            grep -q '^GPGKey=' public/spaced-github.flatpakrepo
+            python3 - <<'PY'
+          import json
+          report = json.load(open("public/build-report.json", encoding="utf-8"))
+          assert report["signed"] is True
+          assert report["imported"]
+          PY
+          fi
+
+      - name: Save verified bundle cache
+        uses: actions/cache/save@v4
+        with:
+          path: .cache/spaced-github-assets
+          key: spaced-github-assets-${{ runner.os }}-${{ github.run_id }}
+
+      - name: Upload verification report
+        uses: actions/upload-artifact@v4
+        with:
+          name: spaced-github-build-report
+          path: |
+            public/build-report.json
+            public/catalog/
+            public/spaced-github.flatpakrepo
+
+      - name: Configure GitHub Pages
+        if: env.PUBLISH_REPOSITORY == 'true'
+        uses: actions/configure-pages@v5
+
+      - name: Upload signed Pages artifact
+        if: env.PUBLISH_REPOSITORY == 'true'
+        uses: actions/upload-pages-artifact@v4
+        with:
+          path: public
+
+  deploy:
+    name: Deploy signed repository
+    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

@@ -2308,7 +2308,13 @@ bz_entry_calc_usefulness (BzEntry *self)
   g_return_val_if_fail (BZ_IS_ENTRY (self), FALSE);
   priv = bz_entry_get_instance_private (self);
 
-  score += priv->is_flathub ? 1000 : 0;
+  /* Prefer the verified Spaced catalog when the same application is also
+     available from Flathub. This affects source selection inside an entry
+     group; it does not hide or de-prioritize unrelated Flathub apps. */
+  if (g_strcmp0 (priv->remote_repo_name, "spaced-github") == 0)
+    score += 2000;
+  else if (priv->is_flathub)
+    score += 1000;
 
   score += priv->title != NULL ? 5 : 0;
   score += priv->description != NULL ? 1 : 0;

@@ -73,6 +73,17 @@
   </screenshots>
 
   <releases>
+    <release version="0.2.0" date="2026-08-23">
+      <url type="details">https://github.com/crhy/spacedbazaar/releases/tag/0.2.0</url>
+      <description translate="no">
+        <p>Adds the verified Spaced Linux GitHub application catalog.</p>
+        <ul>
+          <li>Prefers verified spaced-github applications over duplicate Flathub sources</li>
+          <li>Publishes searchable AppStream metadata through a signed Flatpak repository</li>
+          <li>Shows a neutral catalog-update state during the first synchronization</li>
+        </ul>
+      </description>
+    </release>
     <release version="0.1.2" date="2026-08-19">
       <url type="details">https://github.com/crhy/spacedbazaar/releases/tag/0.1.2</url>
       <description translate="no">

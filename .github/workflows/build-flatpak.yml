@@ -51,8 +51,13 @@ jobs:
     - name: Build Flatpak
       uses: flatpak/flatpak-github-actions/flatpak-builder@401fe28a8384095fc1531b9d320b292f0ee45adb # v6.7
       with:
-        bundle: SpacedBazaar-${{ matrix.variant.arch }}.flatpak
         manifest-path: build-aux/flatpak/io.github.crhy.SpacedBazaar.json
+        branch: master
+        repo-dir: spaced-bazaar-repo
+        build-bundle: false
+        upload-artifact: false
+        repository-name: flathub
+        repository-url: https://flathub.org/repo/flathub.flatpakrepo
         # caching is broken upstream
         # https://github.com/flatpak/flatpak-github-actions/issues/239
         # this is only true because there is no other way to call fb with --ccache
@@ -60,6 +65,30 @@ jobs:
         restore-cache: false
         arch: ${{ matrix.variant.arch }}
         verbose: true
+
+    # The upstream action only sets --runtime-repo when it creates a bundle.
+    # Build it explicitly so a direct install records the updateable Spaced
+    # GitHub repository as the application source as well.
+    - name: Create updateable release bundle
+      env:
+        BUNDLE: SpacedBazaar-${{ matrix.variant.arch }}.flatpak
+      run: >-
+        flatpak build-bundle
+        --arch=${{ matrix.variant.arch }}
+        --repo-url=https://crhy.github.io/spacedbazaar/flatpak-repo/
+        --runtime-repo=https://flathub.org/repo/flathub.flatpakrepo
+        spaced-bazaar-repo
+        "$BUNDLE"
+        io.github.crhy.SpacedBazaar
+        master
+
+    - name: Upload release bundle
+      uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+      with:
+        name: SpacedBazaar-${{ matrix.variant.arch }}.flatpak
+        path: SpacedBazaar-${{ matrix.variant.arch }}.flatpak
+        if-no-files-found: error
+        compression-level: 0
 
     - name: Write new cache
       uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0

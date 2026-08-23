@@ -55,6 +55,22 @@ template $BzFlathubPage: Adw.Bin {
         }
 
         Adw.ViewStackPage {
+          name: "updating";
+
+          child: Adw.StatusPage {
+            icon-name: "system-software-update-symbolic";
+            title: _("Updating App Catalog");
+            description: _("Updating app catalog from Flathub and Spaced GitHub…");
+
+            child: Adw.Spinner {
+              width-request: 48;
+              height-request: 48;
+              halign: center;
+            };
+          };
+        }
+
+        Adw.ViewStackPage {
           name: "content";
 
           child: ScrolledWindow {

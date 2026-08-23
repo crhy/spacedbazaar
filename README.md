@@ -23,6 +23,10 @@ SpacedBazaar
 >   contains no account-specific home-directory paths.
 >   Releases ship as x86_64 and aarch64 Flatpak bundles on the
 >   [releases page](https://github.com/crhy/spacedbazaar/releases).
+> - `Verified Spaced apps`: a normalized CRHY release catalog and signed,
+>   AppStream-capable `spaced-github` Flatpak repository make Spaced Linux apps
+>   searchable, installable, and updateable without treating arbitrary GitHub
+>   uploads as trusted software.
 
 > [!NOTE]
 > If you are a distributor/packager who would like to learn how to customize
@@ -62,6 +66,21 @@ flatpak install --user ./SpacedBazaar-x86_64.flatpak
 
 The aarch64 bundle is named `SpacedBazaar-aarch64.flatpak`. The release is not
 the Flathub Bazaar package: it has its own ID and may be installed alongside it.
+
+### Spaced GitHub application catalog
+
+The `spaced-github` remote is preferred when the same application is available
+there and on Flathub. Flathub remains configured for runtimes and its broader
+catalog. After the signed repository is deployed, add it for the current user:
+
+```sh
+scripts/configure-spaced-github-remote.sh --user
+```
+
+Repository construction validates the latest stable GitHub release, SHA-256
+digest, bundle identity, architecture, branch, runtime, and AppStream metadata
+before import. Arbitrary GitHub assets are never installed automatically. See
+[the repository, trust, signing, and maintenance documentation](docs/spaced-github.md).
 
 [![Build Flatpak](https://github.com/crhy/spacedbazaar/actions/workflows/build-flatpak.yml/badge.svg)](https://github.com/crhy/spacedbazaar/actions/workflows/build-flatpak.yml)
 

@@ -1,0 +1,134 @@
+{
+  "$schema": "./crhy-flatpaks.schema.json",
+  "schema_version": 1,
+  "publisher": {
+    "github_owner": "crhy",
+    "name": "Spaced Linux",
+    "homepage": "https://spacedlinux.com/"
+  },
+  "remote": {
+    "name": "spaced-github",
+    "title": "Spaced Linux GitHub Apps",
+    "comment": "Verified Flatpak releases maintained for Spaced Linux",
+    "description": "Curated Flatpak applications published by the crhy GitHub account and verified before import.",
+    "descriptor_url": "https://crhy.github.io/spacedbazaar/spaced-github.flatpakrepo",
+    "repository_url": "https://crhy.github.io/spacedbazaar/flatpak-repo/",
+    "icon": "https://raw.githubusercontent.com/crhy/spacedbazaar/main/data/icons/SpacedBazaar.svg",
+    "default_branch": "stable"
+  },
+  "policy": {
+    "channel": "latest-stable",
+    "require_exactly_one_asset": true,
+    "require_github_sha256": true,
+    "require_appstream_metadata": true,
+    "unverified_github_assets": "never-install-automatically"
+  },
+  "apps": [
+    {
+      "id": "io.github.crhy.SpacedBazaar",
+      "name": "SpacedBazaar",
+      "summary": "Discover and install applications",
+      "repository": "crhy/spacedbazaar",
+      "homepage": "https://github.com/crhy/spacedbazaar",
+      "branch": "master",
+      "runtime": {
+        "id": "org.gnome.Platform",
+        "branch": "50",
+        "repository": "https://flathub.org/repo/flathub.flatpakrepo"
+      },
+      "publish": true,
+      "assets": [
+        {
+          "arch": "aarch64",
+          "pattern": "SpacedBazaar-aarch64.flatpak"
+        },
+        {
+          "arch": "x86_64",
+          "pattern": "SpacedBazaar-x86_64.flatpak"
+        }
+      ]
+    },
+    {
+      "id": "io.github.crhy.ScumWithCats",
+      "name": "Scum With Cats",
+      "summary": "Play classic card games against computer-controlled cats",
+      "repository": "crhy/ScumWithCats",
+      "homepage": "https://github.com/crhy/ScumWithCats",
+      "branch": "stable",
+      "runtime": {
+        "id": "org.freedesktop.Platform",
+        "branch": "25.08",
+        "repository": "https://flathub.org/repo/flathub.flatpakrepo"
+      },
+      "publish": true,
+      "assets": [
+        {
+          "arch": "x86_64",
+          "pattern": "ScumWithCats-*.flatpak"
+        }
+      ]
+    },
+    {
+      "id": "io.github.crhy.BrutalChess",
+      "name": "Brutal Chess",
+      "summary": "Play 3D chess against a computer opponent",
+      "repository": "crhy/brutalchess",
+      "homepage": "https://github.com/crhy/brutalchess",
+      "branch": "stable",
+      "runtime": {
+        "id": "org.freedesktop.Platform",
+        "branch": "25.08",
+        "repository": "https://flathub.org/repo/flathub.flatpakrepo"
+      },
+      "publish": true,
+      "assets": [
+        {
+          "arch": "x86_64",
+          "pattern": "BrutalChess-*.flatpak"
+        }
+      ]
+    },
+    {
+      "id": "org.spacedlinux.SpacedUpdate",
+      "name": "Spaced Update",
+      "summary": "Update Spaced Linux and installed Flatpak applications",
+      "repository": "crhy/spacedupdate",
+      "homepage": "https://github.com/crhy/spacedupdate",
+      "branch": "stable",
+      "runtime": {
+        "id": "org.gnome.Platform",
+        "branch": "50",
+        "repository": "https://flathub.org/repo/flathub.flatpakrepo"
+      },
+      "publish": false,
+      "blocked_reason": "The 8.26.4.0.2 bundle has no exported AppStream metainfo, so app stores cannot discover it.",
+      "assets": [
+        {
+          "arch": "x86_64",
+          "pattern": "SpacedUpdate-*-x86_64.flatpak"
+        }
+      ]
+    },
+    {
+      "id": "io.github.crhy.voice2textai",
+      "name": "Voice2Text AI",
+      "summary": "Local speech transcription and AI assistance",
+      "repository": "crhy/Voice2Text-AI",
+      "homepage": "https://github.com/crhy/Voice2Text-AI",
+      "branch": "master",
+      "runtime": {
+        "id": "org.gnome.Platform",
+        "branch": "48",
+        "repository": "https://flathub.org/repo/flathub.flatpakrepo"
+      },
+      "publish": false,
+      "blocked_reason": "The v0.4.1 bundle contains a static-delta part rejected by patched OSTree because its decompressed size exceeds the security limit.",
+      "assets": [
+        {
+          "arch": "x86_64",
+          "pattern": "Voice2Text-AI.flatpak"
+        }
+      ]
+    }
+  ]
+}

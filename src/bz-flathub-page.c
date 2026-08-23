@@ -306,6 +306,11 @@ bz_flathub_page_set_state (BzFlathubPage *self,
           "notify::online",
           G_CALLBACK (invalidating_state_changed),
           self);
+      g_signal_connect_swapped (
+          state,
+          "notify::syncing",
+          G_CALLBACK (invalidating_state_changed),
+          self);
     }
 
   invalidating_state_changed (self, NULL, state);
@@ -351,16 +356,20 @@ invalidating_state_changed (BzFlathubPage *self,
 {
   BzFlathubState *flathub  = NULL;
   gboolean        has_repo = FALSE;
+  gboolean        syncing  = FALSE;
   const char     *page     = NULL;
 
   if (self->state != NULL)
     {
       flathub  = bz_state_info_get_flathub (self->state);
       has_repo = bz_state_info_get_has_flathub (self->state);
+      syncing  = bz_state_info_get_syncing (self->state);
     }
 
   if (flathub != NULL && has_repo)
     page = "content";
+  else if (syncing)
+    page = "updating";
   else if (!has_repo)
     page = "empty";
   else

@@ -50,7 +50,7 @@ publisher trust boundary presented to users.
 
 | Application | Published architectures | Status |
 | --- | --- | --- |
-| SpacedBazaar | `x86_64`, `aarch64` | Publishable |
+| SpacedBazaar | `x86_64` | Publishable |
 | Scum With Cats | `x86_64` | Publishable |
 | Brutal Chess | `x86_64` | Publishable |
 | Spaced Update | `x86_64` | Blocked: its current bundle lacks exported AppStream metainfo |

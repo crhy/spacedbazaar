@@ -21,7 +21,7 @@ SpacedBazaar
 > - `SpacedBazaar.svg` icon: the app store's brand in the Spaced Linux colors.
 > - `Portable Flatpak access`: the bundle uses the standard XDG data mount and
 >   contains no account-specific home-directory paths.
->   Releases ship as x86_64 and aarch64 Flatpak bundles on the
+>   Releases ship as x86_64 Flatpak bundles on the
 >   [releases page](https://github.com/crhy/spacedbazaar/releases).
 > - `Verified Spaced apps`: a normalized CRHY release catalog and signed,
 >   AppStream-capable `spaced-github` Flatpak repository make Spaced Linux apps
@@ -64,7 +64,7 @@ then install it for your user:
 flatpak install --user ./SpacedBazaar-x86_64.flatpak
 ```
 
-The aarch64 bundle is named `SpacedBazaar-aarch64.flatpak`. The release is not
+The release is not
 the Flathub Bazaar package: it has its own ID and may be installed alongside it.
 
 ### Spaced GitHub application catalog

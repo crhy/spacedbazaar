@@ -39,10 +39,6 @@
       "publish": true,
       "assets": [
         {
-          "arch": "aarch64",
-          "pattern": "SpacedBazaar-aarch64.flatpak"
-        },
-        {
           "arch": "x86_64",
           "pattern": "SpacedBazaar-x86_64.flatpak"
         }

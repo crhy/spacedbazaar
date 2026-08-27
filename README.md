@@ -54,6 +54,26 @@ Thanks to [Tobias Bernard](https://tobiasbernard.com/), [Jakub
 Steiner](http://jimmac.eu), and [Sam Hewitt](https://snwh.org) for designing
 Bazaar's market stall icon.
 
+### Screenshots
+
+<img src="screenshots/fullview.png" width="100%"
+     alt="SpacedBazaar: the full Flatpak catalog view" />
+
+<br/>
+
+<img src="screenshots/search.png" width="48%" alt="Searching the catalog" />
+<img src="screenshots/categories.png" width="48%" alt="Browsing app categories" />
+
+<br/>
+
+<img src="screenshots/library.png" width="48%" alt="The installed libraries view" />
+<img src="screenshots/flathub.png" width="48%" alt="The Flathub remote" />
+
+<br/>
+
+<img src="screenshots/bazaar-light.png" width="48%" alt="SpacedBazaar in the Spaced Linux light theme" />
+<img src="screenshots/bazaar-dark.png" width="48%" alt="SpacedBazaar in the Spaced Linux dark theme" />
+
 ### Installing
 
 Download the bundle for your architecture from the

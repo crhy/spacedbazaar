@@ -60,6 +60,7 @@
         "require_exactly_one_asset",
         "require_github_sha256",
         "require_appstream_metadata",
+        "require_appstream_icon",
         "unverified_github_assets"
       ],
       "properties": {
@@ -67,6 +68,7 @@
         "require_exactly_one_asset": {"const": true},
         "require_github_sha256": {"const": true},
         "require_appstream_metadata": {"const": true},
+        "require_appstream_icon": {"const": true},
         "unverified_github_assets": {"const": "never-install-automatically"}
       }
     },

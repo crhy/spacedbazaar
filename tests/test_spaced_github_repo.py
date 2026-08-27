@@ -67,15 +67,14 @@ class CatalogTests(unittest.TestCase):
             set(apps),
             {
                 "io.github.crhy.BrutalChess",
-                "io.github.crhy.ScumWithCats",
+                "io.github.crhy.CardsWithCats",
                 "io.github.crhy.SpacedBazaar",
+                "io.github.crhy.SpacedWelcome",
                 "io.github.crhy.voice2textai",
                 "org.spacedlinux.SpacedUpdate",
             },
         )
-        self.assertFalse(apps["io.github.crhy.voice2textai"]["publish"])
-        self.assertFalse(apps["org.spacedlinux.SpacedUpdate"]["publish"])
-        self.assertTrue(apps["io.github.crhy.SpacedBazaar"]["publish"])
+        self.assertTrue(all(app["publish"] for app in apps.values()))
 
     def test_schema_is_valid_json(self) -> None:
         schema_path = REPOSITORY_ROOT / "catalog" / "crhy-flatpaks.schema.json"
@@ -91,13 +90,19 @@ class CatalogTests(unittest.TestCase):
 
     def test_publish_false_requires_reason(self) -> None:
         catalog = copy.deepcopy(self.catalog)
-        catalog["apps"][-1].pop("blocked_reason")
+        catalog["apps"][-1]["publish"] = False
         with self.assertRaisesRegex(repo.CatalogError, "blocked_reason"):
             repo.validate_catalog(catalog)
 
     def test_policy_cannot_be_weakened(self) -> None:
         catalog = copy.deepcopy(self.catalog)
         catalog["policy"]["require_github_sha256"] = False
+        with self.assertRaisesRegex(repo.CatalogError, "fail-closed"):
+            repo.validate_catalog(catalog)
+
+    def test_icon_policy_cannot_be_weakened(self) -> None:
+        catalog = copy.deepcopy(self.catalog)
+        catalog["policy"]["require_appstream_icon"] = False
         with self.assertRaisesRegex(repo.CatalogError, "fail-closed"):
             repo.validate_catalog(catalog)
 
@@ -168,6 +173,18 @@ class ReleaseAssetTests(unittest.TestCase):
 
 
 class RepositoryOutputTests(unittest.TestCase):
+    def test_installed_icons_are_applied_after_base_deserialization(self):
+        source = (REPOSITORY_ROOT / "src" / "bz-flatpak-entry.c").read_text(
+            encoding="utf-8"
+        )
+        function = source.split("bz_flatpak_entry_real_deserialize", 1)[1].split(
+            "static void\nserializable_iface_init", 1
+        )[0]
+        self.assertLess(
+            function.index("bz_entry_deserialize"),
+            function.index("apply_icon_theme"),
+        )
+
     def test_sha256_file(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
             path = pathlib.Path(temporary) / "payload"
@@ -266,6 +283,20 @@ class RepositoryOutputTests(unittest.TestCase):
                 paths,
                 ["export/share/metainfo/io.github.crhy.Example.metainfo.xml"],
             )
+
+    def test_exported_icon_paths_require_matching_nonempty_app_icon(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            checkout = pathlib.Path(temporary)
+            directory = checkout / "export" / "share" / "icons" / "hicolor" / "128x128" / "apps"
+            directory.mkdir(parents=True)
+            icon = directory / "io.github.crhy.Example.png"
+            icon.write_bytes(b"png")
+            self.assertEqual(
+                repo._exported_icon_paths(checkout, "io.github.crhy.Example"),
+                ["export/share/icons/hicolor/128x128/apps/io.github.crhy.Example.png"],
+            )
+            icon.write_bytes(b"")
+            self.assertEqual(repo._exported_icon_paths(checkout, "io.github.crhy.Example"), [])
 
 
 if __name__ == "__main__":

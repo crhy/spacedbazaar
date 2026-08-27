@@ -21,6 +21,7 @@
     "require_exactly_one_asset": true,
     "require_github_sha256": true,
     "require_appstream_metadata": true,
+    "require_appstream_icon": true,
     "unverified_github_assets": "never-install-automatically"
   },
   "apps": [
@@ -45,12 +46,12 @@
       ]
     },
     {
-      "id": "io.github.crhy.ScumWithCats",
-      "name": "Scum With Cats",
+      "id": "io.github.crhy.CardsWithCats",
+      "name": "Cards With Cats",
       "summary": "Play classic card games against computer-controlled cats",
-      "repository": "crhy/ScumWithCats",
-      "homepage": "https://github.com/crhy/ScumWithCats",
-      "branch": "stable",
+      "repository": "crhy/CardsWithCats",
+      "homepage": "https://github.com/crhy/CardsWithCats",
+      "branch": "master",
       "runtime": {
         "id": "org.freedesktop.Platform",
         "branch": "25.08",
@@ -60,7 +61,27 @@
       "assets": [
         {
           "arch": "x86_64",
-          "pattern": "ScumWithCats-*.flatpak"
+          "pattern": "CardsWithCats-*.flatpak"
+        }
+      ]
+    },
+    {
+      "id": "io.github.crhy.SpacedWelcome",
+      "name": "Spaced Linux Welcome",
+      "summary": "Set up applications on a new Spaced Linux system",
+      "repository": "crhy/spacedwelcome",
+      "homepage": "https://github.com/crhy/spacedwelcome",
+      "branch": "master",
+      "runtime": {
+        "id": "org.gnome.Platform",
+        "branch": "50",
+        "repository": "https://flathub.org/repo/flathub.flatpakrepo"
+      },
+      "publish": true,
+      "assets": [
+        {
+          "arch": "x86_64",
+          "pattern": "SpacedWelcome*x86_64.flatpak"
         }
       ]
     },
@@ -96,8 +117,7 @@
         "branch": "50",
         "repository": "https://flathub.org/repo/flathub.flatpakrepo"
       },
-      "publish": false,
-      "blocked_reason": "The 8.26.4.0.2 bundle has no exported AppStream metainfo, so app stores cannot discover it.",
+      "publish": true,
       "assets": [
         {
           "arch": "x86_64",
@@ -114,11 +134,10 @@
       "branch": "master",
       "runtime": {
         "id": "org.gnome.Platform",
-        "branch": "48",
+        "branch": "50",
         "repository": "https://flathub.org/repo/flathub.flatpakrepo"
       },
-      "publish": false,
-      "blocked_reason": "The v0.4.1 bundle contains a static-delta part rejected by patched OSTree because its decompressed size exceeds the security limit.",
+      "publish": true,
       "assets": [
         {
           "arch": "x86_64",

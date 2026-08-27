@@ -152,6 +152,7 @@ def validate_catalog(catalog_value: Any) -> None:
         "require_exactly_one_asset",
         "require_github_sha256",
         "require_appstream_metadata",
+        "require_appstream_icon",
         "unverified_github_assets",
     ]
     _require_keys(policy, policy_keys, policy_keys, "catalog.policy")
@@ -160,6 +161,7 @@ def validate_catalog(catalog_value: Any) -> None:
         "require_exactly_one_asset": True,
         "require_github_sha256": True,
         "require_appstream_metadata": True,
+        "require_appstream_icon": True,
         "unverified_github_assets": "never-install-automatically",
     }
     if policy != expected_policy:
@@ -473,6 +475,17 @@ def _metadata_component_ids(checkout: pathlib.Path) -> tuple[list[str], list[str
     return ids, relative_paths
 
 
+def _exported_icon_paths(checkout: pathlib.Path, app_id: str) -> list[str]:
+    icon_root = checkout / "export" / "share" / "icons" / "hicolor"
+    paths = sorted(
+        path
+        for pattern in (f"*/apps/{app_id}.png", f"*/apps/{app_id}.svg")
+        for path in icon_root.glob(pattern)
+        if path.is_file() and path.stat().st_size > 0
+    )
+    return [path.relative_to(checkout).as_posix() for path in paths]
+
+
 def inspect_bundle(
     bundle: pathlib.Path,
     app: dict[str, Any],
@@ -543,6 +556,11 @@ def inspect_bundle(
             f"{asset['name']} must export exactly one AppStream component for {app['id']}; "
             f"found {component_ids!r}"
         )
+    icon_paths = _exported_icon_paths(checkout, app["id"])
+    if not icon_paths:
+        raise CatalogError(
+            f"{asset['name']} must export a non-empty AppStream icon for {app['id']}"
+        )
     commit = run_command(
         ["ostree", "rev-parse", f"--repo={inspect_repo}", expected_ref]
     ).strip()
@@ -553,6 +571,7 @@ def inspect_bundle(
         "commit": commit,
         "runtime": embedded_runtime,
         "metainfo": metainfo_paths,
+        "icons": icon_paths,
     }
 
 

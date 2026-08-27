@@ -78,8 +78,10 @@ scripts/configure-spaced-github-remote.sh --user
 ```
 
 Repository construction validates the latest stable GitHub release, SHA-256
-digest, bundle identity, architecture, branch, runtime, and AppStream metadata
-before import. Arbitrary GitHub assets are never installed automatically. See
+digest, bundle identity, architecture, branch, runtime, AppStream metadata, and
+a non-empty application icon before import. The catalog includes every released
+CRHY desktop Flatpak, including SpacedBazaar and Spaced Welcome. Arbitrary
+GitHub assets are never installed automatically. See
 [the repository, trust, signing, and maintenance documentation](docs/spaced-github.md).
 
 [![Build Flatpak](https://github.com/crhy/spacedbazaar/actions/workflows/build-flatpak.yml/badge.svg)](https://github.com/crhy/spacedbazaar/actions/workflows/build-flatpak.yml)

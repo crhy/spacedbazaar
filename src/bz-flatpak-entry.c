@@ -313,6 +313,7 @@ bz_flatpak_entry_real_deserialize (BzSerializable *serializable,
 {
   BzFlatpakEntry *self          = BZ_FLATPAK_ENTRY (serializable);
   g_autoptr (GVariantIter) iter = NULL;
+  gboolean result               = FALSE;
 
   clear_entry (self);
 
@@ -351,10 +352,17 @@ bz_flatpak_entry_real_deserialize (BzSerializable *serializable,
         self->addon_extension_of_ref = g_variant_dup_string (value, NULL);
     }
 
+  result = bz_entry_deserialize (BZ_ENTRY (self), import, error);
+  if (!result)
+    return FALSE;
+
+  /* Base deserialization clears and restores the cached entry fields.  Apply
+   * the live exported icon afterwards so installed apps do not retain a
+   * missing or stale cached paintable. */
   if (self->is_installed_ref)
     apply_icon_theme (self);
 
-  return bz_entry_deserialize (BZ_ENTRY (self), import, error);
+  return TRUE;
 }
 
 static void

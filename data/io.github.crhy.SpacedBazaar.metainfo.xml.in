@@ -73,6 +73,18 @@
   </screenshots>
 
   <releases>
+    <release version="0.1.5" date="2026-08-27">
+      <url type="details">https://github.com/crhy/spacedbazaar/releases/tag/0.1.5</url>
+      <description translate="no">
+        <p>Completes the signed Spaced Linux application catalog.</p>
+        <ul>
+          <li>Restores exported icons after cached installed applications are loaded</li>
+          <li>Adds Spaced Welcome and Cards With Cats, and requires every published app to export metadata and an icon</li>
+          <li>Publishes the repaired Spaced Update and Voice2Text AI bundles</li>
+          <li>Allows the dependency-update workflow to push its update branch and pull request</li>
+        </ul>
+      </description>
+    </release>
     <release version="0.1.4" date="2026-08-26">
       <url type="details">https://github.com/crhy/spacedbazaar/releases/tag/0.1.4</url>
       <description translate="no">

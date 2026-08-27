@@ -53,12 +53,14 @@ publisher trust boundary presented to users.
 | SpacedBazaar | `x86_64` | Publishable |
 | Cards With Cats | `x86_64` | Publishable |
 | Brutal Chess | `x86_64` | Publishable |
-| Spaced Update | `x86_64` | Blocked: its current bundle lacks exported AppStream metainfo |
-| Voice2Text AI | `x86_64` | Blocked: its current bundle has an oversized static-delta part rejected by patched OSTree |
+| Spaced Linux Welcome | `x86_64` | Publishable |
+| Spaced Update | `x86_64` | Publishable |
+| Voice2Text AI | `x86_64` | Publishable |
 
-Blocked applications remain in the normalized catalog with a reason. They are
-not silently omitted and cannot enter the public remote until their release is
-rebuilt and the catalog's `publish` flag is deliberately changed.
+Every current application release exports matching AppStream metadata and a
+non-empty icon, imports with patched OSTree, and is eligible for the signed
+repository. A future blocked application remains in the normalized catalog
+with a reason; it is never silently omitted or published until repaired.
 
 ## Build and test locally
 

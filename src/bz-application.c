@@ -742,6 +742,13 @@ bz_application_about_action (GSimpleAction *action,
       "issue-url", "https://github.com/crhy/spacedbazaar/issues",
       NULL);
 
+  adw_about_dialog_add_link (ADW_ABOUT_DIALOG (dialog), _ ("Online Help"),
+                             "https://spacedlinux.com/#help");
+  adw_about_dialog_add_link (ADW_ABOUT_DIALOG (dialog), _ ("Spaced Linux Discord"),
+                             "https://discord.gg/BMW9Y6NB3y");
+  adw_about_dialog_add_link (ADW_ABOUT_DIALOG (dialog), _ ("Spaced Linux Telegram"),
+                             "https://t.me/+pjmFzHo-i9A2ZWY5");
+
   adw_about_dialog_add_credit_section (
       ADW_ABOUT_DIALOG (dialog),
       _ ("Credits"),

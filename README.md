@@ -108,6 +108,8 @@ GitHub assets are never installed automatically. See
 
 ### Supporting
 
+Community help: [Discord](https://discord.gg/BMW9Y6NB3y) · [Telegram](https://t.me/+pjmFzHo-i9A2ZWY5)
+
 You can support Spaced Linux development at
 [spacedlinux.com](https://spacedlinux.com/#donate).
 

@@ -609,7 +609,12 @@ bz_flatpak_entry_new_for_ref (FlatpakRef    *ref,
             }
         }
       else if (FLATPAK_IS_INSTALLED_REF (ref))
-        apply_icon_theme (self);
+        {
+          apply_icon_theme (self);
+          /* Keep the local value in sync: the final property assignment below
+           * would otherwise replace the exported icon with NULL. */
+          g_object_get (self, "icon-paintable", &icon_paintable, NULL);
+        }
     }
 
   g_object_get (self, "title", &title, NULL);
@@ -879,7 +884,9 @@ apply_icon_theme (BzFlatpakEntry *self)
                   ? bz_state_info_get_user_icon_theme (state)
                   : bz_state_info_get_system_icon_theme (state);
 
-  if (theme != NULL)
+  /* lookup_icon() returns a missing-image paintable even when no icon exists.
+   * Do not replace valid AppStream art with that placeholder. */
+  if (theme != NULL && gtk_icon_theme_has_icon (theme, icon_name))
     {
       g_autoptr (GtkIconPaintable) paintable = NULL;
 

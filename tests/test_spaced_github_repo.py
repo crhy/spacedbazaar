@@ -173,6 +173,25 @@ class ReleaseAssetTests(unittest.TestCase):
 
 
 class RepositoryOutputTests(unittest.TestCase):
+    def test_generated_catalog_requires_every_imported_app_and_its_icon(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            checkout = pathlib.Path(temporary)
+            metadata = checkout / "appstream.xml"
+            metadata.write_text('<components><component><id>io.example.App</id>'
+                                '<icon type="cached" width="128" height="128">io.example.App.png</icon>'
+                                '</component></components>')
+            with self.assertRaisesRegex(repo.CatalogError, "missing io.example.Other"):
+                repo.validate_appstream_checkout(checkout, ["io.example.Other"])
+            with self.assertRaisesRegex(repo.CatalogError, "no cached icon"):
+                repo.validate_appstream_checkout(checkout, ["io.example.App"])
+            icon = checkout / "icons/128x128/io.example.App.png"
+            icon.parent.mkdir(parents=True)
+            icon.write_bytes(b"test icon")
+            repo.validate_appstream_checkout(checkout, ["io.example.App"])
+            icon.write_bytes(b"")
+            with self.assertRaisesRegex(repo.CatalogError, "no cached icon"):
+                repo.validate_appstream_checkout(checkout, ["io.example.App"])
+
     def test_installed_icons_are_applied_after_base_deserialization(self):
         source = (REPOSITORY_ROOT / "src" / "bz-flatpak-entry.c").read_text(
             encoding="utf-8"

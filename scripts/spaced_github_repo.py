@@ -14,6 +14,7 @@ import argparse
 import base64
 import configparser
 import fnmatch
+import gzip
 import hashlib
 import html
 import json
@@ -575,6 +576,41 @@ def inspect_bundle(
     }
 
 
+def validate_appstream_checkout(checkout: pathlib.Path, app_ids: Iterable[str]) -> None:
+    """Reject repositories whose installable refs are absent from the store catalog."""
+    metadata = checkout / "appstream.xml"
+    try:
+        if metadata.is_file():
+            root = ET.parse(metadata).getroot()
+        else:
+            with gzip.open(checkout / "appstream.xml.gz", "rb") as source:
+                root = ET.parse(source).getroot()
+    except (OSError, ET.ParseError) as error:
+        raise CatalogError(f"cannot read generated AppStream catalog: {error}") from error
+    components = {item.findtext("id"): item for item in root.findall("component")}
+    for app_id in app_ids:
+        component = components.get(app_id)
+        if component is None:
+            raise CatalogError(f"generated AppStream catalog is missing {app_id}")
+        icons = []
+        for icon in component.findall("icon"):
+            if icon.get("type") != "cached" or not icon.text:
+                continue
+            filename = icon.text.strip()
+            width, height = icon.get("width", ""), icon.get("height", "")
+            if not width.isdigit() or not height.isdigit() or pathlib.PurePosixPath(filename).name != filename:
+                continue
+            path = checkout / "icons" / f"{width}x{height}" / filename
+            try:
+                path.resolve().relative_to(checkout.resolve())
+            except ValueError:
+                continue
+            if path.is_file() and path.stat().st_size > 0:
+                icons.append(path)
+        if not icons:
+            raise CatalogError(f"generated AppStream catalog has no cached icon for {app_id}")
+
+
 def _export_public_key(key_id: str, gpg_homedir: pathlib.Path | None) -> bytes:
     command = ["gpg", "--batch"]
     if gpg_homedir is not None:
@@ -753,8 +789,18 @@ def build_repository(
         raise CatalogError(f"generated repository is missing imported refs: {missing_refs}")
     published_arches = sorted({item["arch"] for item in imported})
     for arch in published_arches:
-        if not any(ref in refs for ref in (f"appstream/{arch}", f"appstream2/{arch}")):
+        appstream_ref = next((ref for ref in (f"appstream2/{arch}", f"appstream/{arch}") if ref in refs), None)
+        if appstream_ref is None:
             raise CatalogError(f"generated repository has no AppStream branch for {arch}")
+        with tempfile.TemporaryDirectory(prefix="spaced-github-appstream-") as temporary:
+            checkout = pathlib.Path(temporary) / "checkout"
+            run_command([
+                "ostree", "checkout", "--user-mode", f"--repo={repo_dir}",
+                appstream_ref, str(checkout),
+            ])
+            validate_appstream_checkout(
+                checkout, (item["id"] for item in imported if item["arch"] == arch)
+            )
 
     public_key = _export_public_key(gpg_sign, gpg_homedir) if gpg_sign else None
     if require_signing and public_key is None:

@@ -23,8 +23,15 @@ PY
 version=$($repo_root/version.sh get-version)
 release_url=$($repo_root/version.sh get-gh-release)
 
-test "$version" = "0.1.7"
-test "$release_url" = "https://github.com/crhy/spacedbazaar/releases/tag/v0.1.7"
+test "$version" = "0.1.8"
+test "$release_url" = "https://github.com/crhy/spacedbazaar/releases/tag/v0.1.8"
+
+python3 - "$repo_root/data/io.github.crhy.SpacedBazaar.metainfo.xml.in" "$version" <<'PY'
+import sys
+import xml.etree.ElementTree as ET
+release = ET.parse(sys.argv[1]).getroot().find("releases/release")
+assert release is not None and release.get("version") == sys.argv[2], "AppStream version differs from the binary"
+PY
 
 grep -q 'installation == self->user' "$repo_root/src/bz-flatpak-instance.c" || {
     echo "user-installation source enumeration fix is missing" >&2

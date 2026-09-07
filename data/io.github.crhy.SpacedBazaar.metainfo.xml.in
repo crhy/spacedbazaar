@@ -73,6 +73,16 @@
   </screenshots>
 
   <releases>
+    <release version="0.1.8" date="2026-09-07">
+      <url type="details">https://github.com/crhy/spacedbazaar/releases/tag/v0.1.8</url>
+      <description><p>Keeps the application catalog version aligned with the binary and includes the installed-icon fixes and community help links for Spaced Linux 9.26 testing.</p></description>
+    </release>
+    <release version="0.1.7" date="2026-09-07">
+      <description><p>Adds Discord, Telegram, and Online Help links.</p></description>
+    </release>
+    <release version="0.1.6" date="2026-09-07">
+      <description><p>Preserves installed application icons and validates generated catalog entries and icons.</p></description>
+    </release>
     <release version="0.1.5" date="2026-08-27">
       <url type="details">https://github.com/crhy/spacedbazaar/releases/tag/0.1.5</url>
       <description translate="no">

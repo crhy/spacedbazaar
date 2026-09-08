@@ -22,10 +22,12 @@ import os
 import pathlib
 import re
 import shutil
+import struct
 import subprocess
 import sys
 import tempfile
 import urllib.error
+import urllib.parse
 import urllib.request
 import xml.etree.ElementTree as ET
 from typing import Any, Iterable
@@ -158,14 +160,16 @@ def validate_catalog(catalog_value: Any) -> None:
     ]
     _require_keys(policy, policy_keys, policy_keys, "catalog.policy")
     expected_policy = {
-        "channel": "latest-stable",
+        "channel": policy.get("channel"),
         "require_exactly_one_asset": True,
         "require_github_sha256": True,
         "require_appstream_metadata": True,
         "require_appstream_icon": True,
         "unverified_github_assets": "never-install-automatically",
     }
-    if policy != expected_policy:
+    if policy != expected_policy or policy["channel"] not in {
+        "latest-stable", "latest-stable-with-reviewed-pins"
+    }:
         raise CatalogError("catalog.policy must retain the fail-closed verification policy")
 
     apps = _require_list(catalog["apps"], "catalog.apps")
@@ -187,7 +191,7 @@ def validate_catalog(catalog_value: Any) -> None:
             "publish",
             "assets",
         ]
-        allowed = required + ["blocked_reason"]
+        allowed = required + ["blocked_reason", "release_pin", "screenshots"]
         _require_keys(app, required, allowed, context)
         app_id = _require_nonempty_string(app["id"], f"{context}.id")
         if not APP_ID_RE.fullmatch(app_id):
@@ -206,6 +210,27 @@ def validate_catalog(catalog_value: Any) -> None:
             raise CatalogError(f"duplicate repository: {repository}")
         seen_repositories.add(repository.casefold())
         _require_https_url(app["homepage"], f"{context}.homepage")
+
+        if "release_pin" in app:
+            if policy["channel"] != "latest-stable-with-reviewed-pins":
+                raise CatalogError("reviewed release pins require an explicit catalog channel")
+            pin = _require_mapping(app["release_pin"], f"{context}.release_pin")
+            _require_keys(pin, ["tag", "asset_sha256"], ["tag", "asset_sha256"], f"{context}.release_pin")
+            _require_nonempty_string(pin["tag"], f"{context}.release_pin.tag")
+            digests = _require_mapping(pin["asset_sha256"], f"{context}.release_pin.asset_sha256")
+            if not digests or any(arch not in SUPPORTED_ARCHES or not isinstance(digest, str)
+                                  or not SHA256_RE.fullmatch(digest) for arch, digest in digests.items()):
+                raise CatalogError(f"{context}.release_pin requires architecture-specific SHA-256 digests")
+        screenshots = _require_list(app.get("screenshots", []), f"{context}.screenshots")
+        if app["publish"] and not screenshots:
+            raise CatalogError(f"{context} requires at least one screenshot for publication")
+        for shot in screenshots:
+            shot = _require_mapping(shot, f"{context}.screenshot")
+            _require_keys(shot, ["url", "caption", "sha256"], ["url", "caption", "sha256"], f"{context}.screenshot")
+            _require_https_url(shot["url"], f"{context}.screenshot.url")
+            _require_nonempty_string(shot["caption"], f"{context}.screenshot.caption")
+            if not isinstance(shot["sha256"], str) or not SHA256_RE.fullmatch(shot["sha256"]):
+                raise CatalogError(f"{context}.screenshot requires SHA-256")
 
         runtime = _require_mapping(app["runtime"], f"{context}.runtime")
         runtime_keys = ["id", "branch", "repository"]
@@ -242,6 +267,8 @@ def validate_catalog(catalog_value: Any) -> None:
                 raise CatalogError(
                     f"{asset_context}.pattern must be a basename ending in .flatpak"
                 )
+        if "release_pin" in app and set(app["release_pin"]["asset_sha256"]) != seen_arches:
+            raise CatalogError(f"{context}.release_pin must pin every published architecture")
 
 
 def _load_release_fixture(metadata_dir: pathlib.Path, repository: str) -> dict[str, Any]:
@@ -254,8 +281,9 @@ def _load_release_fixture(metadata_dir: pathlib.Path, repository: str) -> dict[s
         raise CatalogError(f"cannot read release fixture {fixture}: {error}") from error
 
 
-def _fetch_latest_release(repository: str, token: str | None) -> dict[str, Any]:
-    url = f"https://api.github.com/repos/{repository}/releases/latest"
+def _fetch_latest_release(repository: str, token: str | None, tag: str | None = None) -> dict[str, Any]:
+    endpoint = "latest" if tag is None else "tags/" + urllib.parse.quote(tag, safe="")
+    url = f"https://api.github.com/repos/{repository}/releases/{endpoint}"
     headers = {
         "Accept": "application/vnd.github+json",
         "User-Agent": USER_AGENT,
@@ -287,11 +315,15 @@ def select_release_asset(
     repository: str,
     arch: str,
     pattern: str,
+    release_pin: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
     release = _require_mapping(release_value, f"latest release for {repository}")
-    if release.get("draft") is not False or release.get("prerelease") is not False:
+    if release.get("draft") is not False or (release.get("prerelease") is not False
+            and not (release_pin is not None and release.get("prerelease") is True)):
         raise CatalogError(f"latest release for {repository} is not a stable published release")
     tag = _require_nonempty_string(release.get("tag_name"), f"{repository} release tag")
+    if release_pin is not None and tag != release_pin["tag"]:
+        raise CatalogError(f"{repository} release tag does not match the reviewed pin")
     assets = _require_list(release.get("assets"), f"{repository} release assets")
     matches = [
         _require_mapping(asset, f"{repository} release asset")
@@ -315,6 +347,8 @@ def select_release_asset(
     algorithm, separator, digest = digest_value.partition(":")
     if algorithm != "sha256" or not separator or not SHA256_RE.fullmatch(digest):
         raise CatalogError(f"{repository} asset has no valid GitHub SHA-256 digest")
+    if release_pin is not None and digest != release_pin["asset_sha256"].get(arch):
+        raise CatalogError(f"{repository} asset SHA-256 does not match the reviewed pin")
     size = asset.get("size")
     if not isinstance(size, int) or size <= 0:
         raise CatalogError(f"{repository} asset has invalid size: {size!r}")
@@ -348,7 +382,7 @@ def resolve_catalog(
     for app in sorted(catalog["apps"], key=lambda item: item["id"]):
         repository = app["repository"]
         if metadata_dir is None:
-            release = _fetch_latest_release(repository, token)
+            release = _fetch_latest_release(repository, token, app.get("release_pin", {}).get("tag"))
         else:
             release = _load_release_fixture(metadata_dir, repository)
         resolved_assets = [
@@ -357,6 +391,7 @@ def resolve_catalog(
                 repository,
                 asset_spec["arch"],
                 asset_spec["pattern"],
+                app.get("release_pin"),
             )
             for asset_spec in sorted(app["assets"], key=lambda item: item["arch"])
         ]
@@ -375,12 +410,16 @@ def resolve_catalog(
         }
         if "blocked_reason" in app:
             resolved_app["blocked_reason"] = app["blocked_reason"]
+        resolved_app["screenshots"] = app.get("screenshots", [])
+        if "release_pin" in app:
+            resolved_app["release_pin"] = app["release_pin"]
         resolved_app["release"] = {
             "tag": release["tag_name"],
             "release_id": release.get("id"),
             "html_url": release.get("html_url"),
             "created_at": release.get("created_at"),
             "published_at": release.get("published_at"),
+            "prerelease": release.get("prerelease"),
         }
         resolved_app["assets"] = resolved_assets
         resolved_apps.append(resolved_app)
@@ -576,7 +615,8 @@ def inspect_bundle(
     }
 
 
-def validate_appstream_checkout(checkout: pathlib.Path, app_ids: Iterable[str]) -> None:
+def validate_appstream_checkout(checkout: pathlib.Path, app_ids: Iterable[str],
+                               screenshots: dict[str, list[dict[str, Any]]] | None = None) -> None:
     """Reject repositories whose installable refs are absent from the store catalog."""
     metadata = checkout / "appstream.xml"
     try:
@@ -609,6 +649,81 @@ def validate_appstream_checkout(checkout: pathlib.Path, app_ids: Iterable[str]) 
                 icons.append(path)
         if not icons:
             raise CatalogError(f"generated AppStream catalog has no cached icon for {app_id}")
+        if screenshots is not None:
+            actual = [image.text for image in component.findall("screenshots/screenshot/image")]
+            expected = [shot["url"] for shot in screenshots[app_id]]
+            if not expected or actual != expected:
+                raise CatalogError(f"generated AppStream screenshots differ from the reviewed set for {app_id}")
+
+
+def apply_screenshots(checkout: pathlib.Path, screenshots: dict[str, list[dict[str, Any]]]) -> None:
+    """Add reviewed screenshots to repository metadata without changing app commits."""
+    xml = checkout / "appstream.xml"
+    compressed = checkout / "appstream.xml.gz"
+    try:
+        data = xml.read_bytes() if xml.exists() else gzip.decompress(compressed.read_bytes())
+        root = ET.fromstring(data)
+    except (OSError, ET.ParseError) as error:
+        raise CatalogError(f"cannot read AppStream for screenshots: {error}") from error
+    components = {component.findtext("id"): component for component in root.findall("component")}
+    for app_id, shots in screenshots.items():
+        component = components.get(app_id)
+        if component is None or not shots:
+            raise CatalogError(f"cannot add screenshots for missing or empty component {app_id}")
+        for old in component.findall("screenshots"):
+            component.remove(old)
+        container = ET.SubElement(component, "screenshots")
+        for index, shot in enumerate(shots):
+            item = ET.SubElement(container, "screenshot", {"type": "default"} if index == 0 else {})
+            ET.SubElement(item, "caption").text = shot["caption"]
+            ET.SubElement(item, "image", {"type": "source", "width": str(shot["width"]),
+                                         "height": str(shot["height"])}).text = shot["url"]
+    data = ET.tostring(root, encoding="utf-8", xml_declaration=True)
+    # OSTree checkouts can use hardlinks. Replace files rather than modifying
+    # their existing inodes, so the imported objects remain immutable.
+    for destination, payload in ((xml, data), (compressed, gzip.compress(data, mtime=0))):
+        if destination.exists():
+            destination.unlink()
+        destination.write_bytes(payload)
+
+
+def stage_screenshots(resolved: dict[str, Any], output_dir: pathlib.Path, cache_dir: pathlib.Path) -> dict[str, list[dict[str, Any]]]:
+    staged: dict[str, list[dict[str, Any]]] = {}
+    screenshot_dir = output_dir / "screenshots"
+    screenshot_dir.mkdir()
+    cache_dir.mkdir(parents=True, exist_ok=True)
+    public_root = resolved["remote"]["descriptor_url"].rsplit("/", 1)[0]
+    for app in resolved["apps"]:
+        if not app["publish"]:
+            continue
+        staged[app["id"]] = []
+        for shot in app["screenshots"]:
+            filename = shot["sha256"] + ".png"
+            cached = cache_dir / filename
+            if not cached.exists() or sha256_file(cached) != shot["sha256"]:
+                request = urllib.request.Request(shot["url"], headers={"User-Agent": USER_AGENT})
+                try:
+                    with urllib.request.urlopen(request, timeout=45) as response:
+                        if not response.geturl().startswith("https://"):
+                            raise CatalogError("screenshot redirect must retain HTTPS")
+                        data = response.read(16 * 1024 * 1024 + 1)
+                except OSError as error:
+                    raise CatalogError(f"screenshot download failed for {app['id']}: {error}") from error
+                if len(data) > 16 * 1024 * 1024 or hashlib.sha256(data).hexdigest() != shot["sha256"]:
+                    raise CatalogError(f"screenshot SHA-256/size mismatch for {app['id']}")
+                cached.write_bytes(data)
+            data = cached.read_bytes()
+            if len(data) < 33 or data[:8] != b"\x89PNG\r\n\x1a\n" or data[12:16] != b"IHDR":
+                raise CatalogError(f"screenshot for {app['id']} is not a PNG")
+            width, height = struct.unpack(">II", data[16:24])
+            if not (320 <= width <= 8192 and 200 <= height <= 8192):
+                raise CatalogError(f"screenshot dimensions are invalid for {app['id']}")
+            shutil.copyfile(cached, screenshot_dir / filename)
+            staged[app["id"]].append({"url": f"{public_root}/screenshots/{filename}",
+                                       "caption": shot["caption"], "width": width, "height": height})
+        if not staged[app["id"]]:
+            raise CatalogError(f"no screenshots staged for {app['id']}")
+    return staged
 
 
 def _export_public_key(key_id: str, gpg_homedir: pathlib.Path | None) -> bytes:
@@ -722,6 +837,7 @@ def build_repository(
     if output_dir.exists() and any(output_dir.iterdir()):
         raise CatalogError(f"output directory must be absent or empty: {output_dir}")
     output_dir.mkdir(parents=True, exist_ok=True)
+    screenshots = stage_screenshots(resolved, output_dir, cache_dir / "screenshots")
     repo_dir = output_dir / "flatpak-repo"
     run_command(["ostree", "init", f"--repo={repo_dir}", "--mode=archive-z2"])
 
@@ -778,6 +894,28 @@ def build_repository(
     update_command.append(str(repo_dir))
     run_command(update_command)
 
+    # Flatpak generates appstream and appstream2 refs for different client
+    # versions. Keep both consistent, sign their new metadata commits, then
+    # refresh the summary without regenerating AppStream from the bundles.
+    for metadata_ref in run_command(["ostree", "refs", f"--repo={repo_dir}"]).splitlines():
+        if not metadata_ref.startswith(("appstream/", "appstream2/")):
+            continue
+        arch = metadata_ref.split("/", 1)[1]
+        selected = {app["id"]: screenshots[app["id"]] for app in resolved["apps"]
+                    if app["publish"] and any(asset["arch"] == arch for asset in app["assets"])}
+        with tempfile.TemporaryDirectory(prefix="spaced-github-screenshots-") as temporary:
+            checkout = pathlib.Path(temporary) / "checkout"
+            run_command(["ostree", "checkout", "--user-mode", f"--repo={repo_dir}", metadata_ref, str(checkout)])
+            apply_screenshots(checkout, selected)
+            command = ["ostree", "commit", f"--repo={repo_dir}", f"--branch={metadata_ref}",
+                       "--subject=Publish reviewed application screenshots", f"--tree=dir={checkout}"]
+            if gpg_sign:
+                command.append(f"--gpg-sign={gpg_sign}")
+                if gpg_homedir is not None:
+                    command.append(f"--gpg-homedir={gpg_homedir}")
+            run_command(command)
+    run_command(update_command[:-1] + ["--no-update-appstream", str(repo_dir)])
+
     refs = sorted(
         line.strip()
         for line in run_command(["ostree", "refs", f"--repo={repo_dir}"]).splitlines()
@@ -799,7 +937,7 @@ def build_repository(
                 appstream_ref, str(checkout),
             ])
             validate_appstream_checkout(
-                checkout, (item["id"] for item in imported if item["arch"] == arch)
+                checkout, (item["id"] for item in imported if item["arch"] == arch), screenshots
             )
 
     public_key = _export_public_key(gpg_sign, gpg_homedir) if gpg_sign else None
@@ -829,6 +967,7 @@ def build_repository(
         "published_arches": published_arches,
         "imported": sorted(imported, key=lambda item: (item["id"], item["arch"])),
         "refs": refs,
+        "screenshots": screenshots,
     }
     (output_dir / "build-report.json").write_bytes(canonical_json_bytes(report))
     _write_index(output_dir, resolved, public_key is not None)

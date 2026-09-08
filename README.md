@@ -56,7 +56,7 @@ Bazaar's market stall icon.
 
 ### Screenshots
 
-<img src="screenshots/fullview.png" width="100%"
+<img src="screenshots/spaced-bazaar-explore-2026-09.png" width="100%"
      alt="SpacedBazaar: the full Flatpak catalog view" />
 
 <br/>
@@ -117,3 +117,23 @@ You can support Spaced Linux development at
 
 SpacedLinux Code of Conduct:
 All facets of Spaced Linux are Free.  You can say and call anyone whatever you want.  We endorse absolute freedom of speech, including screaming fire in a theater.
+
+### Reviewed releases and screenshots
+
+The signed GitHub catalog covers all seven crhy applications with published
+Flatpak bundles, including rhYciv. Other crhy projects have no installable
+Flatpak release and are not advertised as installable applications.
+
+Ordinary entries follow the latest stable release. A reviewed release pin
+names an exact GitHub tag and a SHA-256 for every architecture, allowing the
+approved Welcome, Update, and Bazaar testing releases without accepting an
+arbitrary prerelease. Drafts, changed pinned assets, mismatched identities,
+and unsigned publication remain rejected. Review or remove the pins when
+promoting the next stable application releases. This app catalog does not
+switch the operating system's APT release channel.
+
+Each published app has a reviewed PNG screenshot with a SHA-256. The
+publisher verifies and hosts those images alongside the repository, inserts
+them into both AppStream generations, signs the metadata commits, and then
+refreshes the signed summary. Imported application commits and verified
+GitHub bundle bytes remain unchanged.

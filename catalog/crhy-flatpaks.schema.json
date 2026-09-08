@@ -21,11 +21,24 @@
     "publisher": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["github_owner", "name", "homepage"],
+      "required": [
+        "github_owner",
+        "name",
+        "homepage"
+      ],
       "properties": {
-        "github_owner": {"type": "string", "minLength": 1},
-        "name": {"type": "string", "minLength": 1},
-        "homepage": {"type": "string", "format": "uri"}
+        "github_owner": {
+          "type": "string",
+          "minLength": 1
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "homepage": {
+          "type": "string",
+          "format": "uri"
+        }
       }
     },
     "remote": {
@@ -42,14 +55,37 @@
         "default_branch"
       ],
       "properties": {
-        "name": {"const": "spaced-github"},
-        "title": {"type": "string", "minLength": 1},
-        "comment": {"type": "string", "minLength": 1},
-        "description": {"type": "string", "minLength": 1},
-        "descriptor_url": {"type": "string", "format": "uri"},
-        "repository_url": {"type": "string", "format": "uri"},
-        "icon": {"type": "string", "format": "uri"},
-        "default_branch": {"type": "string", "minLength": 1}
+        "name": {
+          "const": "spaced-github"
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1
+        },
+        "comment": {
+          "type": "string",
+          "minLength": 1
+        },
+        "description": {
+          "type": "string",
+          "minLength": 1
+        },
+        "descriptor_url": {
+          "type": "string",
+          "format": "uri"
+        },
+        "repository_url": {
+          "type": "string",
+          "format": "uri"
+        },
+        "icon": {
+          "type": "string",
+          "format": "uri"
+        },
+        "default_branch": {
+          "type": "string",
+          "minLength": 1
+        }
       }
     },
     "policy": {
@@ -64,37 +100,75 @@
         "unverified_github_assets"
       ],
       "properties": {
-        "channel": {"const": "latest-stable"},
-        "require_exactly_one_asset": {"const": true},
-        "require_github_sha256": {"const": true},
-        "require_appstream_metadata": {"const": true},
-        "require_appstream_icon": {"const": true},
-        "unverified_github_assets": {"const": "never-install-automatically"}
+        "channel": {
+          "enum": [
+            "latest-stable",
+            "latest-stable-with-reviewed-pins"
+          ]
+        },
+        "require_exactly_one_asset": {
+          "const": true
+        },
+        "require_github_sha256": {
+          "const": true
+        },
+        "require_appstream_metadata": {
+          "const": true
+        },
+        "require_appstream_icon": {
+          "const": true
+        },
+        "unverified_github_assets": {
+          "const": "never-install-automatically"
+        }
       }
     },
     "apps": {
       "type": "array",
       "minItems": 1,
-      "items": {"$ref": "#/$defs/app"}
+      "items": {
+        "$ref": "#/$defs/app"
+      }
     }
   },
   "$defs": {
     "runtime": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["id", "branch", "repository"],
+      "required": [
+        "id",
+        "branch",
+        "repository"
+      ],
       "properties": {
-        "id": {"type": "string", "minLength": 1},
-        "branch": {"type": "string", "minLength": 1},
-        "repository": {"type": "string", "format": "uri"}
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "branch": {
+          "type": "string",
+          "minLength": 1
+        },
+        "repository": {
+          "type": "string",
+          "format": "uri"
+        }
       }
     },
     "asset": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["arch", "pattern"],
+      "required": [
+        "arch",
+        "pattern"
+      ],
       "properties": {
-        "arch": {"enum": ["aarch64", "x86_64"]},
+        "arch": {
+          "enum": [
+            "aarch64",
+            "x86_64"
+          ]
+        },
         "pattern": {
           "type": "string",
           "minLength": 9,
@@ -117,28 +191,121 @@
         "assets"
       ],
       "properties": {
-        "id": {"type": "string", "pattern": "^[A-Za-z0-9_-]+(\\.[A-Za-z0-9_-]+)+$"},
-        "name": {"type": "string", "minLength": 1},
-        "summary": {"type": "string", "minLength": 1},
-        "repository": {"type": "string", "pattern": "^crhy/[A-Za-z0-9_.-]+$"},
-        "homepage": {"type": "string", "format": "uri"},
-        "branch": {"type": "string", "minLength": 1},
-        "runtime": {"$ref": "#/$defs/runtime"},
-        "publish": {"type": "boolean"},
-        "blocked_reason": {"type": "string", "minLength": 1},
+        "id": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9_-]+(\\.[A-Za-z0-9_-]+)+$"
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "summary": {
+          "type": "string",
+          "minLength": 1
+        },
+        "repository": {
+          "type": "string",
+          "pattern": "^crhy/[A-Za-z0-9_.-]+$"
+        },
+        "homepage": {
+          "type": "string",
+          "format": "uri"
+        },
+        "branch": {
+          "type": "string",
+          "minLength": 1
+        },
+        "runtime": {
+          "$ref": "#/$defs/runtime"
+        },
+        "publish": {
+          "type": "boolean"
+        },
+        "blocked_reason": {
+          "type": "string",
+          "minLength": 1
+        },
         "assets": {
           "type": "array",
           "minItems": 1,
-          "items": {"$ref": "#/$defs/asset"}
+          "items": {
+            "$ref": "#/$defs/asset"
+          }
+        },
+        "release_pin": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "tag",
+            "asset_sha256"
+          ],
+          "properties": {
+            "tag": {
+              "type": "string",
+              "minLength": 1
+            },
+            "asset_sha256": {
+              "type": "object",
+              "minProperties": 1,
+              "additionalProperties": false,
+              "properties": {
+                "x86_64": {
+                  "type": "string",
+                  "pattern": "^[0-9a-f]{64}$"
+                },
+                "aarch64": {
+                  "type": "string",
+                  "pattern": "^[0-9a-f]{64}$"
+                }
+              }
+            }
+          }
+        },
+        "screenshots": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "url",
+              "caption",
+              "sha256"
+            ],
+            "properties": {
+              "url": {
+                "type": "string",
+                "format": "uri"
+              },
+              "caption": {
+                "type": "string",
+                "minLength": 1
+              },
+              "sha256": {
+                "type": "string",
+                "pattern": "^[0-9a-f]{64}$"
+              }
+            }
+          }
         }
       },
       "allOf": [
         {
           "if": {
-            "properties": {"publish": {"const": false}},
-            "required": ["publish"]
+            "properties": {
+              "publish": {
+                "const": false
+              }
+            },
+            "required": [
+              "publish"
+            ]
           },
-          "then": {"required": ["blocked_reason"]}
+          "then": {
+            "required": [
+              "blocked_reason"
+            ]
+          }
         }
       ]
     }

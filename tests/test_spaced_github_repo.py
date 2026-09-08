@@ -3,12 +3,14 @@
 from __future__ import annotations
 
 import copy
+import gzip
 import hashlib
 import importlib.util
 import json
 import pathlib
 import tempfile
 import unittest
+import xml.etree.ElementTree as ET
 
 
 REPOSITORY_ROOT = pathlib.Path(__file__).resolve().parents[1]
@@ -71,6 +73,7 @@ class CatalogTests(unittest.TestCase):
                 "io.github.crhy.SpacedBazaar",
                 "io.github.crhy.SpacedWelcome",
                 "io.github.crhy.voice2textai",
+                "io.github.crhy.rhYciv",
                 "org.spacedlinux.SpacedUpdate",
             },
         )
@@ -106,10 +109,29 @@ class CatalogTests(unittest.TestCase):
         with self.assertRaisesRegex(repo.CatalogError, "fail-closed"):
             repo.validate_catalog(catalog)
 
+    def test_pins_cannot_silently_change_the_latest_stable_policy(self):
+        catalog = copy.deepcopy(self.catalog)
+        catalog["policy"]["channel"] = "latest-stable"
+        with self.assertRaisesRegex(repo.CatalogError, "explicit catalog channel"):
+            repo.validate_catalog(catalog)
+
+    def test_published_apps_require_screenshots(self):
+        catalog = copy.deepcopy(self.catalog)
+        catalog["apps"][0]["screenshots"] = []
+        with self.assertRaisesRegex(repo.CatalogError, "at least one screenshot"):
+            repo.validate_catalog(catalog)
+
+    def test_pin_must_cover_each_architecture(self):
+        catalog = copy.deepcopy(self.catalog)
+        catalog["apps"][0]["assets"].append({"arch": "aarch64", "pattern": "example-aarch64.flatpak"})
+        with self.assertRaisesRegex(repo.CatalogError, "every published architecture"):
+            repo.validate_catalog(catalog)
+
     def test_resolve_from_fixtures_is_deterministic(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
             fixture_dir = pathlib.Path(temporary)
             for app in self.catalog["apps"]:
+                app.pop("release_pin", None)
                 release = release_for(
                     app["repository"], [asset["pattern"] for asset in app["assets"]]
                 )
@@ -153,6 +175,23 @@ class ReleaseAssetTests(unittest.TestCase):
                 release, self.repository, "x86_64", "Example.flatpak"
             )
 
+    def test_reviewed_prerelease_requires_exact_tag_and_digest(self) -> None:
+        release = release_for(self.repository, ["Example.flatpak"])
+        release["prerelease"] = True
+        pin = {"tag": "v9.9.9", "asset_sha256": {"x86_64": f"{1:064x}"}}
+        repo.select_release_asset(release, self.repository, "x86_64", "Example.flatpak", pin)
+        release["tag_name"] = "v9.9.8"
+        with self.assertRaisesRegex(repo.CatalogError, "reviewed pin"):
+            repo.select_release_asset(release, self.repository, "x86_64", "Example.flatpak", pin)
+        release["tag_name"] = "v9.9.9"
+        release["assets"][0]["digest"] = f"sha256:{2:064x}"
+        with self.assertRaisesRegex(repo.CatalogError, "reviewed pin"):
+            repo.select_release_asset(release, self.repository, "x86_64", "Example.flatpak", pin)
+        release["assets"][0]["digest"] = f"sha256:{1:064x}"
+        release["draft"] = True
+        with self.assertRaisesRegex(repo.CatalogError, "not a stable"):
+            repo.select_release_asset(release, self.repository, "x86_64", "Example.flatpak", pin)
+
     def test_missing_github_digest_is_rejected(self) -> None:
         release = release_for(self.repository, ["Example.flatpak"])
         release["assets"][0]["digest"] = None
@@ -173,6 +212,27 @@ class ReleaseAssetTests(unittest.TestCase):
 
 
 class RepositoryOutputTests(unittest.TestCase):
+    def test_screenshots_preserve_metadata_and_do_not_mutate_hardlinks(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = pathlib.Path(temporary)
+            checkout = root / "checkout"
+            checkout.mkdir()
+            original = root / "original.xml"
+            original.write_text('<components><component><id>io.example.App</id><name>App</name>'
+                                '<screenshots><screenshot><image>old</image></screenshot></screenshots>'
+                                '</component></components>')
+            (checkout / "appstream.xml").hardlink_to(original)
+            shots = {"io.example.App": [{"url": "https://example.org/current.png", "caption": "Current view",
+                                         "width": 1280, "height": 720}]}
+            repo.apply_screenshots(checkout, shots)
+            result = ET.parse(checkout / "appstream.xml").getroot()
+            self.assertEqual(result.findtext("component/name"), "App")
+            self.assertEqual(result.findtext("component/screenshots/screenshot/image"), "https://example.org/current.png")
+            self.assertIn("<image>old</image>", original.read_text())
+            self.assertEqual((checkout / "appstream.xml").read_bytes(), gzip.decompress((checkout / "appstream.xml.gz").read_bytes()))
+            with self.assertRaisesRegex(repo.CatalogError, "missing or empty"):
+                repo.apply_screenshots(checkout, {"io.example.Missing": shots["io.example.App"]})
+
     def test_generated_catalog_requires_every_imported_app_and_its_icon(self):
         with tempfile.TemporaryDirectory() as temporary:
             checkout = pathlib.Path(temporary)

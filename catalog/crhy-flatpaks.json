@@ -17,7 +17,7 @@
     "default_branch": "stable"
   },
   "policy": {
-    "channel": "latest-stable",
+    "channel": "latest-stable-with-reviewed-pins",
     "require_exactly_one_asset": true,
     "require_github_sha256": true,
     "require_appstream_metadata": true,
@@ -43,7 +43,20 @@
           "arch": "x86_64",
           "pattern": "SpacedBazaar-x86_64.flatpak"
         }
-      ]
+      ],
+      "screenshots": [
+        {
+          "url": "https://raw.githubusercontent.com/crhy/spacedbazaar/3486d9713cfafc758a746fcee900de9401de3154/screenshots/spaced-bazaar-explore-2026-09.png",
+          "caption": "Explore applications in SpacedBazaar on the Spaced desktop",
+          "sha256": "df73ec7f773a2e532fafac91754146b9982f8f40d844e229a01e6d05b063328f"
+        }
+      ],
+      "release_pin": {
+        "tag": "v0.1.8",
+        "asset_sha256": {
+          "x86_64": "1678f4006bcaacd33be456e6d9159b3edde3f1f0bba10dcd1a540c2d9816d047"
+        }
+      }
     },
     {
       "id": "io.github.crhy.CardsWithCats",
@@ -62,6 +75,13 @@
         {
           "arch": "x86_64",
           "pattern": "CardsWithCats-*.flatpak"
+        }
+      ],
+      "screenshots": [
+        {
+          "url": "https://raw.githubusercontent.com/crhy/CardsWithCats/cb040914f685155e2259047703f58c9c6e4a4d52/screenshots/cards-with-cats-menu.png",
+          "caption": "Start a card game against a table of cats",
+          "sha256": "c8754140910d449da74f7e2e5075001dd4d17018082e02862a383a8cad6b63b9"
         }
       ]
     },
@@ -83,7 +103,20 @@
           "arch": "x86_64",
           "pattern": "SpacedWelcome*x86_64.flatpak"
         }
-      ]
+      ],
+      "screenshots": [
+        {
+          "url": "https://raw.githubusercontent.com/crhy/spacedwelcome/5417644e8e486dff346f9026c9a4b192bf7f1407/screenshots/welcome-0.1.8.png",
+          "caption": "Suggested applications from Flathub and the Spaced GitHub repository",
+          "sha256": "346913ca948f8827c6e291a613464b80dc8a660275647586f7478b01efd07418"
+        }
+      ],
+      "release_pin": {
+        "tag": "v0.1.11",
+        "asset_sha256": {
+          "x86_64": "686f343ab067d8c7ce1c506d1f2fa09d9e2b3f2f750e4667df6115ed6edb2099"
+        }
+      }
     },
     {
       "id": "io.github.crhy.BrutalChess",
@@ -102,6 +135,13 @@
         {
           "arch": "x86_64",
           "pattern": "BrutalChess-*.flatpak"
+        }
+      ],
+      "screenshots": [
+        {
+          "url": "https://raw.githubusercontent.com/crhy/brutalchess/7857f0884d8a7efdada14e3a49df3b636307d971/screenshots/brutalchessshot.png",
+          "caption": "A match on the charcoal-gray 3D chess board",
+          "sha256": "97551e4cd5c2b8b04ffab19f3f580f24080c3e43d8ca9a0445a94f334a949990"
         }
       ]
     },
@@ -123,7 +163,20 @@
           "arch": "x86_64",
           "pattern": "SpacedUpdate-*-x86_64.flatpak"
         }
-      ]
+      ],
+      "screenshots": [
+        {
+          "url": "https://raw.githubusercontent.com/crhy/spacedupdate/d8c6232fc21b65dd85c156cb2133687db8a7e601/screenshots/updates.png",
+          "caption": "Review the installed release and available system updates",
+          "sha256": "fa50733a69106f648f09b356ada5604eeae4718721ffb4afe83f979fcbbc0fb2"
+        }
+      ],
+      "release_pin": {
+        "tag": "0.2.0",
+        "asset_sha256": {
+          "x86_64": "1a496fec1ac5cc24b0aa71dc2a6e67931ee3b025af9d9e6e0c6f911609e59c31"
+        }
+      }
     },
     {
       "id": "io.github.crhy.voice2textai",
@@ -142,6 +195,40 @@
         {
           "arch": "x86_64",
           "pattern": "Voice2Text-AI.flatpak"
+        }
+      ],
+      "screenshots": [
+        {
+          "url": "https://raw.githubusercontent.com/crhy/Voice2Text-AI/f5ad8ae34b86e06d524db705f6672818b7eaa1d1/docs/screenshots/v0.4.0-main.png",
+          "caption": "Local transcription and an AI response side by side",
+          "sha256": "b1bb20feb3578c256e5a57556a64cda44f6321eee6fb7dacabdc00e7e0c92a15"
+        }
+      ]
+    },
+    {
+      "id": "io.github.crhy.rhYciv",
+      "name": "rhYciv",
+      "summary": "Build an empire in a turn-based strategy game",
+      "repository": "crhy/rhYciv",
+      "homepage": "https://github.com/crhy/rhYciv",
+      "branch": "master",
+      "runtime": {
+        "id": "org.freedesktop.Platform",
+        "branch": "25.08",
+        "repository": "https://flathub.org/repo/flathub.flatpakrepo"
+      },
+      "publish": true,
+      "assets": [
+        {
+          "arch": "x86_64",
+          "pattern": "rhYciv-*-x86_64.flatpak"
+        }
+      ],
+      "screenshots": [
+        {
+          "url": "https://raw.githubusercontent.com/crhy/spacedbazaar/d8d1fdf2a24944d2b7063a17911336254129f687/screenshots/rhyciv-main-menu-1600.png",
+          "caption": "Create or load an empire strategy game in rhYciv",
+          "sha256": "ea88207af048fd6952bca2aebc0732cbd80852684b488402f1c090e9a0a85b52"
         }
       ]
     }

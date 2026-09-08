@@ -35,7 +35,7 @@
   <url type="bugtracker">https://github.com/crhy/spacedbazaar/issues</url>
   <url type="translate">https://l10n.gnome.org/module/bazaar/</url>
   <url type="faq">https://github.com/crhy/spacedbazaar#readme</url>
-  <url type="help">https://spacedlinux.com/#help</url>
+  <url type="help">https://spacedlinux.com/help.html</url>
   <url type="donation">https://spacedlinux.com/#donate</url>
   <url type="contact">https://github.com/crhy</url>
   <url type="contribute">https://github.com/crhy/spacedbazaar</url>
@@ -51,28 +51,16 @@
 
   <screenshots>
     <screenshot type="default">
-      <image>https://github.com/user-attachments/assets/e67f35f0-9566-4068-93f5-cb814db0aedd</image>
-      <caption>The home page displaying Flathub apps</caption>
-    </screenshot>
-    <screenshot>
-      <image>https://github.com/user-attachments/assets/3de5d9a0-9c5d-461a-964c-7d680cc5f1a2</image>
-      <caption>App page for Exhibit</caption>
-    </screenshot>
-    <screenshot>
-      <image>https://github.com/user-attachments/assets/18424ebc-73a1-41b5-956e-57dcbcb592e6</image>
-      <caption>Library page</caption>
-    </screenshot>
-    <screenshot>
-      <image>https://github.com/user-attachments/assets/73fa606d-9a54-4169-a692-a14375183b0c</image>
-      <caption>Search page</caption>
-    </screenshot>
-    <screenshot>
-      <image>https://github.com/user-attachments/assets/e38681c0-a064-4075-8a11-3d5f5d84703c</image>
-      <caption>Category page</caption>
+      <image type="source" width="1920" height="1080">https://raw.githubusercontent.com/crhy/spacedbazaar/3486d9713cfafc758a746fcee900de9401de3154/screenshots/spaced-bazaar-explore-2026-09.png</image>
+      <caption>Explore applications in SpacedBazaar on the Spaced desktop</caption>
     </screenshot>
   </screenshots>
 
   <releases>
+    <release version="0.1.9" date="2026-09-08">
+      <url type="details">https://github.com/crhy/spacedbazaar/releases/tag/v0.1.9</url>
+      <description><p>Shows current Spaced desktop screenshots and publishes reviewed application updates with complete screenshot metadata, including rhYciv.</p></description>
+    </release>
     <release version="0.1.8" date="2026-09-07">
       <url type="details">https://github.com/crhy/spacedbazaar/releases/tag/v0.1.8</url>
       <description><p>Keeps the application catalog version aligned with the binary and includes the installed-icon fixes and community help links for Spaced Linux 9.26 testing.</p></description>

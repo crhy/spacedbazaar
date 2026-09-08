@@ -803,9 +803,12 @@ def _write_index(output_dir: pathlib.Path, resolved: dict[str, Any], signed: boo
         [
             "<!doctype html>",
             '<html lang="en">',
+            '<head>',
             '<meta charset="utf-8">',
             '<meta name="viewport" content="width=device-width, initial-scale=1">',
             "<title>Spaced Linux GitHub Flatpak Repository</title>",
+            '<style>body{font:16px/1.6 system-ui,sans-serif;margin:40px auto;padding:0 20px;max-width:1100px;background:#10141c;color:#f8f9fc}a{color:#92cbff}main{overflow-x:auto}table{border-collapse:collapse;width:100%}th,td{padding:12px;text-align:left;border-bottom:1px solid #39404c}footer{margin-top:32px}</style>',
+            '</head><body><main>',
             "<h1>Spaced Linux GitHub Flatpak Repository</h1>",
             f"<p>Repository status: {signature_status}.</p>",
             '<p><a href="spaced-github.flatpakrepo">Add the spaced-github remote</a></p>',
@@ -813,7 +816,9 @@ def _write_index(output_dir: pathlib.Path, resolved: dict[str, Any], signed: boo
             "<table><thead><tr><th>App</th><th>ID</th><th>Release</th><th>Status</th></tr></thead><tbody>",
             *app_rows,
             "</tbody></table>",
-            "</html>",
+            '<p><a href="catalog/resolved.json">View verified release metadata</a></p>',
+            '</main><footer><a href="https://spacedlinux.com/help.html">Online Help</a> · <a href="https://discord.gg/BMW9Y6NB3y">Discord</a> · <a href="https://t.me/+pjmFzHo-i9A2ZWY5">Telegram</a></footer>',
+            "</body></html>",
             "",
         ]
     )
@@ -991,7 +996,7 @@ def build_parser() -> argparse.ArgumentParser:
     subparsers.add_parser("validate", help="validate catalog invariants without network access")
 
     resolve_parser = subparsers.add_parser(
-        "resolve", help="resolve latest stable GitHub release metadata"
+        "resolve", help="resolve stable releases and explicitly reviewed release pins"
     )
     resolve_parser.add_argument("--output", type=_path, required=True)
     resolve_parser.add_argument(

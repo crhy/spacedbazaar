@@ -33,14 +33,20 @@ GitHub. It follows two separate policies:
 
 The repository builder verifies, in order:
 
-1. GitHub's `releases/latest` response is neither a draft nor a prerelease.
+1. Normally, GitHub's `releases/latest` response is neither a draft nor a
+   prerelease. An explicitly reviewed `release_pin` instead requests that exact
+   tag and requires a matching SHA-256 for every architecture; this can select
+   an approved prerelease. Drafts remain forbidden in both cases.
 2. Exactly one asset matches the catalog's architecture-specific pattern.
 3. The asset is fully uploaded and has a GitHub-provided SHA-256 digest.
 4. The complete download matches both the advertised size and digest.
 5. Importing the bundle succeeds with the installed, security-patched OSTree.
 6. The bundle exports exactly the expected app ID, architecture, branch,
    runtime, and AppStream component.
-7. Publication is signed. Unsigned builds are for local verification only.
+7. Every app has reviewed PNG screenshots; HTTPS downloads match their pinned
+   SHA-256 and expected image format. The images are hosted with the repository.
+8. Publication is signed, including both AppStream metadata generations after
+   inserting screenshots. Unsigned builds are for local verification only.
 
 GitHub release assets remain mutable unless the release is made immutable. The
 GitHub digest protects a particular download, but repository GPG signing is the
@@ -56,6 +62,7 @@ publisher trust boundary presented to users.
 | Spaced Linux Welcome | `x86_64` | Publishable |
 | Spaced Update | `x86_64` | Publishable |
 | Voice2Text AI | `x86_64` | Publishable |
+| rhYciv | `x86_64` | Publishable |
 
 Every current application release exports matching AppStream metadata and a
 non-empty icon, imports with patched OSTree, and is eligible for the signed
@@ -153,10 +160,17 @@ For each new CRHY application release:
 4. For every supported architecture, attach exactly one matching `.flatpak`.
 5. Build bundle deltas with bounded chunks; confirm a current patched Flatpak
    can import the bundle before publishing it.
-6. Publish a full release, not a draft or prerelease, and consider making it
-   immutable after verification.
+6. Publish a stable release, or add an exact reviewed tag/SHA pin for a testing
+   release. Never publish a draft. Keep asset bytes immutable after verification;
+   a changed digest at a pinned tag intentionally stops catalog publication.
 7. Run this repository workflow and review `build-report.json` before deploy.
 
 These checks prevent filename drift, wrong-architecture bundles, ID changes,
 missing store metadata, mutable-download surprises, and unsafe static deltas
 from breaking every installed Spaced Linux system at once.
+
+To promote a pinned app, verify the replacement bundle and update its tag,
+asset pattern, and architecture digests together, or remove the pin to resume
+following stable releases. A version-specific asset pattern avoids ambiguity
+when CI also attaches an unversioned bundle to the same release. Changing this
+Flatpak catalog does not opt the native OS into a testing APT suite.

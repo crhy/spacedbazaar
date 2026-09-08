@@ -97,7 +97,7 @@ catalog. After the signed repository is deployed, add it for the current user:
 scripts/configure-spaced-github-remote.sh --user
 ```
 
-Repository construction validates the latest stable GitHub release, SHA-256
+Repository construction validates the selected stable or explicitly pinned release, SHA-256
 digest, bundle identity, architecture, branch, runtime, AppStream metadata, and
 a non-empty application icon before import. The catalog includes every released
 CRHY desktop Flatpak, including SpacedBazaar and Spaced Welcome. Arbitrary

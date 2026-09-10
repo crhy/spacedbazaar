@@ -151,39 +151,6 @@
       ]
     },
     {
-      "id": "org.spacedlinux.SpacedUpdate",
-      "name": "Spaced Update",
-      "summary": "Update Spaced Linux and installed Flatpak applications",
-      "repository": "crhy/spacedupdate",
-      "homepage": "https://github.com/crhy/spacedupdate",
-      "branch": "stable",
-      "runtime": {
-        "id": "org.gnome.Platform",
-        "branch": "50",
-        "repository": "https://flathub.org/repo/flathub.flatpakrepo"
-      },
-      "publish": true,
-      "assets": [
-        {
-          "arch": "x86_64",
-          "pattern": "SpacedUpdate-*-x86_64.flatpak"
-        }
-      ],
-      "screenshots": [
-        {
-          "url": "https://raw.githubusercontent.com/crhy/spacedbazaar/59aa23f1fe25af3f0371c2a81293d761cf6caac4/screenshots/spaced-update-0.2.1.png",
-          "caption": "Check native and Flatpak updates with Spaced Update 0.2.1",
-          "sha256": "d8ba7462cd8fb0fac34fcf2abce0492b2b785822fd66cbf7700b26f0f82079e2"
-        }
-      ],
-      "release_pin": {
-        "tag": "0.2.2",
-        "asset_sha256": {
-          "x86_64": "c1ea7a78b615dd1e173b780d0c43927151e708fbc33a696b9c2fa10442e1faae"
-        }
-      }
-    },
-    {
       "id": "io.github.crhy.voice2textai",
       "name": "Voice2Text AI",
       "summary": "Local speech transcription and AI assistance",

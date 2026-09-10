@@ -52,9 +52,9 @@
         }
       ],
       "release_pin": {
-        "tag": "v0.1.8",
+        "tag": "v0.1.9",
         "asset_sha256": {
-          "x86_64": "1678f4006bcaacd33be456e6d9159b3edde3f1f0bba10dcd1a540c2d9816d047"
+          "x86_64": "bef1a622931aa61ae52ab2fce20234206094769f00ebf648e42ae3d9e9486966"
         }
       }
     },
@@ -101,20 +101,20 @@
       "assets": [
         {
           "arch": "x86_64",
-          "pattern": "SpacedWelcome*x86_64.flatpak"
+          "pattern": "SpacedWelcome-0.1.12-x86_64.flatpak"
         }
       ],
       "screenshots": [
         {
-          "url": "https://raw.githubusercontent.com/crhy/spacedwelcome/5417644e8e486dff346f9026c9a4b192bf7f1407/screenshots/welcome-0.1.8.png",
-          "caption": "Suggested applications from Flathub and the Spaced GitHub repository",
-          "sha256": "346913ca948f8827c6e291a613464b80dc8a660275647586f7478b01efd07418"
+          "url": "https://raw.githubusercontent.com/crhy/spacedbazaar/59aa23f1fe25af3f0371c2a81293d761cf6caac4/screenshots/spaced-welcome-0.1.12.png",
+          "caption": "Install suggested applications or open Spaced Video Drivers",
+          "sha256": "756988188706f4bc26a565b8e52d4d4dcac44c5e173f7cb7d67bb6eec3435ef5"
         }
       ],
       "release_pin": {
-        "tag": "v0.1.11",
+        "tag": "v0.1.12",
         "asset_sha256": {
-          "x86_64": "686f343ab067d8c7ce1c506d1f2fa09d9e2b3f2f750e4667df6115ed6edb2099"
+          "x86_64": "b4458b846f02dd47ea11fac9bae858a75ce1ef9ab8ac2e313a3dc118bb3c3f0b"
         }
       }
     },
@@ -166,9 +166,9 @@
       ],
       "screenshots": [
         {
-          "url": "https://raw.githubusercontent.com/crhy/spacedupdate/d8c6232fc21b65dd85c156cb2133687db8a7e601/screenshots/updates.png",
-          "caption": "Review the installed release and available system updates",
-          "sha256": "fa50733a69106f648f09b356ada5604eeae4718721ffb4afe83f979fcbbc0fb2"
+          "url": "https://raw.githubusercontent.com/crhy/spacedbazaar/59aa23f1fe25af3f0371c2a81293d761cf6caac4/screenshots/spaced-update-0.2.1.png",
+          "caption": "Check native and Flatpak updates with Spaced Update 0.2.1",
+          "sha256": "d8ba7462cd8fb0fac34fcf2abce0492b2b785822fd66cbf7700b26f0f82079e2"
         }
       ],
       "release_pin": {

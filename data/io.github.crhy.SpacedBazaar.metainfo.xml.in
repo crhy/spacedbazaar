@@ -51,12 +51,16 @@
 
   <screenshots>
     <screenshot type="default">
-      <image type="source" width="1920" height="1080">https://raw.githubusercontent.com/crhy/spacedbazaar/3486d9713cfafc758a746fcee900de9401de3154/screenshots/spaced-bazaar-explore-2026-09.png</image>
+      <image type="source" width="1544" height="964">https://raw.githubusercontent.com/crhy/spacedbazaar/15cb25db24c0bd739887049f680c062ba8d8fbad/screenshots/spaced-bazaar-explore-dark-9.26.1.png</image>
       <caption>Explore applications in SpacedBazaar on the Spaced desktop</caption>
     </screenshot>
   </screenshots>
 
   <releases>
+    <release version="0.1.10" date="2026-09-10">
+      <url type="details">https://github.com/crhy/spacedbazaar/releases/tag/v0.1.10</url>
+      <description><p>Keeps the updating view on screen with the current sync step until the catalog has something to browse, instead of showing an empty Explore page for the length of a sync, and gives search results enough room to show application names rather than an ellipsis.</p></description>
+    </release>
     <release version="0.1.9" date="2026-09-08">
       <url type="details">https://github.com/crhy/spacedbazaar/releases/tag/v0.1.9</url>
       <description><p>Shows current Spaced desktop screenshots and publishes reviewed application updates with complete screenshot metadata, including rhYciv.</p></description>

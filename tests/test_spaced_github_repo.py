@@ -74,7 +74,6 @@ class CatalogTests(unittest.TestCase):
                 "io.github.crhy.SpacedWelcome",
                 "io.github.crhy.voice2textai",
                 "io.github.crhy.rhYciv",
-                "org.spacedlinux.SpacedUpdate",
             },
         )
         self.assertTrue(all(app["publish"] for app in apps.values()))

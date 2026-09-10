@@ -177,9 +177,9 @@
         }
       ],
       "release_pin": {
-        "tag": "0.2.0",
+        "tag": "0.2.2",
         "asset_sha256": {
-          "x86_64": "1a496fec1ac5cc24b0aa71dc2a6e67931ee3b025af9d9e6e0c6f911609e59c31"
+          "x86_64": "c1ea7a78b615dd1e173b780d0c43927151e708fbc33a696b9c2fa10442e1faae"
         }
       }
     },

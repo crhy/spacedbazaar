@@ -46,15 +46,20 @@
       ],
       "screenshots": [
         {
-          "url": "https://raw.githubusercontent.com/crhy/spacedbazaar/3486d9713cfafc758a746fcee900de9401de3154/screenshots/spaced-bazaar-explore-2026-09.png",
-          "caption": "Explore applications in SpacedBazaar on the Spaced desktop",
-          "sha256": "df73ec7f773a2e532fafac91754146b9982f8f40d844e229a01e6d05b063328f"
+          "url": "https://raw.githubusercontent.com/crhy/spacedbazaar/15cb25db24c0bd739887049f680c062ba8d8fbad/screenshots/spaced-bazaar-explore-dark-9.26.1.png",
+          "caption": "Explore applications in SpacedBazaar on the Spaced dark desktop",
+          "sha256": "257a7a6e14ccc7987b9a8a872131d113c942c628bfc0404cfc4be9c51e6b12bb"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/crhy/spacedbazaar/15cb25db24c0bd739887049f680c062ba8d8fbad/screenshots/spaced-bazaar-search-dark-9.26.1.png",
+          "caption": "Search results showing application names in SpacedBazaar",
+          "sha256": "548d6663aaaace64044fe14191178f869d27ad29e374d7e5ef9d91840448f715"
         }
       ],
       "release_pin": {
-        "tag": "v0.1.9",
+        "tag": "v0.1.10",
         "asset_sha256": {
-          "x86_64": "bef1a622931aa61ae52ab2fce20234206094769f00ebf648e42ae3d9e9486966"
+          "x86_64": "2cbab66072a1bf5e351330ea8cc8f416846bca36d75bc2c034f3fba64fcdc519"
         }
       }
     },

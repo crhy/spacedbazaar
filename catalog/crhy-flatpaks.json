@@ -106,7 +106,7 @@
       "assets": [
         {
           "arch": "x86_64",
-          "pattern": "SpacedWelcome-0.1.12-x86_64.flatpak"
+          "pattern": "SpacedWelcome-0.1.13-x86_64.flatpak"
         }
       ],
       "screenshots": [
@@ -117,9 +117,9 @@
         }
       ],
       "release_pin": {
-        "tag": "v0.1.12",
+        "tag": "v0.1.13",
         "asset_sha256": {
-          "x86_64": "b4458b846f02dd47ea11fac9bae858a75ce1ef9ab8ac2e313a3dc118bb3c3f0b"
+          "x86_64": "7babc3c7ff27aefebd4a4b283651137ef7563f69dff6cfb1dc2ee9c42c3f310e"
         }
       }
     },

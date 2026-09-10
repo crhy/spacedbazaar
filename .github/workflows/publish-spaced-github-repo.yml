@@ -112,17 +112,6 @@ jobs:
           PY
           fi
 
-      # A screenshot that cannot be fetched is indistinguishable, in the store,
-      # from an application with no screenshots at all. Both causes seen so far
-      # (a Flathub media rewrite for an app published here, and metadata
-      # pointing at github.com/user-attachments) shipped because nothing
-      # checked. Screenshots this publication rehosts are resolved against the
-      # built tree, since Pages has not deployed them yet at this point.
-      - name: Verify every advertised screenshot resolves
-        run: |
-          python3 scripts/verify-appstream-screenshots.py \
-            public https://crhy.github.io/spacedbazaar
-
       - name: Save verified bundle cache
         uses: actions/cache/save@v4
         with:

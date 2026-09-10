@@ -62,10 +62,30 @@ template $BzFlathubPage: Adw.Bin {
             title: _("Updating App Catalog");
             description: _("Updating app catalog from Flathub and Spaced GitHub…");
 
-            child: Adw.Spinner {
-              width-request: 48;
-              height-request: 48;
+            child: Box {
+              orientation: vertical;
+              spacing: 12;
               halign: center;
+
+              Adw.Spinner {
+                width-request: 48;
+                height-request: 48;
+                halign: center;
+              }
+
+              // Show what the sync is actually doing, so a slow catalog
+              // download does not look like a stalled application.
+              Label {
+                halign: center;
+                wrap: true;
+                justify: center;
+                visible: bind $invert_boolean($is_null(template.state as <$BzStateInfo>.background-task-label) as <bool>) as <bool>;
+                label: bind template.state as <$BzStateInfo>.background-task-label;
+
+                styles [
+                  "dimmed",
+                ]
+              }
             };
           };
         }

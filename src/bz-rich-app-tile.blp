@@ -91,7 +91,12 @@ template $BzRichAppTile: $BzListTile {
             xalign: 0.0;
             ellipsize: end;
             label: bind template.group as <$BzEntryGroup>.title;
-            max-width-chars: 18;
+            // An ellipsizing label will happily shrink to a bare "…" when the
+            // row runs out of room, which is what search results looked like
+            // on a desktop with text scaling above 100%. width-chars keeps a
+            // readable minimum so the app name always wins over the button.
+            width-chars: 12;
+            max-width-chars: 24;
           }
 
           Image {

@@ -12,7 +12,7 @@ template $BzSearchPage: Adw.Bin {
       setters {
         grid_view.min-columns: 2;
         grid_view.max-columns: 2;
-        clamp_scrollable.maximum-size: 700;
+        clamp_scrollable.maximum-size: 820;
       }
     }
 
@@ -225,8 +225,12 @@ template $BzSearchPage: Adw.Bin {
               hscrollbar-policy: never;
 
               child: Adw.ClampScrollable clamp_scrollable {
-                maximum-size: 1000;
-                tightening-threshold: 900;
+                // Three rich tiles inside a 1000px clamp leave roughly 300px
+                // each, which is not enough for an app name once the desktop
+                // scales text above 100%. Give the grid the width the tiles
+                // actually need so results show titles, not just an ellipsis.
+                maximum-size: 1400;
+                tightening-threshold: 1200;
 
                 child: GridView grid_view {
                   styles [

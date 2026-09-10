@@ -349,6 +349,15 @@ show_more_clicked (BzFlathubPage *self,
   adw_navigation_view_push (ADW_NAVIGATION_VIEW (nav_view), apps_page);
 }
 
+static gboolean
+flathub_has_content (BzFlathubState *flathub)
+{
+  GListModel *categories = NULL;
+
+  categories = bz_flathub_state_get_categories (flathub);
+  return categories != NULL && g_list_model_get_n_items (categories) > 0;
+}
+
 static void
 invalidating_state_changed (BzFlathubPage *self,
                             GParamSpec    *pspec,
@@ -366,12 +375,19 @@ invalidating_state_changed (BzFlathubPage *self,
       syncing  = bz_state_info_get_syncing (self->state);
     }
 
-  if (flathub != NULL && has_repo)
+  if (!has_repo)
+    page = "empty";
+  else if (flathub != NULL && flathub_has_content (flathub))
+    /* There is something to browse, so keep showing it. A later manual
+     * re-sync must not blank a catalog the user is already reading. */
     page = "content";
   else if (syncing)
+    /* The catalog object exists long before its contents arrive. Showing
+     * "content" here left Explore empty for as long as the sync took, which
+     * reads as a broken store rather than a download in progress. */
     page = "updating";
-  else if (!has_repo)
-    page = "empty";
+  else if (flathub != NULL)
+    page = "content";
   else
     page = "offline";
 

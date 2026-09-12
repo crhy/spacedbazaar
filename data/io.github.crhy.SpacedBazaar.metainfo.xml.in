@@ -57,6 +57,11 @@
   </screenshots>
 
   <releases>
+    <release version="0.1.11" date="2026-09-12">
+      <description>
+        <p>Keep startup loading visible until catalog synchronization finishes.</p>
+      </description>
+    </release>
     <release version="0.1.10" date="2026-09-10">
       <url type="details">https://github.com/crhy/spacedbazaar/releases/tag/v0.1.10</url>
       <description><p>Keeps the updating view on screen with the current sync step until the catalog has something to browse, instead of showing an empty Explore page for the length of a sync, and gives search results enough room to show application names rather than an ellipsis.</p></description>

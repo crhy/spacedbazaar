@@ -72,10 +72,20 @@ template $BzWindow: Adw.ApplicationWindow {
                         label: _("Refreshing");
                         wrap: true;
                         justify: center;
-                        margin-bottom: 24;
 
                         styles [
                           "title-3",
+                        ]
+                      }
+
+                      Label {
+                        label: bind template.state as <$BzStateInfo>.background-task-label;
+                        wrap: true;
+                        justify: center;
+                        margin-bottom: 24;
+
+                        styles [
+                          "dimmed",
                         ]
                       }
                     };

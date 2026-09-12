@@ -126,7 +126,6 @@ struct _BzApplication
   GtkStringList           *blocklists;
   GtkStringList           *curated_configs;
   GtkStringList           *txt_blocklists;
-  gboolean                 flathub_remote_initialized;
   gboolean                 had_cache_on_init;
   gboolean                 running;
   guint                    periodic_timeout_source;
@@ -1290,8 +1289,6 @@ init_fiber (BzWeakRef *wr)
       g_warning ("Unable to ensure cache directory: %s", local_error->message);
       g_clear_error (&local_error);
     }
-  bz_state_info_set_busy (self->state, FALSE);
-
   auth_state = bz_auth_state_new ();
   bz_state_info_set_auth_state (self->state, auth_state);
 
@@ -1763,17 +1760,11 @@ respond_to_flatpak_fiber (BzWeakRef             *wr,
             if (bz_state_info_get_has_flathub (self->state))
               {
                 if (g_strcmp0 (remote_name, "flathub") == 0)
-                  {
-                    self->n_remotes_syncing--;
-                    if (self->n_remotes_syncing == 0)
-                      self->flathub_remote_initialized = TRUE;
-                  }
+                  self->n_remotes_syncing--;
               }
             else
               {
                 self->n_remotes_syncing--;
-                if (self->n_remotes_syncing == 0)
-                  bz_state_info_set_busy (self->state, FALSE);
               }
 
             g_debug ("remote '%s' has finished synchronization; "
@@ -2068,13 +2059,6 @@ respond_to_flatpak_fiber (BzWeakRef             *wr,
           fiber_check_for_updates (self);
           finish_with_background_task_label (self);
         }
-    }
-
-  if (self->n_entries_incoming == 0 &&
-      self->flathub_remote_initialized)
-    {
-      bz_state_info_set_busy (self->state, FALSE);
-      finish_with_background_task_label (self);
     }
 
   return g_steal_pointer (&read_future);

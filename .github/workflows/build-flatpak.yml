@@ -1,7 +1,7 @@
 on:
   push:
     branches: [main, "release/**"]
-    tags: ["*"]
+    tags: ["v*"]
   pull_request:
     paths-ignore:
       - "**.md"
@@ -101,6 +101,14 @@ jobs:
     permissions:
       contents: write
     steps:
+      - name: Git Checkout
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          persist-credentials: false
+
+      - name: Verify release version
+        run: test "$GITHUB_REF_NAME" = "v$(./version.sh get-version)"
+
       - name: Download Flatpak bundles
         uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131 # v7.0.0
         with:

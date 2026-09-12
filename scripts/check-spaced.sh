@@ -23,8 +23,8 @@ PY
 version=$($repo_root/version.sh get-version)
 release_url=$($repo_root/version.sh get-gh-release)
 
-test "$version" = "0.1.9"
-test "$release_url" = "https://github.com/crhy/spacedbazaar/releases/tag/v0.1.9"
+test "$version" = "0.1.11"
+test "$release_url" = "https://github.com/crhy/spacedbazaar/releases/tag/v0.1.11"
 
 python3 - "$repo_root/data/io.github.crhy.SpacedBazaar.metainfo.xml.in" "$version" <<'PY'
 import sys
@@ -50,6 +50,17 @@ grep -q 'prefer_user_installation (store)' "$repo_root/src/bz-transaction-dialog
 
 grep -Fq 'SpacedBazaar-${{ matrix.variant.arch }}.flatpak' "$repo_root/.github/workflows/build-flatpak.yml" || {
     echo "architecture-specific release bundle naming is missing" >&2
+    exit 1
+}
+
+grep -Fq 'tags: ["v*"]' "$repo_root/.github/workflows/build-flatpak.yml" || {
+    echo "release workflow accepts non-version tags" >&2
+    exit 1
+}
+
+grep -Fq 'test "$GITHUB_REF_NAME" = "v$(./version.sh get-version)"' \
+    "$repo_root/.github/workflows/build-flatpak.yml" || {
+    echo "release workflow does not verify the source version" >&2
     exit 1
 }
 

@@ -68,6 +68,11 @@ template $BzWindow: Adw.ApplicationWindow {
                         margin-bottom: 18;
                       }
 
+                      $BzProgressBar sync_progress {
+                        width-request: 280;
+                        fraction: bind template.state as <$BzStateInfo>.busy-progress;
+                      }
+
                       Label {
                         label: _("Refreshing");
                         wrap: true;

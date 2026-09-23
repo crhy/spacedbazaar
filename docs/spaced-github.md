@@ -56,13 +56,16 @@ publisher trust boundary presented to users.
 
 | Application | Published architectures | Status |
 | --- | --- | --- |
-| SpacedBazaar | `x86_64` | Publishable |
+| SpacedBazaar | `x86_64` | Publishable; pinned to `v0.1.12` |
 | Cards With Cats | `x86_64` | Publishable |
 | Brutal Chess | `x86_64` | Publishable |
-| Spaced Linux Welcome | `x86_64` | Publishable |
-| Spaced Update | `x86_64` | Publishable |
-| Voice2Text AI | `x86_64` | Publishable |
+| Voxa | `x86_64` | Publishable; pinned to `v0.1.4`; replaces `io.github.crhy.voice2textai` |
 | rhYciv | `x86_64` | Publishable |
+
+Retired application IDs are not published as current apps. When a replacement
+entry declares `replaces`, the repository builder creates
+`flatpak build-commit-from` commands that mark the retired refs as end-of-life
+and rebase `app/<retired-id>/<arch>/<branch>` to the replacement ID.
 
 Every current application release exports matching AppStream metadata and a
 non-empty icon, imports with patched OSTree, and is eligible for the signed

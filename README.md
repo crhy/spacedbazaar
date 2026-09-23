@@ -99,8 +99,11 @@ scripts/configure-spaced-github-remote.sh --user
 
 Repository construction validates the selected stable or explicitly pinned release, SHA-256
 digest, bundle identity, architecture, branch, runtime, AppStream metadata, and
-a non-empty application icon before import. The catalog includes every released
-CRHY desktop Flatpak, including SpacedBazaar and Spaced Welcome. Arbitrary
+a non-empty application icon before import. The catalog includes every currently published
+CRHY desktop Flatpak, including SpacedBazaar and Voxa. Retired IDs are not
+published as current apps; when a replacement entry declares `replaces`, the
+repository builder marks the retired refs as end-of-life and rebases them to the
+replacement ID. Arbitrary
 GitHub assets are never installed automatically. See
 [the repository, trust, signing, and maintenance documentation](docs/spaced-github.md).
 
@@ -120,13 +123,13 @@ All facets of Spaced Linux are Free.  You can say and call anyone whatever you w
 
 ### Reviewed releases and screenshots
 
-The signed GitHub catalog covers all seven crhy applications with published
+The signed GitHub catalog covers the five crhy applications with published
 Flatpak bundles, including rhYciv. Other crhy projects have no installable
 Flatpak release and are not advertised as installable applications.
 
 Ordinary entries follow the latest stable release. A reviewed release pin
 names an exact GitHub tag and a SHA-256 for every architecture, allowing the
-approved Welcome, Update, and Bazaar testing releases without accepting an
+approved SpacedBazaar `v0.1.12` and Voxa `v0.1.4` releases without accepting an
 arbitrary prerelease. Drafts, changed pinned assets, mismatched identities,
 and unsigned publication remain rejected. Review or remove the pins when
 promoting the next stable application releases. This app catalog does not

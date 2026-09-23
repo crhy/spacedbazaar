@@ -71,12 +71,21 @@ class CatalogTests(unittest.TestCase):
                 "io.github.crhy.BrutalChess",
                 "io.github.crhy.CardsWithCats",
                 "io.github.crhy.SpacedBazaar",
-                "io.github.crhy.SpacedWelcome",
-                "io.github.crhy.voice2textai",
+                "io.github.crhy.voxa",
                 "io.github.crhy.rhYciv",
             },
         )
         self.assertTrue(all(app["publish"] for app in apps.values()))
+        self.assertNotIn("io.github.crhy.SpacedWelcome", apps)
+        self.assertNotIn("io.github.crhy.voice2textai", apps)
+        self.assertEqual(
+            apps["io.github.crhy.voxa"]["replaces"],
+            ["io.github.crhy.voice2textai"],
+        )
+        self.assertEqual(
+            apps["io.github.crhy.SpacedBazaar"]["release_pin"]["tag"],
+            "v0.1.12",
+        )
 
     def test_schema_is_valid_json(self) -> None:
         schema_path = REPOSITORY_ROOT / "catalog" / "crhy-flatpaks.schema.json"
@@ -208,6 +217,62 @@ class ReleaseAssetTests(unittest.TestCase):
             repo.select_release_asset(
                 release, self.repository, "x86_64", "Example.flatpak"
             )
+
+
+class EndOfLifeRebaseTests(unittest.TestCase):
+    def test_replacement_generates_retired_end_of_life_ref(self) -> None:
+        resolved = {
+            "apps": [
+                {
+                    "id": "io.github.crhy.voxa",
+                    "branch": "master",
+                    "publish": True,
+                    "replaces": ["io.github.crhy.voice2textai"],
+                    "assets": [{"arch": "x86_64"}],
+                }
+            ]
+        }
+        commands = repo.end_of_life_rebase_commands(
+            resolved, pathlib.Path("/repo")
+        )
+        self.assertEqual(
+            commands,
+            [
+                [
+                    "flatpak",
+                    "build-commit-from",
+                    "--src-repo=/repo",
+                    "--src-ref=app/io.github.crhy.voxa/x86_64/master",
+                    "--no-update-summary",
+                    "--end-of-life=io.github.crhy.voice2textai is replaced by io.github.crhy.voxa",
+                    "--end-of-life-rebase=io.github.crhy.voice2textai=io.github.crhy.voxa",
+                    "/repo",
+                    "app/io.github.crhy.voice2textai/x86_64/master",
+                ]
+            ],
+        )
+
+    def test_rebase_commands_include_signing_options(self) -> None:
+        resolved = {
+            "apps": [
+                {
+                    "id": "io.github.crhy.voxa",
+                    "branch": "master",
+                    "publish": True,
+                    "replaces": ["io.github.crhy.voice2textai"],
+                    "assets": [{"arch": "aarch64"}],
+                }
+            ]
+        }
+        command = repo.end_of_life_rebase_commands(
+            resolved,
+            pathlib.Path("/repo"),
+            "KEY_ID",
+            pathlib.Path("/gpg"),
+        )[0]
+        self.assertIn("--gpg-sign=KEY_ID", command)
+        self.assertIn("--gpg-homedir=/gpg", command)
+        self.assertIn("app/io.github.crhy.voice2textai/aarch64/master", command)
 
 
 class RepositoryOutputTests(unittest.TestCase):

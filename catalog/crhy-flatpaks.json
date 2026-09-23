@@ -57,9 +57,9 @@
         }
       ],
       "release_pin": {
-        "tag": "v0.1.10",
+        "tag": "v0.1.12",
         "asset_sha256": {
-          "x86_64": "2cbab66072a1bf5e351330ea8cc8f416846bca36d75bc2c034f3fba64fcdc519"
+          "x86_64": "973790f4c6cfac1c49eb61221ddb3f543ec453b36d677e3b6ceb66a00c55523d"
         }
       }
     },
@@ -91,39 +91,6 @@
       ]
     },
     {
-      "id": "io.github.crhy.SpacedWelcome",
-      "name": "Spaced Linux Welcome",
-      "summary": "Set up applications on a new Spaced Linux system",
-      "repository": "crhy/spacedwelcome",
-      "homepage": "https://github.com/crhy/spacedwelcome",
-      "branch": "master",
-      "runtime": {
-        "id": "org.gnome.Platform",
-        "branch": "50",
-        "repository": "https://flathub.org/repo/flathub.flatpakrepo"
-      },
-      "publish": true,
-      "assets": [
-        {
-          "arch": "x86_64",
-          "pattern": "SpacedWelcome-*-x86_64.flatpak"
-        }
-      ],
-      "screenshots": [
-        {
-          "url": "https://raw.githubusercontent.com/crhy/spacedbazaar/59aa23f1fe25af3f0371c2a81293d761cf6caac4/screenshots/spaced-welcome-0.1.12.png",
-          "caption": "Install suggested applications or open Spaced Video Drivers",
-          "sha256": "756988188706f4bc26a565b8e52d4d4dcac44c5e173f7cb7d67bb6eec3435ef5"
-        }
-      ],
-      "release_pin": {
-        "tag": "v0.1.13",
-        "asset_sha256": {
-          "x86_64": "7babc3c7ff27aefebd4a4b283651137ef7563f69dff6cfb1dc2ee9c42c3f310e"
-        }
-      }
-    },
-    {
       "id": "io.github.crhy.BrutalChess",
       "name": "Brutal Chess",
       "summary": "Play 3D chess against a computer opponent",
@@ -151,11 +118,11 @@
       ]
     },
     {
-      "id": "io.github.crhy.voice2textai",
-      "name": "Voice2Text AI",
-      "summary": "Local speech transcription and AI assistance",
-      "repository": "crhy/Voice2Text-AI",
-      "homepage": "https://github.com/crhy/Voice2Text-AI",
+      "id": "io.github.crhy.voxa",
+      "name": "Voxa",
+      "summary": "Your personal voice assistant: dictation and local AI",
+      "repository": "crhy/voxa",
+      "homepage": "https://github.com/crhy/voxa",
       "branch": "master",
       "runtime": {
         "id": "org.gnome.Platform",
@@ -163,19 +130,28 @@
         "repository": "https://flathub.org/repo/flathub.flatpakrepo"
       },
       "publish": true,
+      "replaces": [
+        "io.github.crhy.voice2textai"
+      ],
       "assets": [
         {
           "arch": "x86_64",
-          "pattern": "Voice2Text-AI.flatpak"
+          "pattern": "Voxa-*-x86_64.flatpak"
         }
       ],
       "screenshots": [
         {
-          "url": "https://raw.githubusercontent.com/crhy/Voice2Text-AI/f5ad8ae34b86e06d524db705f6672818b7eaa1d1/docs/screenshots/v0.4.0-main.png",
-          "caption": "Local transcription and an AI response side by side",
-          "sha256": "b1bb20feb3578c256e5a57556a64cda44f6321eee6fb7dacabdc00e7e0c92a15"
+          "url": "https://raw.githubusercontent.com/crhy/voxa/3b388cb964f7084b98b23467e49b94f680a50602/docs/screenshots/main-window.png",
+          "caption": "Voxa's assistant view with a local model and animated character",
+          "sha256": "6f587ea496c63a32c25fde4647bfb023a0cd7cd908d1ce92fa13807bcfc5b4e0"
         }
-      ]
+      ],
+      "release_pin": {
+        "tag": "v0.1.4",
+        "asset_sha256": {
+          "x86_64": "a53bd106f01a55fe5eb5719c7914cbc9c3e824e45ccfb515128695f91becb47a"
+        }
+      }
     },
     {
       "id": "io.github.crhy.rhYciv",

@@ -177,6 +177,7 @@ def validate_catalog(catalog_value: Any) -> None:
         raise CatalogError("catalog.apps must not be empty")
     seen_ids: set[str] = set()
     seen_repositories: set[str] = set()
+    retired_ids: set[str] = set()
     for index, raw_app in enumerate(apps):
         context = f"catalog.apps[{index}]"
         app = _require_mapping(raw_app, context)
@@ -191,7 +192,7 @@ def validate_catalog(catalog_value: Any) -> None:
             "publish",
             "assets",
         ]
-        allowed = required + ["blocked_reason", "release_pin", "screenshots"]
+        allowed = required + ["blocked_reason", "release_pin", "screenshots", "replaces"]
         _require_keys(app, required, allowed, context)
         app_id = _require_nonempty_string(app["id"], f"{context}.id")
         if not APP_ID_RE.fullmatch(app_id):
@@ -210,6 +211,22 @@ def validate_catalog(catalog_value: Any) -> None:
             raise CatalogError(f"duplicate repository: {repository}")
         seen_repositories.add(repository.casefold())
         _require_https_url(app["homepage"], f"{context}.homepage")
+
+        if "replaces" in app:
+            replaced = _require_list(app["replaces"], f"{context}.replaces")
+            if not replaced:
+                raise CatalogError(f"{context}.replaces must not be empty")
+            for retired_id in replaced:
+                retired = _require_nonempty_string(retired_id, f"{context}.replaces")
+                if not APP_ID_RE.fullmatch(retired):
+                    raise CatalogError(
+                        f"{context}.replaces contains an invalid Flatpak ID: {retired}"
+                    )
+                if retired == app_id:
+                    raise CatalogError(f"{context}.replaces cannot name its own app ID")
+                if retired in retired_ids:
+                    raise CatalogError(f"{context}.replaces duplicates retired ID {retired}")
+                retired_ids.add(retired)
 
         if "release_pin" in app:
             if policy["channel"] != "latest-stable-with-reviewed-pins":
@@ -269,6 +286,12 @@ def validate_catalog(catalog_value: Any) -> None:
                 )
         if "release_pin" in app and set(app["release_pin"]["asset_sha256"]) != seen_arches:
             raise CatalogError(f"{context}.release_pin must pin every published architecture")
+
+    conflicting_retired_ids = sorted(retired_ids & seen_ids)
+    if conflicting_retired_ids:
+        raise CatalogError(
+            f"retired application IDs are still published: {conflicting_retired_ids}"
+        )
 
 
 def _load_release_fixture(metadata_dir: pathlib.Path, repository: str) -> dict[str, Any]:
@@ -413,6 +436,8 @@ def resolve_catalog(
         resolved_app["screenshots"] = app.get("screenshots", [])
         if "release_pin" in app:
             resolved_app["release_pin"] = app["release_pin"]
+        if "replaces" in app:
+            resolved_app["replaces"] = app["replaces"]
         resolved_app["release"] = {
             "tag": release["tag_name"],
             "release_id": release.get("id"),
@@ -825,6 +850,39 @@ def _write_index(output_dir: pathlib.Path, resolved: dict[str, Any], signed: boo
     (output_dir / "index.html").write_text(document, encoding="utf-8")
 
 
+def end_of_life_rebase_commands(
+    resolved: dict[str, Any],
+    repo_dir: pathlib.Path,
+    gpg_sign: str | None = None,
+    gpg_homedir: pathlib.Path | None = None,
+) -> list[list[str]]:
+    """Build Flatpak commands that mark retired IDs as end-of-life replacements."""
+    commands: list[list[str]] = []
+    for app in resolved.get("apps", []):
+        if not app.get("publish") or not app.get("replaces"):
+            continue
+        for asset in app["assets"]:
+            src_ref = f"app/{app['id']}/{asset['arch']}/{app['branch']}"
+            for retired_id in app["replaces"]:
+                command = [
+                    "flatpak",
+                    "build-commit-from",
+                    f"--src-repo={repo_dir}",
+                    f"--src-ref={src_ref}",
+                    "--no-update-summary",
+                    f"--end-of-life={retired_id} is replaced by {app['id']}",
+                    f"--end-of-life-rebase={retired_id}={app['id']}",
+                    str(repo_dir),
+                    f"app/{retired_id}/{asset['arch']}/{app['branch']}",
+                ]
+                if gpg_sign:
+                    command.append(f"--gpg-sign={gpg_sign}")
+                    if gpg_homedir is not None:
+                        command.append(f"--gpg-homedir={gpg_homedir}")
+                commands.append(command)
+    return commands
+
+
 def build_repository(
     catalog: dict[str, Any],
     resolved: dict[str, Any],
@@ -878,6 +936,12 @@ def build_repository(
                         **inspection,
                     }
                 )
+
+    rebase_commands = end_of_life_rebase_commands(
+        resolved, repo_dir, gpg_sign, gpg_homedir
+    )
+    for command in rebase_commands:
+        run_command(command)
 
     remote = catalog["remote"]
     update_command = [
@@ -973,6 +1037,7 @@ def build_repository(
         "imported": sorted(imported, key=lambda item: (item["id"], item["arch"])),
         "refs": refs,
         "screenshots": screenshots,
+        "end_of_life_rebases": rebase_commands,
     }
     (output_dir / "build-report.json").write_bytes(canonical_json_bytes(report))
     _write_index(output_dir, resolved, public_key is not None)

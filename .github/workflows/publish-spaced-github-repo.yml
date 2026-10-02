@@ -18,6 +18,10 @@ on:
       - ".github/workflows/publish-spaced-github-repo.yml"
   schedule:
     - cron: "17 4 * * *"
+  # Sent by a CRHY application's release workflow so a new release is
+  # published at once instead of at the next scheduled run (crhy/spaced#250).
+  repository_dispatch:
+    types: [crhy-release]
   workflow_dispatch:
 
 concurrency:

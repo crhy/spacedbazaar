@@ -976,8 +976,14 @@ def build_repository(
             checkout = pathlib.Path(temporary) / "checkout"
             run_command(["ostree", "checkout", "--user-mode", f"--repo={repo_dir}", metadata_ref, str(checkout)])
             apply_screenshots(checkout, selected)
+            # Commit as root with canonical modes, as flatpak does. Files owned
+            # by the CI user fail checksum verification when a client pulls
+            # into a bare-user-only repository as another user, which is how
+            # the system helper refreshes AppStream (crhy/spaced#250).
             command = ["ostree", "commit", f"--repo={repo_dir}", f"--branch={metadata_ref}",
-                       "--subject=Publish reviewed application screenshots", f"--tree=dir={checkout}"]
+                       "--subject=Publish reviewed application screenshots",
+                       "--owner-uid=0", "--owner-gid=0", "--canonical-permissions",
+                       f"--tree=dir={checkout}"]
             if gpg_sign:
                 command.append(f"--gpg-sign={gpg_sign}")
                 if gpg_homedir is not None:

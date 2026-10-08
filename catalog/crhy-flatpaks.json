@@ -145,13 +145,7 @@
           "caption": "Voxa's assistant view with a local model and animated character",
           "sha256": "6f587ea496c63a32c25fde4647bfb023a0cd7cd908d1ce92fa13807bcfc5b4e0"
         }
-      ],
-      "release_pin": {
-        "tag": "v0.1.4",
-        "asset_sha256": {
-          "x86_64": "a53bd106f01a55fe5eb5719c7914cbc9c3e824e45ccfb515128695f91becb47a"
-        }
-      }
+      ]
     },
     {
       "id": "io.github.crhy.rhYciv",

@@ -1,0 +1,17 @@
+using Gtk 4.0;
+
+template $BzProgressRing: Box {
+  Gtk.Overlay overlay {
+    child: DrawingArea ring {
+      width-request: 96;
+      height-request: 96;
+    };
+
+    [overlay]
+    Label label {
+      halign: center;
+      valign: center;
+      label: _("…");
+    }
+  }
+}

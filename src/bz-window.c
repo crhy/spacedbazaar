@@ -37,6 +37,7 @@
 #include "io.h"
 #include "bz-library-page.h"
 #include "bz-progress-bar.h"
+#include "bz-progress-ring.h"
 #include "bz-screenshot-page.h"
 #include "bz-search-bar.h"
 #include "bz-search-page.h"
@@ -66,6 +67,7 @@ struct _BzWindow
   AdwToastOverlay   *toasts;
   AdwViewStack      *main_view_stack;
   GtkStack          *main_stack;
+  BzProgressRing    *progress_ring;
   GtkOverlay        *window_overlay;
 };
 
@@ -785,6 +787,7 @@ bz_window_class_init (BzWindowClass *klass)
   gtk_widget_class_bind_template_child (widget_class, BzWindow, library_page);
   gtk_widget_class_bind_template_child (widget_class, BzWindow, main_view_stack);
   gtk_widget_class_bind_template_child (widget_class, BzWindow, main_stack);
+  gtk_widget_class_bind_template_child (widget_class, BzWindow, progress_ring);
   gtk_widget_class_bind_template_child (widget_class, BzWindow, window_overlay);
   gtk_widget_class_bind_template_callback (widget_class, list_length);
   gtk_widget_class_bind_template_callback (widget_class, update_cb);
@@ -1426,6 +1429,8 @@ set_page (BzWindow *self)
     {
       gtk_stack_set_visible_child_name (self->main_stack, "loading");
       adw_navigation_view_pop_to_tag (self->navigation_view, "main");
+      if (self->progress_ring != NULL)
+        bz_progress_ring_set_fraction (self->progress_ring, bz_state_info_get_busy_progress (self->state));
     }
   else
     gtk_stack_set_visible_child_name (self->main_stack, "main");

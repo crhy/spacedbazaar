@@ -62,9 +62,10 @@ template $BzWindow: Adw.ApplicationWindow {
                       spacing: 6;
                       tooltip-text: bind template.state as <$BzStateInfo>.background-task-label;
 
-                      Adw.Spinner {
-                        width-request: 64;
-                        height-request: 64;
+                      $BzProgressRing ring {
+                        halign: center;
+                        width-request: 96;
+                        height-request: 96;
                         margin-bottom: 18;
                       }
 

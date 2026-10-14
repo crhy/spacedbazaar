@@ -1930,6 +1930,12 @@ bz_entry_group_reconcile_with_installed_set (BzEntryGroup *self,
           self->removable_available++;
           any_installed = TRUE;
         }
+      else
+        {
+          flags |= ENTRY_INSTALLABLE | ENTRY_INSTALLABLE_AVAILABLE;
+          self->installable++;
+          self->installable_available++;
+        }
 
       /* The saved groups cache keeps old installed versions (a source
        * removed long ago still showed "0.1.4"); show only what is really
@@ -1942,12 +1948,6 @@ bz_entry_group_reconcile_with_installed_set (BzEntryGroup *self,
                                   (const char *const[]) {
                                       version != NULL ? version : "",
                                       NULL });
-        }
-      else
-        {
-          flags |= ENTRY_INSTALLABLE | ENTRY_INSTALLABLE_AVAILABLE;
-          self->installable++;
-          self->installable_available++;
         }
 
       g_array_index (self->state_flags, gint32, i) = flags;

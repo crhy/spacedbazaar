@@ -67,10 +67,21 @@ template $BzFlathubPage: Adw.Bin {
               spacing: 12;
               halign: center;
 
-              Adw.Spinner {
-                width-request: 48;
-                height-request: 48;
+              $BzProgressRing sync_progress {
                 halign: center;
+                fraction: bind template.state as <$BzStateInfo>.busy-progress;
+              }
+
+              Label {
+                halign: center;
+                wrap: true;
+                justify: center;
+                visible: bind $invert_boolean($is_null(template.state as <$BzStateInfo>.busy-progress-label) as <bool>) as <bool>;
+                label: bind template.state as <$BzStateInfo>.busy-progress-label;
+
+                styles [
+                  "dimmed",
+                ]
               }
 
               // Show what the sync is actually doing, so a slow catalog

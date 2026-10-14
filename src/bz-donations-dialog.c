@@ -98,8 +98,13 @@ static void
 release_page_clicked (BzDonationsDialog *self,
                       GtkButton         *button)
 {
-  if (self->release_url != NULL)
-    g_app_info_launch_default_for_uri (self->release_url, NULL, NULL);
+  g_autoptr (GtkUriLauncher) launcher = NULL;
+
+  /* Newer release entries carry no <url type="details">; without this
+   * fallback the button silently did nothing while its tooltip showed the
+   * release page. */
+  launcher = gtk_uri_launcher_new (self->release_url != NULL ? self->release_url : RELEASE_PAGE);
+  gtk_uri_launcher_launch (launcher, GTK_WINDOW (gtk_widget_get_root (GTK_WIDGET (self))), NULL, NULL, NULL);
 }
 
 static void

@@ -8,3 +8,4 @@ property=is_user gboolean G_TYPE_BOOLEAN boolean
 property=title char G_TYPE_STRING string
 property=url char G_TYPE_STRING string
 property=name char G_TYPE_STRING string
+property=enumerable gboolean G_TYPE_BOOLEAN boolean

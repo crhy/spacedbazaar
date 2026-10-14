@@ -2117,6 +2117,8 @@ list_repositories_fiber (ListReposData *data)
                                  "title", flatpak_remote_get_title (remote),
                                  "url", flatpak_remote_get_url (remote),
                                  "is-user", FALSE,
+                                 "enumerable", !flatpak_remote_get_noenumerate (remote) &&
+                                                   !flatpak_remote_get_disabled (remote),
                                  NULL);
 
           g_list_store_append (repos, repo);
@@ -2145,6 +2147,8 @@ list_repositories_fiber (ListReposData *data)
                                  "title", flatpak_remote_get_title (remote),
                                  "url", flatpak_remote_get_url (remote),
                                  "is-user", TRUE,
+                                 "enumerable", !flatpak_remote_get_noenumerate (remote) &&
+                                                   !flatpak_remote_get_disabled (remote),
                                  NULL);
 
           g_list_store_append (repos, repo);
@@ -2635,10 +2639,11 @@ transaction_fiber (TransactionData *data)
               transaction_job_data_unref));
     }
 
-  dex_await (dex_future_all_racev (
-                 (DexFuture *const *) jobs->pdata,
-                 jobs->len),
-             NULL);
+  if (jobs->len > 0)
+    dex_await (dex_future_all_racev (
+                   (DexFuture *const *) jobs->pdata,
+                   jobs->len),
+               NULL);
 
   g_mutex_lock (&self->transactions_mutex);
 

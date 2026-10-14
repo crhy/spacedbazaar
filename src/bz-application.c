@@ -30,6 +30,7 @@
 #include "config.h"
 
 #include <glib/gi18n.h>
+#include <xmlb.h>
 #include <malloc.h>
 
 #include "bz-application-map-factory.h"
@@ -40,6 +41,7 @@
 #include "bz-bundle-install-dialog.h"
 #include "bz-content-provider.h"
 #include "bz-donations-dialog.h"
+#include "bz-repository.h"
 #include "bz-download-worker.h"
 #include "bz-entry-cache-manager.h"
 #include "bz-entry-group.h"
@@ -614,6 +616,168 @@ bz_application_bazaar_inspector_action (GSimpleAction *action,
   gtk_window_present (GTK_WINDOW (inspector));
 }
 
+/* An installed app's cache entry is built from the installed ref, which marks
+ * it not reinstallable, and it shares its unique ID with the catalog entry it
+ * replaced in the cache.  Once the app is removed, the page then offered no
+ * Get button until the next full catalog sync.  If the app's source is still
+ * a browsable catalog remote (Flathub, spaced-github), it can be installed
+ * again; a bundle's private origin is gone with the app, so it stays not
+ * reinstallable. */
+static void
+restore_reinstallable_after_removal (BzApplication *self,
+                                     BzEntry       *entry)
+{
+  const char      *unique_id   = NULL;
+  g_auto (GStrv) parts         = NULL;
+  gboolean         user        = FALSE;
+  GListModel      *repos       = NULL;
+  guint            n_repos     = 0;
+
+  if (bz_entry_is_reinstallable (entry))
+    return;
+
+  unique_id = bz_entry_get_unique_id (entry);
+  if (unique_id == NULL)
+    return;
+
+  /* FLATPAK-USER::<origin>::<ref> or FLATPAK-SYSTEM::<origin>::<ref> */
+  parts = g_strsplit (unique_id, "::", 3);
+  if (g_strv_length (parts) != 3)
+    return;
+  if (g_strcmp0 (parts[0], "FLATPAK-USER") == 0)
+    user = TRUE;
+  else if (g_strcmp0 (parts[0], "FLATPAK-SYSTEM") != 0)
+    return;
+
+  repos = bz_state_info_get_repositories (self->state);
+  if (repos == NULL)
+    return;
+
+  n_repos = g_list_model_get_n_items (repos);
+  for (guint i = 0; i < n_repos; i++)
+    {
+      g_autoptr (BzRepository) repo = g_list_model_get_item (repos, i);
+
+      if (bz_repository_get_is_user (repo) == user &&
+          bz_repository_get_enumerable (repo) &&
+          g_strcmp0 (bz_repository_get_name (repo), parts[1]) == 0)
+        {
+          g_object_set (entry, "reinstallable", TRUE, NULL);
+          return;
+        }
+    }
+}
+
+/* The newest release's notes, as bundled for the What's New dialog, so the
+ * About window can show them too (users looked for release notes there). */
+static void
+about_set_release_notes (AdwAboutDialog *dialog)
+{
+  g_autoptr (GBytes) bytes            = NULL;
+  g_autoptr (XbBuilderSource) source  = NULL;
+  g_autoptr (XbBuilder) builder       = NULL;
+  g_autoptr (XbSilo) silo             = NULL;
+  g_autoptr (XbNode) release          = NULL;
+  g_autoptr (XbNode) description      = NULL;
+  g_autofree char *notes              = NULL;
+
+  bytes = g_resources_lookup_data ("/io/github/crhy/SpacedBazaar/release-notes.xml",
+                                   G_RESOURCE_LOOKUP_FLAGS_NONE, NULL);
+  if (bytes == NULL)
+    return;
+
+  source = xb_builder_source_new ();
+  if (!xb_builder_source_load_bytes (source, bytes, XB_BUILDER_SOURCE_FLAG_NONE, NULL))
+    return;
+  builder = xb_builder_new ();
+  xb_builder_import_source (builder, source);
+  silo = xb_builder_compile (builder, XB_BUILDER_COMPILE_FLAG_NONE, NULL, NULL);
+  if (silo == NULL)
+    return;
+
+  release     = xb_silo_query_first (silo, "release", NULL);
+  description = xb_silo_query_first (silo, "release/description", NULL);
+  if (release == NULL || description == NULL)
+    return;
+
+  notes = xb_node_export (description, XB_NODE_EXPORT_FLAG_ONLY_CHILDREN, NULL);
+  if (notes == NULL)
+    return;
+
+  adw_about_dialog_set_release_notes_version (dialog, xb_node_get_attr (release, "version"));
+  adw_about_dialog_set_release_notes (dialog, notes);
+}
+
+/* AdwAboutDialog puts the website and extra links on a page it calls
+ * "Details", with no way to rename it; here it holds only links, so call it
+ * that.  If a future libadwaita builds the dialog differently, the walk
+ * simply finds nothing and the default title stays. */
+static gboolean
+same_title (const char *title,
+            const char *wanted)
+{
+  g_autoptr (GString) plain = NULL;
+
+  if (title == NULL)
+    return FALSE;
+
+  /* libadwaita titles the row "_Details" (with a mnemonic) */
+  plain = g_string_new (title);
+  g_string_replace (plain, "_", "", 0);
+  return g_strcmp0 (plain->str, wanted) == 0;
+}
+
+static void
+about_rename_details (GtkWidget  *widget,
+                      const char *from,
+                      const char *to);
+
+static void
+about_page_pushed_cb (AdwNavigationView *view,
+                      gpointer           user_data)
+{
+  AdwNavigationPage *page = adw_navigation_view_get_visible_page (view);
+
+  if (page != NULL &&
+      same_title (adw_navigation_page_get_title (page), "Details"))
+    adw_navigation_page_set_title (page, _ ("Links"));
+}
+
+static void
+about_rename_details (GtkWidget  *widget,
+                      const char *from,
+                      const char *to)
+{
+  if (ADW_IS_PREFERENCES_ROW (widget) &&
+      same_title (adw_preferences_row_get_title (ADW_PREFERENCES_ROW (widget)), from))
+    {
+      g_autofree char *mnemonic = g_strconcat ("_", to, NULL);
+
+      adw_preferences_row_set_title (ADW_PREFERENCES_ROW (widget),
+                                     adw_preferences_row_get_use_underline (ADW_PREFERENCES_ROW (widget))
+                                         ? mnemonic
+                                         : to);
+    }
+  else if (ADW_IS_NAVIGATION_PAGE (widget) &&
+           same_title (adw_navigation_page_get_title (ADW_NAVIGATION_PAGE (widget)), from))
+    adw_navigation_page_set_title (ADW_NAVIGATION_PAGE (widget), to);
+  else if (ADW_IS_NAVIGATION_VIEW (widget))
+    /* Sub-pages join the widget tree only when shown: rename on arrival. */
+    g_signal_connect (widget, "pushed", G_CALLBACK (about_page_pushed_cb), NULL);
+
+  for (GtkWidget *child = gtk_widget_get_first_child (widget);
+       child != NULL;
+       child = gtk_widget_get_next_sibling (child))
+    about_rename_details (child, from, to);
+}
+
+static void
+about_dialog_map_cb (GtkWidget *dialog,
+                     gpointer   user_data)
+{
+  about_rename_details (dialog, "Details", _ ("Links"));
+}
+
 static void
 bz_application_donate_action (GSimpleAction *action,
                               GVariant      *parameter,
@@ -741,6 +905,9 @@ bz_application_about_action (GSimpleAction *action,
       "issue-url", "https://github.com/crhy/spacedbazaar/issues",
       NULL);
 
+  about_set_release_notes (ADW_ABOUT_DIALOG (dialog));
+  adw_about_dialog_add_link (ADW_ABOUT_DIALOG (dialog), _ ("Full Release Notes"),
+                             RELEASE_PAGE);
   adw_about_dialog_add_link (ADW_ABOUT_DIALOG (dialog), _ ("Online Help"),
                              "https://spacedlinux.com/#help");
   adw_about_dialog_add_link (ADW_ABOUT_DIALOG (dialog), _ ("Spaced Linux Discord"),
@@ -757,6 +924,9 @@ bz_application_about_action (GSimpleAction *action,
       ADW_ABOUT_DIALOG (dialog),
       _ ("Special Thanks"),
       special_thanks);
+
+  /* Its rows join the widget tree only once the dialog is shown. */
+  g_signal_connect (dialog, "map", G_CALLBACK (about_dialog_map_cb), NULL);
 
   adw_dialog_present (dialog, GTK_WIDGET (window));
 }
@@ -1836,6 +2006,7 @@ respond_to_flatpak_fiber (BzWeakRef             *wr,
 
                   if (kind == BZ_BACKEND_NOTIFICATION_KIND_REMOVE_DONE || was_rebased)
                     {
+                      restore_reinstallable_after_removal (self, entry);
                       bz_entry_set_installed_version (entry, NULL);
                       bz_entry_set_installed (entry, FALSE);
                       g_hash_table_remove (self->installed_set, unique_id);
@@ -1845,8 +2016,12 @@ respond_to_flatpak_fiber (BzWeakRef             *wr,
                           BzEntryGroup *group = NULL;
 
                           group = g_hash_table_lookup (self->ids_to_groups, bz_entry_get_id (entry));
+                          /* Recount from the installed set: the group's own
+                           * count is not updated for entries it never loaded,
+                           * which left removed apps listed in the Library. */
                           if (group != NULL &&
-                              (was_rebased || !bz_entry_group_get_removable (group)))
+                              (was_rebased ||
+                               !bz_entry_group_reconcile_with_installed_set (group, self->installed_set)))
                             {
                               gboolean found    = FALSE;
                               guint    position = 0;
@@ -1986,6 +2161,8 @@ respond_to_flatpak_fiber (BzWeakRef             *wr,
                         if (installed && version != NULL && *version != '\0')
                           bz_entry_set_installed_version (entry, version);
 
+                        if (!installed)
+                          restore_reinstallable_after_removal (self, entry);
                         bz_entry_set_installed (entry, installed);
 
                         if (group != NULL)
@@ -1999,7 +2176,7 @@ respond_to_flatpak_fiber (BzWeakRef             *wr,
                                   self->installed_apps, group,
                                   (GCompareDataFunc) cmp_group, NULL);
                             else if (!installed && found &&
-                                     bz_entry_group_get_removable (group) == 0)
+                                     !bz_entry_group_reconcile_with_installed_set (group, installed_set))
                               g_list_store_remove (self->installed_apps, position);
                           }
 
@@ -2009,10 +2186,13 @@ respond_to_flatpak_fiber (BzWeakRef             *wr,
                       }
                   }
 
-                dex_await (dex_future_allv (
-                               (DexFuture *const *) diff_writes->pdata,
-                               diff_writes->len),
-                           NULL);
+                /* Empty after an uninstall: nothing new to write. Dex
+                 * rejects an empty set with CRITICAL assertions. */
+                if (diff_writes->len > 0)
+                  dex_await (dex_future_allv (
+                                 (DexFuture *const *) diff_writes->pdata,
+                                 diff_writes->len),
+                             NULL);
               }
             g_clear_pointer (&self->installed_set, g_hash_table_unref);
             self->installed_set = g_steal_pointer (&installed_set);
@@ -2312,6 +2492,8 @@ backend_sync_finally (DexFuture *future,
 
   if (dex_future_is_resolved (future))
     {
+      bz_state_info_set_busy_progress (self->state, 0.35);
+      bz_state_info_set_busy_progress_label (self->state, _ ("Loading application metadata…"));
       g_autoptr (DexFuture) enum_future = NULL;
 
       enum_future = dex_scheduler_spawn (
@@ -2359,6 +2541,8 @@ flathub_update_finally (DexFuture *future,
 
   if (dex_future_is_resolved (future))
     {
+      bz_state_info_set_busy_progress (self->state, 0.7);
+      bz_state_info_set_busy_progress_label (self->state, _ ("Preparing the catalog…"));
       g_clear_object (&self->flathub);
       g_assert (self->tmp_flathub != NULL);
       self->flathub = g_steal_pointer (&self->tmp_flathub);
@@ -2415,6 +2599,8 @@ sync_finally (DexFuture *future,
   bz_weak_get_or_return_reject (self, &wr->ref);
 
   bz_state_info_set_online (self->state, dex_future_is_resolved (future));
+  bz_state_info_set_busy_progress (self->state, 1.0);
+  bz_state_info_set_busy_progress_label (self->state, _ ("Catalog ready"));
   bz_state_info_set_allow_manual_sync (self->state, TRUE);
   bz_state_info_set_busy (self->state, FALSE);
   bz_state_info_set_syncing (self->state, FALSE);
@@ -4103,6 +4289,8 @@ make_sync_future (BzApplication *self)
 
   bz_state_info_set_syncing (self->state, TRUE);
   bz_state_info_set_recently_synced (self->state, TRUE);
+  bz_state_info_set_busy_progress (self->state, 0.05);
+  bz_state_info_set_busy_progress_label (self->state, _ ("Connecting to app catalogs…"));
   finish_with_background_task_label (self);
 
   refresh_worker = g_subprocess_new (

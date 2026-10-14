@@ -1488,9 +1488,10 @@ dup_all_into_store_fiber (BzEntryGroup *self)
       g_ptr_array_add (futures, bz_result_dup_future (result));
     }
 
-  dex_await (dex_future_allv (
-                 (DexFuture *const *) futures->pdata, futures->len),
-             NULL);
+  if (futures->len > 0)
+    dex_await (dex_future_allv (
+                   (DexFuture *const *) futures->pdata, futures->len),
+               NULL);
 
   store = g_list_store_new (BZ_TYPE_ENTRY);
   for (guint i = 0; i < futures->len; i++)
@@ -1503,6 +1504,28 @@ dup_all_into_store_fiber (BzEntryGroup *self)
           BzEntry *entry = NULL;
 
           entry = g_value_get_object (dex_future_get_value (future, NULL));
+
+          /* Entries come from Bazaar's cache, which also keeps entries for
+           * sources that have since been removed, still marked installed.
+           * The group's flags were reconciled with what is really
+           * installed, so they win: otherwise those phantoms are offered
+           * in the remove dialog and keep the app in the Library. */
+          if (bz_entry_is_installed (entry))
+            {
+              gboolean removable = FALSE;
+
+              g_mutex_lock (&self->mutex);
+              if (i < self->state_flags->len)
+                removable = (g_array_index (self->state_flags, gint32, i) & ENTRY_REMOVABLE) != 0;
+              g_mutex_unlock (&self->mutex);
+
+              if (!removable)
+                {
+                  bz_entry_set_installed_version (entry, NULL);
+                  bz_entry_set_installed (entry, FALSE);
+                }
+            }
+
           bz_entry_group_connect_living (self, entry);
           g_list_store_append (store, entry);
         }
@@ -1907,6 +1930,19 @@ bz_entry_group_reconcile_with_installed_set (BzEntryGroup *self,
           self->removable_available++;
           any_installed = TRUE;
         }
+
+      /* The saved groups cache keeps old installed versions (a source
+       * removed long ago still showed "0.1.4"); show only what is really
+       * installed, with the version reported for it now. */
+      if (i < g_list_model_get_n_items (G_LIST_MODEL (self->installed_versions)))
+        {
+          const char *version = g_hash_table_lookup (installed_set, uid);
+
+          gtk_string_list_splice (self->installed_versions, i, 1,
+                                  (const char *const[]) {
+                                      version != NULL ? version : "",
+                                      NULL });
+        }
       else
         {
           flags |= ENTRY_INSTALLABLE | ENTRY_INSTALLABLE_AVAILABLE;
@@ -1921,6 +1957,7 @@ bz_entry_group_reconcile_with_installed_set (BzEntryGroup *self,
   g_object_notify_by_pspec (G_OBJECT (self), props[PROP_REMOVABLE_AND_AVAILABLE]);
   g_object_notify_by_pspec (G_OBJECT (self), props[PROP_INSTALLABLE]);
   g_object_notify_by_pspec (G_OBJECT (self), props[PROP_INSTALLABLE_AND_AVAILABLE]);
+  g_object_notify_by_pspec (G_OBJECT (self), props[PROP_INSTALLED_VERSIONS]);
 
   return any_installed;
 }

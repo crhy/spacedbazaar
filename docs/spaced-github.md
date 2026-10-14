@@ -56,7 +56,7 @@ publisher trust boundary presented to users.
 
 | Application | Published architectures | Status |
 | --- | --- | --- |
-| SpacedBazaar | `x86_64` | Publishable; pinned to `v0.1.13` |
+| SpacedBazaar | `x86_64` | Publishable; pinned to `v0.1.12` |
 | Cards With Cats | `x86_64` | Publishable |
 | Brutal Chess | `x86_64` | Publishable |
 | Voxa | `x86_64` | Publishable; follows the latest stable release; replaces `io.github.crhy.voice2textai` |

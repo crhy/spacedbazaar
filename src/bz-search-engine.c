@@ -592,7 +592,8 @@ query_task_fiber (QueryTaskData *data)
       g_ptr_array_add (sub_futures, g_steal_pointer (&future));
     }
 
-  result = dex_await (dex_future_allv (
+  result = sub_futures->len == 0 ||
+           dex_await (dex_future_allv (
                           (DexFuture *const *) sub_futures->pdata, sub_futures->len),
                       &local_error);
   if (!result)

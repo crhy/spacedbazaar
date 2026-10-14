@@ -141,9 +141,19 @@
       ],
       "screenshots": [
         {
-          "url": "https://raw.githubusercontent.com/crhy/voxa/3b388cb964f7084b98b23467e49b94f680a50602/docs/screenshots/main-window.png",
-          "caption": "Voxa's assistant view with a local model and animated character",
-          "sha256": "6f587ea496c63a32c25fde4647bfb023a0cd7cd908d1ce92fa13807bcfc5b4e0"
+          "url": "https://raw.githubusercontent.com/crhy/voxa/3dc1a9477ca0a9f62da7d9e05385cbd28dbef6df/docs/screenshots/main-window.png",
+          "caption": "Voxa ready to listen, with facial quality, local AI and ACTIVE, PAUSE and OFFLINE controls",
+          "sha256": "617f62c6e4b0b6e3e4052d0f0093112941584732a41090a715fcd409f63268be"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/crhy/voxa/3dc1a9477ca0a9f62da7d9e05385cbd28dbef6df/docs/screenshots/characters.png",
+          "caption": "Choose from 22 photoreal characters",
+          "sha256": "73675dcc4a8a1ac215f6a62c8769eed801220b0f5717d3169d7141c90743c75b"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/crhy/voxa/3dc1a9477ca0a9f62da7d9e05385cbd28dbef6df/docs/screenshots/voxa-hiroshi.png",
+          "caption": "Every character speaks with an animated face",
+          "sha256": "8c24c3a67de855f4e428169b51278aafe849d3acd6c61dd7aa5f6132c71de8e3"
         }
       ]
     },

@@ -84,7 +84,7 @@ class CatalogTests(unittest.TestCase):
         )
         self.assertEqual(
             apps["io.github.crhy.SpacedBazaar"]["release_pin"]["tag"],
-            "v0.1.12",
+            "v0.1.13",
         )
 
     def test_schema_is_valid_json(self) -> None:

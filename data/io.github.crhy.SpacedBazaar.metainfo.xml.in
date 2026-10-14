@@ -59,7 +59,13 @@
   <releases>
     <release version="0.1.13" date="2026-10-14">
       <description>
-        <p>Catalog loading shows a compact progress ring with the percentage in its centre, and opening Search puts the cursor in the search field straight away. The bundled Flatpak, OSTree, bubblewrap and xdg-dbus-proxy are updated to their latest stable releases.</p>
+        <p>Catalog loading shows a compact progress ring with the percentage in its centre, and opening Search puts the cursor in the search field straight away.</p>
+        <ul>
+          <li>Removing an app updates the Library at once, offers only the sources it is really installed from, and leaves Get available again.</li>
+          <li>Installed versions are shown correctly instead of versions left over from removed sources.</li>
+          <li>About shows What’s New and a Links page with the full release notes.</li>
+          <li>The bundled Flatpak, OSTree, bubblewrap and xdg-dbus-proxy are updated to their latest stable releases.</li>
+        </ul>
       </description>
       <url type="details">https://github.com/crhy/spacedbazaar/releases/tag/v0.1.13</url>
     </release>

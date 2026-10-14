@@ -41,6 +41,18 @@ class StartupLoadingTests(unittest.TestCase):
         self.assertIn("sync_progress", loading_page)
         self.assertIn("busy-progress", loading_page)
 
+    def test_loading_progress_is_a_compact_ring_not_a_full_width_bar(self):
+        # crhy/spaced#291: a full-width bar under a spinner read as a giant scroll bar.
+        flathub_page = (ROOT / "src/bz-flathub-page.blp").read_text(encoding="utf-8")
+        loading_page = WINDOW_TEMPLATE.split('name: "loading";', 1)[1].split(
+            'name: "main";', 1
+        )[0]
+        for template in (loading_page, flathub_page):
+            self.assertIn("$BzProgressRing sync_progress", template)
+            self.assertNotIn("$BzProgressBar sync_progress", template)
+            self.assertNotIn("Adw.Spinner", template.split("sync_progress", 1)[0][-400:])
+        self.assertNotIn("halign: fill;", loading_page)
+
     def test_setup_does_not_reveal_explore_before_sync_starts(self):
         self.assertNotIn(BUSY_FALSE, function_body("init_fiber"))
 

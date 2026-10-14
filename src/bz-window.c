@@ -37,6 +37,7 @@
 #include "io.h"
 #include "bz-library-page.h"
 #include "bz-progress-bar.h"
+#include "bz-progress-ring.h"
 #include "bz-screenshot-page.h"
 #include "bz-search-bar.h"
 #include "bz-search-page.h"
@@ -298,6 +299,36 @@ page_toggled_cb (BzWindow       *self,
                  AdwToggleGroup *toggles)
 {
   set_page (self);
+}
+
+static gboolean
+focus_search_idle (gpointer user_data)
+{
+  BzWindow  *self  = BZ_WINDOW (user_data);
+  GtkWidget *focus = NULL;
+
+  /* Only if the user is still on the Search page and focus is not already
+   * in it: re-grabbing would select what they have just started typing. */
+  if (g_strcmp0 (adw_view_stack_get_visible_child_name (self->main_view_stack), "search") == 0)
+    {
+      focus = gtk_root_get_focus (GTK_ROOT (self));
+      if (focus == NULL || !gtk_widget_is_ancestor (focus, GTK_WIDGET (self->search_page)))
+        gtk_widget_grab_focus (GTK_WIDGET (self->search_page));
+    }
+
+  return G_SOURCE_REMOVE;
+}
+
+static void
+visible_page_changed_cb (BzWindow     *self,
+                         GParamSpec   *pspec,
+                         AdwViewStack *stack)
+{
+  /* crhy/spaced#292: however Search is opened (its tab, the Explore page's
+   * search button, a shortcut), put the cursor in the search field at once.
+   * Wait for an idle moment so the page is mapped and can take focus. */
+  if (g_strcmp0 (adw_view_stack_get_visible_child_name (stack), "search") == 0)
+    g_idle_add_full (G_PRIORITY_DEFAULT_IDLE, focus_search_idle, g_object_ref (self), g_object_unref);
 }
 
 static void
@@ -770,6 +801,7 @@ bz_window_class_init (BzWindowClass *klass)
   g_type_ensure (BZ_TYPE_SEARCH_BAR);
   g_type_ensure (BZ_TYPE_SEARCH_PAGE);
   g_type_ensure (BZ_TYPE_PROGRESS_BAR);
+  g_type_ensure (BZ_TYPE_PROGRESS_RING);
   g_type_ensure (BZ_TYPE_CURATED_VIEW);
   g_type_ensure (BZ_TYPE_FULL_VIEW);
   g_type_ensure (BZ_TYPE_ENTRY);
@@ -867,6 +899,10 @@ bz_window_init (BzWindow *self)
 #endif
 
   adw_view_stack_set_visible_child_name (self->main_view_stack, "flathub");
+  g_signal_connect_swapped (self->main_view_stack,
+                            "notify::visible-child-name",
+                            G_CALLBACK (visible_page_changed_cb),
+                            self);
 
   self->key_controller = gtk_event_controller_key_new ();
   g_signal_connect_swapped (self->key_controller,

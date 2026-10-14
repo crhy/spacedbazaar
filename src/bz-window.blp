@@ -56,25 +56,22 @@ template $BzWindow: Adw.ApplicationWindow {
                     name: "loading";
 
                     child: Box {
-                      halign: fill;
+                      halign: center;
                       valign: center;
                       orientation: vertical;
                       spacing: 6;
                       tooltip-text: bind template.state as <$BzStateInfo>.background-task-label;
 
-                      Adw.Spinner {
-                        width-request: 64;
-                        height-request: 64;
+                      // One compact ring with the percentage in its centre (crhy/spaced#291);
+                      // a full-width bar under a spinner looked like a giant scroll bar.
+                      $BzProgressRing sync_progress {
+                        halign: center;
                         margin-bottom: 18;
-                      }
-
-                      $BzProgressBar sync_progress {
-                        width-request: 280;
                         fraction: bind template.state as <$BzStateInfo>.busy-progress;
                       }
 
                       Label {
-                        label: _("Refreshing");
+                        label: _("Updating App Catalog");
                         wrap: true;
                         justify: center;
 
@@ -83,8 +80,9 @@ template $BzWindow: Adw.ApplicationWindow {
                         ]
                       }
 
+                      // The current step, e.g. "Loading application metadata…".
                       Label {
-                        label: bind template.state as <$BzStateInfo>.background-task-label;
+                        label: bind template.state as <$BzStateInfo>.busy-progress-label;
                         wrap: true;
                         justify: center;
                         margin-bottom: 24;

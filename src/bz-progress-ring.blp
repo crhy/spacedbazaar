@@ -1,0 +1,25 @@
+using Gtk 4.0;
+using Adw 1;
+
+template $BzProgressRing: Adw.Bin {
+  child: Overlay {
+    halign: center;
+    valign: center;
+
+    child: DrawingArea ring {
+      content-width: 96;
+      content-height: 96;
+    };
+
+    [overlay]
+    Label label {
+      halign: center;
+      valign: center;
+
+      styles [
+        "title-4",
+        "numeric",
+      ]
+    }
+  };
+}

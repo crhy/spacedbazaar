@@ -30,6 +30,7 @@
 #include "bz-flathub-curated-section.h"
 #include "bz-flathub-curated-selection.h"
 #include "bz-flathub-page.h"
+#include "bz-progress-ring.h"
 #include "bz-section-view.h"
 
 struct _BzFlathubPage
@@ -253,6 +254,7 @@ bz_flathub_page_class_init (BzFlathubPageClass *klass)
   g_type_ensure (BZ_TYPE_DYNAMIC_LIST_VIEW);
   g_type_ensure (BZ_TYPE_APP_TILE);
   g_type_ensure (BZ_TYPE_FEATURED_CAROUSEL);
+  g_type_ensure (BZ_TYPE_PROGRESS_RING);
 
   gtk_widget_class_set_template_from_resource (widget_class, "/io/github/crhy/SpacedBazaar/bz-flathub-page.ui");
   gtk_widget_class_bind_template_child (widget_class, BzFlathubPage, stack);

@@ -67,14 +67,8 @@ template $BzFlathubPage: Adw.Bin {
               spacing: 12;
               halign: center;
 
-              Adw.Spinner {
-                width-request: 48;
-                height-request: 48;
+              $BzProgressRing sync_progress {
                 halign: center;
-              }
-
-              $BzProgressBar sync_progress {
-                width-request: 280;
                 fraction: bind template.state as <$BzStateInfo>.busy-progress;
               }
 

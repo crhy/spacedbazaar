@@ -57,6 +57,11 @@
   </screenshots>
 
   <releases>
+    <release version="0.1.13" date="2026-10-14">
+      <description>
+        <p>Catalog loading shows a compact progress ring with the percentage in its centre, and opening Search puts the cursor in the search field straight away. The bundled Flatpak, OSTree, bubblewrap and xdg-dbus-proxy are updated to their latest stable releases.</p>
+      </description>
+    </release>
     <release version="0.1.12" date="2026-09-12">
       <description>
         <p>Shows polished catalog progress and phase labels while waiting for Flathub and Spaced GitHub data, without exposing an empty Explore page.</p>

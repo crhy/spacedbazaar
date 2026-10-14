@@ -73,6 +73,23 @@ template $BzFlathubPage: Adw.Bin {
                 halign: center;
               }
 
+              $BzProgressBar sync_progress {
+                width-request: 280;
+                fraction: bind template.state as <$BzStateInfo>.busy-progress;
+              }
+
+              Label {
+                halign: center;
+                wrap: true;
+                justify: center;
+                visible: bind $invert_boolean($is_null(template.state as <$BzStateInfo>.busy-progress-label) as <bool>) as <bool>;
+                label: bind template.state as <$BzStateInfo>.busy-progress-label;
+
+                styles [
+                  "dimmed",
+                ]
+              }
+
               // Show what the sync is actually doing, so a slow catalog
               // download does not look like a stalled application.
               Label {

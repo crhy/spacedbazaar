@@ -57,6 +57,11 @@
   </screenshots>
 
   <releases>
+    <release version="0.1.12" date="2026-09-12">
+      <description>
+        <p>Shows polished catalog progress and phase labels while waiting for Flathub and Spaced GitHub data, without exposing an empty Explore page.</p>
+      </description>
+    </release>
     <release version="0.1.11" date="2026-09-12">
       <description>
         <p>Keep startup loading visible until catalog synchronization finishes.</p>

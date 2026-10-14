@@ -2312,6 +2312,8 @@ backend_sync_finally (DexFuture *future,
 
   if (dex_future_is_resolved (future))
     {
+      bz_state_info_set_busy_progress (self->state, 0.35);
+      bz_state_info_set_busy_progress_label (self->state, _ ("Loading application metadata…"));
       g_autoptr (DexFuture) enum_future = NULL;
 
       enum_future = dex_scheduler_spawn (
@@ -2359,6 +2361,8 @@ flathub_update_finally (DexFuture *future,
 
   if (dex_future_is_resolved (future))
     {
+      bz_state_info_set_busy_progress (self->state, 0.7);
+      bz_state_info_set_busy_progress_label (self->state, _ ("Preparing the catalog…"));
       g_clear_object (&self->flathub);
       g_assert (self->tmp_flathub != NULL);
       self->flathub = g_steal_pointer (&self->tmp_flathub);
@@ -2415,6 +2419,8 @@ sync_finally (DexFuture *future,
   bz_weak_get_or_return_reject (self, &wr->ref);
 
   bz_state_info_set_online (self->state, dex_future_is_resolved (future));
+  bz_state_info_set_busy_progress (self->state, 1.0);
+  bz_state_info_set_busy_progress_label (self->state, _ ("Catalog ready"));
   bz_state_info_set_allow_manual_sync (self->state, TRUE);
   bz_state_info_set_busy (self->state, FALSE);
   bz_state_info_set_syncing (self->state, FALSE);
@@ -4103,6 +4109,8 @@ make_sync_future (BzApplication *self)
 
   bz_state_info_set_syncing (self->state, TRUE);
   bz_state_info_set_recently_synced (self->state, TRUE);
+  bz_state_info_set_busy_progress (self->state, 0.05);
+  bz_state_info_set_busy_progress_label (self->state, _ ("Connecting to app catalogs…"));
   finish_with_background_task_label (self);
 
   refresh_worker = g_subprocess_new (

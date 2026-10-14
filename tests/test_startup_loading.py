@@ -38,6 +38,8 @@ class StartupLoadingTests(unittest.TestCase):
             'name: "main";', 1
         )[0]
         self.assertIn("background-task-label", loading_page)
+        self.assertIn("sync_progress", loading_page)
+        self.assertIn("busy-progress", loading_page)
 
     def test_setup_does_not_reveal_explore_before_sync_starts(self):
         self.assertNotIn(BUSY_FALSE, function_body("init_fiber"))
@@ -52,6 +54,13 @@ class StartupLoadingTests(unittest.TestCase):
             make_sync.index("(DexFutureCallback) sync_finally"),
         )
         self.assertIn(BUSY_FALSE, function_body("sync_finally"))
+
+    def test_sync_reports_progress_for_each_catalog_phase(self):
+        source = SOURCE
+        self.assertIn('bz_state_info_set_busy_progress (self->state, 0.05);', source)
+        self.assertIn('bz_state_info_set_busy_progress (self->state, 0.35);', source)
+        self.assertIn('bz_state_info_set_busy_progress (self->state, 0.7);', source)
+        self.assertIn('bz_state_info_set_busy_progress (self->state, 1.0);', source)
 
 
 if __name__ == "__main__":

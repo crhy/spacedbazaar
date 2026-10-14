@@ -57,6 +57,17 @@
   </screenshots>
 
   <releases>
+    <release version="0.1.14" date="2026-10-14">
+      <description>
+        <p>Fixes the Install button, which 0.1.13 hid for apps that were not installed, and keeps system-wide app information up to date.</p>
+        <ul>
+          <li>Apps that are not installed show their Install button again.</li>
+          <li>Refreshing the catalog updates system-wide app information again, so Bazaar shows current versions instead of week-old ones.</li>
+          <li>Catalog refresh problems are written to the log instead of passing silently.</li>
+        </ul>
+      </description>
+      <url type="details">https://github.com/crhy/spacedbazaar/releases/tag/v0.1.14</url>
+    </release>
     <release version="0.1.13" date="2026-10-14">
       <description>
         <p>Catalog loading shows a compact progress ring with the percentage in its centre, and opening Search puts the cursor in the search field straight away.</p>

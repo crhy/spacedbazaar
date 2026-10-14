@@ -42,6 +42,21 @@ main (int   argc,
       return 0;
     }
 
+  /* In the Flatpak, libflatpak writes a remote's summary to a temporary file
+   * and asks the system helper, outside the sandbox, to read it.  The
+   * sandbox's /tmp is private, so every system remote whose metadata had
+   * changed failed to update ("Failed to open file /tmp/remote-summary..."),
+   * and its AppStream data was never refreshed again.  The per-app runtime
+   * directory is shared with the host at the same path. */
+  if (g_getenv ("FLATPAK_ID") != NULL)
+    {
+      g_autofree char *shared_tmp = g_build_filename (
+          g_get_user_runtime_dir (), "app", g_getenv ("FLATPAK_ID"), NULL);
+
+      if (g_file_test (shared_tmp, G_FILE_TEST_IS_DIR))
+        g_setenv ("TMPDIR", shared_tmp, TRUE);
+    }
+
   dex_init ();
 
   bindtextdomain (GETTEXT_PACKAGE, LOCALEDIR);

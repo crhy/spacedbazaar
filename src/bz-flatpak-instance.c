@@ -1553,12 +1553,15 @@ retrieve_refs_for_enumerable_remote (BzFlatpakInstance   *self,
       cancellable,
       &local_error);
   if (!result)
-    SEND_AND_RETURN_ERROR (
-        self, TRUE,
-        BZ_FLATPAK_ERROR_REMOTE_SYNCHRONIZATION_FAILURE,
-        "Failed to synchronize remote '%s': %s",
-        remote_name,
-        local_error->message);
+    {
+      /* Only the remote's metadata (title, icon, etc.) failed to update; its
+       * AppStream data can still be refreshed.  Stopping here left system
+       * remotes showing week-old versions. */
+      g_warning ("Failed to update metadata of remote '%s', refreshing its "
+                 "app data anyway: %s",
+                 remote_name, local_error->message);
+      g_clear_error (&local_error);
+    }
 
   result = flatpak_installation_update_appstream_full_sync (
       installation,

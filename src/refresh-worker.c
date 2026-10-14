@@ -90,12 +90,21 @@ run (MainData *data)
   if (channel == NULL)
     goto err;
 
-  result = dex_await (
-      bz_backend_retrieve_remote_entries (
-          BZ_BACKEND (flatpak), NULL),
-      &local_error);
-  if (!result)
-    goto err;
+  {
+    g_autoptr (DexFuture) remote_future = NULL;
+    const GValue *value                 = NULL;
+
+    remote_future = bz_backend_retrieve_remote_entries (BZ_BACKEND (flatpak), NULL);
+    result        = dex_await (dex_ref (remote_future), &local_error);
+    if (!result)
+      goto err;
+
+    /* A partial failure resolves to a message, not an error: say so, or
+     * a remote that never refreshes leaves no trace at all. */
+    value = dex_future_get_value (remote_future, NULL);
+    if (value != NULL && G_VALUE_HOLDS_STRING (value))
+      g_warning ("%s", g_value_get_string (value));
+  }
 
   installed_set = dex_await_boxed (
       bz_backend_retrieve_install_ids (

@@ -254,8 +254,8 @@
                 {
                   "type": "git",
                   "url": "https://github.com/polkit-org/polkit",
-                  "commit": "9e4894c969eecf26a3ba762f4f7a268aa0fb3e51",
-                  "tag": "127",
+                  "commit": "e6373dc19975d8583568c6cd7025d03e682ca956",
+                  "tag": "128",
                   "x-checker-data": {
                     "type": "git",
                     "tag-pattern": "^([\\d.]+)$"
@@ -287,8 +287,8 @@
                     {
                       "type": "git",
                       "url": "https://github.com/ostreedev/ostree",
-                      "tag": "v2026.4",
-                      "commit": "4f4445a8912f70c604fa84a057a8f4e904e35a24",
+                      "tag": "v2026.5",
+                      "commit": "7ab59e047031812fc6b3d68cd20d0e110c3bf0a1",
                       "x-checker-data": {
                         "type": "anitya",
                         "project-id": 10899,

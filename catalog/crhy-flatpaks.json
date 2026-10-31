@@ -64,6 +64,39 @@
       }
     },
     {
+      "id": "io.github.crhy.SpacedRGB",
+      "name": "Spaced RGB",
+      "summary": "Control RGB lighting and the Lian Li cooler display",
+      "repository": "crhy/spacedrgb",
+      "homepage": "https://github.com/crhy/spacedrgb",
+      "branch": "stable",
+      "runtime": {
+        "id": "org.gnome.Platform",
+        "branch": "50",
+        "repository": "https://flathub.org/repo/flathub.flatpakrepo"
+      },
+      "publish": true,
+      "assets": [
+        {
+          "arch": "x86_64",
+          "pattern": "SpacedRGB-*-x86_64.flatpak"
+        }
+      ],
+      "release_pin": {
+        "tag": "v0.1.0",
+        "asset_sha256": {
+          "x86_64": "2ad5ca6ac10e3d0d05bce1aea63a738255e36ca66d6e1b6c7d3961d217426560"
+        }
+      },
+      "screenshots": [
+        {
+          "url": "https://raw.githubusercontent.com/crhy/spacedbazaar/e1941886366c0e9aec559f5be390089380dc7b00/screenshots/spaced-rgb-controls.png",
+          "caption": "Lighting, color presets and CPU temperature LCD controls with example cooler targets",
+          "sha256": "2de9ba6c8d0e6d11b5be13853de17bc72076842aff37f31d72334372a8593a1d"
+        }
+      ]
+    },
+    {
       "id": "io.github.crhy.CardsWithCats",
       "name": "Cards With Cats",
       "summary": "Play classic card games against computer-controlled cats",

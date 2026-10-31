@@ -71,6 +71,7 @@ class CatalogTests(unittest.TestCase):
                 "io.github.crhy.BrutalChess",
                 "io.github.crhy.CardsWithCats",
                 "io.github.crhy.SpacedBazaar",
+                "io.github.crhy.SpacedRGB",
                 "io.github.crhy.voxa",
                 "io.github.crhy.rhYciv",
             },

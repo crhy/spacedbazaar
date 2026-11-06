@@ -64,6 +64,7 @@
 #include "bz-root-curated-config.h"
 #include "bz-serializable.h"
 #include "bz-state-info.h"
+#include "bz-spaced-theme.h"
 #include "bz-transaction-manager.h"
 #include "bz-window.h"
 #include "bz-yaml-parser.h"
@@ -116,6 +117,7 @@ struct _BzApplication
   GPtrArray               *blocklist_regexes;
   GPtrArray               *txt_blocked_id_sets;
   GSettings               *settings;
+  GObject                 *spaced_theme;
   GTimer                  *init_timer;
   GWeakRef                 main_window;
   GtkCustomFilter         *appid_filter;
@@ -390,6 +392,7 @@ bz_application_dispose (GObject *object)
   g_clear_object (&self->search_biases_backing);
   g_clear_object (&self->search_engine);
   g_clear_object (&self->settings);
+  g_clear_object (&self->spaced_theme);
   g_clear_object (&self->state);
   g_clear_object (&self->tmp_flathub);
   g_clear_object (&self->transactions);
@@ -3811,11 +3814,7 @@ init_service_struct (BzApplication *self,
       g_action_map_lookup_action (G_ACTION_MAP (self), "sync-remotes"), "enabled",
       G_BINDING_SYNC_CREATE);
 
-  /* Spaced Linux ships dark desktop themes; keep the store in the dark even
-     though the sandboxed app cannot read the host's color-scheme setting. */
-  adw_style_manager_set_color_scheme (
-      adw_style_manager_get_default (),
-      ADW_COLOR_SCHEME_FORCE_DARK);
+  self->spaced_theme = bz_spaced_theme_new ();
 }
 
 static GtkWindow *

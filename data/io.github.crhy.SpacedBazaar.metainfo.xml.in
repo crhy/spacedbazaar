@@ -57,6 +57,10 @@
   </screenshots>
 
   <releases>
+    <release version="0.1.15" date="2026-11-06">
+      <description><p>Follow Spaced Linux light, dark and coloured desktop palettes, including live theme changes.</p></description>
+      <url type="details">https://github.com/crhy/spacedbazaar/releases/tag/v0.1.15</url>
+    </release>
     <release version="0.1.14" date="2026-10-14">
       <description>
         <p>Fixes the Install button, which 0.1.13 hid for apps that were not installed, and keeps system-wide app information up to date.</p>

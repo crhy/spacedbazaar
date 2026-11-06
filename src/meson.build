@@ -66,6 +66,7 @@ bz_sources = files(
   'bz-app-tile.c',
   'bz-application-map-factory.c',
   'bz-application.c',
+  'bz-spaced-theme.c',
   'bz-apps-page.c',
   'bz-appstream-description-render.c',
   'bz-appstream-parser.c',

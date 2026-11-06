@@ -57,9 +57,9 @@
         }
       ],
       "release_pin": {
-        "tag": "v0.1.14",
+        "tag": "v0.1.15",
         "asset_sha256": {
-          "x86_64": "88252fbd065beab08c281d924f92bee7559c4b2263476f3fb9a1806937d1cfce"
+          "x86_64": "61791a9dd1739a741dcddcb5bb96d62e575b803a2a7d1b113b008a5011813c8c"
         }
       }
     },

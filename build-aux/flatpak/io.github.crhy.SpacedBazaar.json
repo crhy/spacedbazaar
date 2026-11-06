@@ -15,6 +15,7 @@
     "--device=dri",
     "--filesystem=/var/lib/flatpak",
     "--filesystem=xdg-data/flatpak",
+    "--filesystem=xdg-config/spaced:ro",
     "--talk-name=org.freedesktop.Flatpak",
     "--system-talk-name=org.freedesktop.Flatpak.SystemHelper",
     "--filesystem=/var/tmp",

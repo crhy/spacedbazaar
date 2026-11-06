@@ -16,6 +16,7 @@ finish_args = manifest["finish-args"]
 
 assert manifest["id"] == "io.github.crhy.SpacedBazaar"
 assert "--filesystem=xdg-data/flatpak" in finish_args
+assert "--filesystem=xdg-config/spaced:ro" in finish_args
 assert not any("/home/" in arg for arg in finish_args)
 assert not any(arg.startswith("--env=FLATPAK_USER_DIR=") for arg in finish_args)
 PY
@@ -23,8 +24,8 @@ PY
 version=$($repo_root/version.sh get-version)
 release_url=$($repo_root/version.sh get-gh-release)
 
-test "$version" = "0.1.11"
-test "$release_url" = "https://github.com/crhy/spacedbazaar/releases/tag/v0.1.11"
+test "$version" = "0.1.15"
+test "$release_url" = "https://github.com/crhy/spacedbazaar/releases/tag/v$version"
 
 python3 - "$repo_root/data/io.github.crhy.SpacedBazaar.metainfo.xml.in" "$version" <<'PY'
 import sys

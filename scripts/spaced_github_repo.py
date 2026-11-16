@@ -5,7 +5,9 @@ The catalog is intentionally curated. GitHub has no global release-asset
 search endpoint, and a filename ending in ``.flatpak`` is not a trust signal.
 This tool accepts only catalogued repositories, exact-one asset matches,
 GitHub-published SHA-256 digests, and bundles whose embedded identity matches
-the catalog before importing them into the repository.
+the catalog before importing them into the repository. An opted-in peer mirror
+may only ever supply bytes: every candidate is verified against the origin's
+published size and SHA-256, and the signed origin is always the last resort.
 """
 
 from __future__ import annotations
@@ -30,7 +32,7 @@ import urllib.error
 import urllib.parse
 import urllib.request
 import xml.etree.ElementTree as ET
-from typing import Any, Iterable
+from typing import Any, Callable, Iterable, Sequence
 
 
 GITHUB_API_VERSION = "2022-11-28"
@@ -39,6 +41,15 @@ SHA256_RE = re.compile(r"^[0-9a-f]{64}$")
 APP_ID_RE = re.compile(r"^[A-Za-z0-9_-]+(?:\.[A-Za-z0-9_-]+)+$")
 REPOSITORY_RE = re.compile(r"^crhy/[A-Za-z0-9_.-]+$")
 SUPPORTED_ARCHES = {"aarch64", "x86_64"}
+PEER_KEYS = ["name", "base_url", "allow_for_arches"]
+PEER_NAME_RE = re.compile(r"^[A-Za-z0-9._-]+$")
+PEER_URL_PLACEHOLDER = "{filename}"
+ORIGIN_SOURCE = "origin"
+CACHE_SOURCE = "cache"
+PROVENANCE_FILENAME = "provenance.json"
+# A hostile peer must not be able to fill the cache: at most the advertised size
+# plus this fixed slack is ever written to disk.
+PEER_SLACK_BYTES = 64 * 1024
 
 
 class CatalogError(RuntimeError):
@@ -101,10 +112,12 @@ def load_catalog(path: pathlib.Path) -> dict[str, Any]:
 
 def validate_catalog(catalog_value: Any) -> None:
     catalog = _require_mapping(catalog_value, "catalog")
+    # "peers" is optional and inert while policy.peer_fetch is "off"; it is still
+    # shape-checked so a future opt-in cannot smuggle in an unreviewed mirror.
     _require_keys(
         catalog,
         ["schema_version", "publisher", "remote", "policy", "apps"],
-        ["$schema", "schema_version", "publisher", "remote", "policy", "apps"],
+        ["$schema", "schema_version", "publisher", "remote", "policy", "apps", "peers"],
         "catalog",
     )
     if catalog["schema_version"] != 1:
@@ -157,6 +170,7 @@ def validate_catalog(catalog_value: Any) -> None:
         "require_appstream_metadata",
         "require_appstream_icon",
         "unverified_github_assets",
+        "peer_fetch",
     ]
     _require_keys(policy, policy_keys, policy_keys, "catalog.policy")
     expected_policy = {
@@ -166,11 +180,14 @@ def validate_catalog(catalog_value: Any) -> None:
         "require_appstream_metadata": True,
         "require_appstream_icon": True,
         "unverified_github_assets": "never-install-automatically",
+        "peer_fetch": "off",
     }
     if policy != expected_policy or policy["channel"] not in {
         "latest-stable", "latest-stable-with-reviewed-pins"
     }:
         raise CatalogError("catalog.policy must retain the fail-closed verification policy")
+
+    validate_peers(catalog.get("peers", []))
 
     apps = _require_list(catalog["apps"], "catalog.apps")
     if not apps:
@@ -465,39 +482,247 @@ def sha256_file(path: pathlib.Path) -> str:
     return digest.hexdigest()
 
 
+def _peer_name(value: Any, context: str) -> str:
+    name = _require_nonempty_string(value, context)
+    if not PEER_NAME_RE.fullmatch(name):
+        raise CatalogError(f"{context} must match {PEER_NAME_RE.pattern}")
+    if name == ORIGIN_SOURCE:
+        raise CatalogError(f"{context} cannot claim the reserved {ORIGIN_SOURCE} name")
+    return name
+
+
+def _peer_url_template(value: Any, context: str) -> str:
+    template = _require_https_url(value, context)
+    if PEER_URL_PLACEHOLDER not in template:
+        raise CatalogError(
+            f"{context} must contain the {PEER_URL_PLACEHOLDER} asset filename placeholder"
+        )
+    without_placeholder = template.replace(PEER_URL_PLACEHOLDER, "")
+    if "{" in without_placeholder or "}" in without_placeholder:
+        raise CatalogError(f"{context} has an unknown placeholder")
+    if any(character in without_placeholder for character in " \t\n\\?#"):
+        raise CatalogError(f"{context} must not contain spaces, queries, or fragments")
+    if ".." in without_placeholder.split("/"):
+        raise CatalogError(f"{context} must not traverse outside its base path")
+    return template
+
+
+def validate_peers(peers_value: Any, context: str = "catalog.peers") -> list[dict[str, Any]]:
+    """Validate an opt-in peers block; a peer may only ever supply bytes."""
+    peers = _require_list(peers_value, context)
+    validated: list[dict[str, Any]] = []
+    seen_names: set[str] = set()
+    for index, raw_peer in enumerate(peers):
+        peer_context = f"{context}[{index}]"
+        peer = _require_mapping(raw_peer, peer_context)
+        _require_keys(peer, PEER_KEYS, PEER_KEYS, peer_context)
+        name = _peer_name(peer["name"], f"{peer_context}.name")
+        if name in seen_names:
+            raise CatalogError(f"duplicate peer name: {name}")
+        seen_names.add(name)
+        base_url = _peer_url_template(peer["base_url"], f"{peer_context}.base_url")
+        arches = _require_list(
+            peer["allow_for_arches"], f"{peer_context}.allow_for_arches"
+        )
+        if not arches:
+            raise CatalogError(f"{peer_context}.allow_for_arches must not be empty")
+        selected_arches: list[str] = []
+        for arch in arches:
+            arch = _require_nonempty_string(
+                arch, f"{peer_context}.allow_for_arches"
+            )
+            if arch not in SUPPORTED_ARCHES:
+                raise CatalogError(
+                    f"{peer_context}.allow_for_arches is unsupported: {arch}"
+                )
+            if arch in selected_arches:
+                raise CatalogError(f"{peer_context}.allow_for_arches duplicates {arch}")
+            selected_arches.append(arch)
+        validated.append(
+            {
+                "name": name,
+                "base_url": base_url,
+                "allow_for_arches": selected_arches,
+            }
+        )
+    return validated
+
+
+def parse_peer_spec(spec: str) -> dict[str, Any]:
+    """Parse one --peer-mirror NAME=URL value with the catalog's peer rules."""
+    name, separator, url = str(spec).partition("=")
+    if not separator:
+        raise CatalogError(f"--peer-mirror expects NAME=URL, got {spec!r}")
+    return validate_peers(
+        [
+            {
+                "name": name.strip(),
+                "base_url": url.strip(),
+                "allow_for_arches": sorted(SUPPORTED_ARCHES),
+            }
+        ],
+        "--peer-mirror",
+    )[0]
+
+
+def resolve_peer_sources(
+    catalog: dict[str, Any],
+    cli_specs: Iterable[str] = (),
+) -> list[dict[str, Any]]:
+    """Which peers this run may consult, and only when the operator opted in.
+
+    The shipped catalog keeps policy.peer_fetch at "off", so a declared peers
+    array is validated for shape but never consulted; --peer-mirror is the
+    explicit per-run opt-in an operator types themselves.
+    """
+    declared = validate_peers(catalog.get("peers", []))
+    if catalog["policy"]["peer_fetch"] != "off":
+        raise CatalogError(
+            'catalog.policy.peer_fetch must be "off" until peer fetches are reviewed'
+        )
+    if declared:
+        raise CatalogError(
+            "catalog declares peers while catalog.policy.peer_fetch is off; "
+            "remove them from the catalog or opt in per run with --peer-mirror"
+        )
+    peers: list[dict[str, Any]] = []
+    seen_names: set[str] = set()
+    for spec in cli_specs:
+        peer = parse_peer_spec(spec)
+        if peer["name"] in seen_names:
+            raise CatalogError(f"duplicate --peer-mirror name: {peer['name']}")
+        seen_names.add(peer["name"])
+        peers.append(peer)
+    return peers
+
+
+def peer_candidates(
+    peers: Sequence[dict[str, Any]],
+    asset: dict[str, Any],
+) -> list[tuple[str, str]]:
+    """Candidate (source, URL) pairs: opted-in peers first, signed origin last.
+
+    Order is about availability only. The origin's published SHA-256 stays the
+    single acceptance criterion for every candidate, so a peer can never become
+    an update authority.
+    """
+    candidates: list[tuple[str, str]] = []
+    for peer in peers:
+        if asset["arch"] not in peer["allow_for_arches"]:
+            continue
+        url = peer["base_url"].replace(PEER_URL_PLACEHOLDER, asset["name"])
+        _require_https_url(url, f"peer {peer['name']} URL")
+        if url == asset["download_url"]:
+            continue
+        candidates.append((peer["name"], url))
+    candidates.append((ORIGIN_SOURCE, asset["download_url"]))
+    return candidates
+
+
+def _copy_bounded(source: Any, sink: Any, limit: int) -> None:
+    remaining = limit
+    while remaining > 0:
+        chunk = source.read(min(1024 * 1024, remaining))
+        if not chunk:
+            break
+        sink.write(chunk)
+        remaining -= len(chunk)
+
+
+def _stream_to_path(url: str, destination: pathlib.Path, limit: int) -> None:
+    """Default fetch: stream at most limit bytes of one HTTPS URL to disk."""
+    request = urllib.request.Request(
+        url,
+        headers={"Accept": "application/octet-stream", "User-Agent": USER_AGENT},
+    )
+    try:
+        with urllib.request.urlopen(request, timeout=120) as response, destination.open("wb") as sink:
+            _copy_bounded(response, sink, limit)
+    except (OSError, urllib.error.URLError) as error:
+        raise CatalogError(f"cannot download {url}: {error}") from error
+
+
+def _record_provenance(
+    cache_dir: pathlib.Path,
+    filename: str,
+    source: str,
+    rejections: Sequence[str] = (),
+) -> None:
+    """Note which source served each cached asset for --cache-dir diagnostics."""
+    path = cache_dir / PROVENANCE_FILENAME
+    entries: dict[str, Any] = {}
+    if path.exists():
+        try:
+            stored = json.loads(path.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError):
+            stored = None
+        if isinstance(stored, dict):
+            entries = stored
+    entry: dict[str, Any] = {"source": source}
+    if rejections:
+        entry["rejections"] = list(rejections)
+    entries[filename] = entry
+    path.write_bytes(canonical_json_bytes(entries))
+
+
 def download_asset(
     asset: dict[str, Any],
     cache_dir: pathlib.Path,
-) -> pathlib.Path:
+    peers: Sequence[dict[str, Any]] = (),
+    fetch: Callable[[str, pathlib.Path, int], None] = _stream_to_path,
+) -> tuple[pathlib.Path, str]:
+    """Fetch one asset as (path, source); only the origin's digest accepts bytes.
+
+    Every candidate streams into a bounded partial file. A candidate is kept only
+    if it matches the origin-published size and SHA-256; otherwise the partial is
+    deleted, the rejection is recorded, and the next candidate is tried. A peer's
+    own digest is never read, so it cannot override the catalog.
+    """
     cache_dir.mkdir(parents=True, exist_ok=True)
     target = cache_dir / f"{asset['asset_id']}-{asset['name']}"
     if target.exists():
         if target.stat().st_size == asset["size"] and sha256_file(target) == asset["sha256"]:
-            return target
+            _record_provenance(cache_dir, target.name, CACHE_SOURCE)
+            return target, CACHE_SOURCE
         target.unlink()
-    partial = target.with_name(f".{target.name}.partial")
-    if partial.exists():
-        partial.unlink()
-    request = urllib.request.Request(
-        asset["download_url"],
-        headers={"Accept": "application/octet-stream", "User-Agent": USER_AGENT},
+    limit = asset["size"] + PEER_SLACK_BYTES
+    rejections: list[str] = []
+    for source, url in peer_candidates(peers, asset):
+        partial = target.with_name(f".{target.name}.partial")
+        partial.unlink(missing_ok=True)
+        try:
+            fetch(url, partial, limit)
+        except CatalogError as error:
+            partial.unlink(missing_ok=True)
+            if source == ORIGIN_SOURCE:
+                raise CatalogError(
+                    f"{error}"
+                    + (f" ({'; '.join(rejections)})" if rejections else "")
+                ) from error
+            rejections.append(f"rejected peer {source}: {error}")
+            continue
+        actual_size = partial.stat().st_size
+        actual_digest = sha256_file(partial)
+        if actual_size != asset["size"] or actual_digest != asset["sha256"]:
+            partial.unlink(missing_ok=True)
+            if source == ORIGIN_SOURCE:
+                raise CatalogError(
+                    f"download verification failed for {asset['name']}: "
+                    f"size {actual_size}/{asset['size']}, SHA-256 {actual_digest}/{asset['sha256']}"
+                    + (f" ({'; '.join(rejections)})" if rejections else "")
+                )
+            detail = f"rejected peer {source}: SHA-256 {actual_digest}/{asset['sha256']}"
+            if actual_size != asset["size"]:
+                detail += f" (size {actual_size}/{asset['size']})"
+            rejections.append(detail)
+            continue
+        os.replace(partial, target)
+        _record_provenance(cache_dir, target.name, source, rejections)
+        return target, source
+    raise CatalogError(
+        f"no candidate served {asset['name']}: "
+        + ("; ".join(rejections) if rejections else "no candidates")
     )
-    try:
-        with urllib.request.urlopen(request, timeout=120) as response, partial.open("wb") as sink:
-            shutil.copyfileobj(response, sink, length=1024 * 1024)
-    except (OSError, urllib.error.URLError) as error:
-        partial.unlink(missing_ok=True)
-        raise CatalogError(f"cannot download {asset['download_url']}: {error}") from error
-    actual_size = partial.stat().st_size
-    actual_digest = sha256_file(partial)
-    if actual_size != asset["size"] or actual_digest != asset["sha256"]:
-        partial.unlink(missing_ok=True)
-        raise CatalogError(
-            f"download verification failed for {asset['name']}: "
-            f"size {actual_size}/{asset['size']}, SHA-256 {actual_digest}/{asset['sha256']}"
-        )
-    os.replace(partial, target)
-    return target
 
 
 def run_command(command: list[str], cwd: pathlib.Path | None = None) -> str:
@@ -892,6 +1117,7 @@ def build_repository(
     gpg_homedir: pathlib.Path | None,
     require_signing: bool,
     generate_static_deltas: bool,
+    peers: Sequence[dict[str, Any]] = (),
 ) -> dict[str, Any]:
     if require_signing and not gpg_sign:
         raise CatalogError("publishing requires --gpg-sign")
@@ -911,7 +1137,7 @@ def build_repository(
             if not app["publish"]:
                 continue
             for asset in app["assets"]:
-                bundle = download_asset(asset, cache_dir)
+                bundle, source = download_asset(asset, cache_dir, peers)
                 asset_work = temporary_root / f"{app['id']}-{asset['arch']}"
                 asset_work.mkdir()
                 inspection = inspect_bundle(bundle, app, asset, asset_work)
@@ -933,6 +1159,7 @@ def build_repository(
                         "release": app["release"]["tag"],
                         "asset": asset["name"],
                         "asset_sha256": asset["sha256"],
+                        "source": source,
                         **inspection,
                     }
                 )
@@ -1094,6 +1321,16 @@ def build_parser() -> argparse.ArgumentParser:
         action="store_true",
         help="skip static deltas for local diagnostics",
     )
+    build.add_argument(
+        "--peer-mirror",
+        action="append",
+        metavar="NAME=URL",
+        help=(
+            "opt in to a peer mirror for this run only, for example "
+            "--peer-mirror lab-mirror=https://lab.example/spacedbazaar/{filename}; "
+            "the peer only supplies bytes that must still match the origin SHA-256"
+        ),
+    )
     return parser
 
 
@@ -1112,6 +1349,14 @@ def main(argv: list[str] | None = None) -> int:
             args.output.write_bytes(canonical_json_bytes(resolved))
             print(f"resolved {len(resolved['apps'])} apps into {args.output}")
             return 0
+        peers = resolve_peer_sources(catalog, args.peer_mirror or [])
+        if peers:
+            print(
+                "peers (bytes only, verified against the origin SHA-256): "
+                + ", ".join(f"{peer['name']} {peer['base_url']}" for peer in peers)
+            )
+        else:
+            print("peers: none (origin only)")
         report = build_repository(
             catalog,
             resolved,
@@ -1121,11 +1366,16 @@ def main(argv: list[str] | None = None) -> int:
             args.gpg_homedir,
             args.require_signing,
             not args.no_static_deltas,
+            peers,
         )
         print(
             f"built {report['remote']} with {len(report['imported'])} app refs "
             f"(signed={str(report['signed']).lower()})"
         )
+        sources = ", ".join(
+            f"{item['id']} {item['arch']} {item['source']}" for item in report["imported"]
+        )
+        print(f"asset sources: {sources}")
         return 0
     except CatalogError as error:
         parser.exit(1, f"error: {error}\n")

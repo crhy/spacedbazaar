@@ -52,6 +52,40 @@ GitHub release assets remain mutable unless the release is made immutable. The
 GitHub digest protects a particular download, but repository GPG signing is the
 publisher trust boundary presented to users.
 
+## Peer mirrors supply bytes, never authority
+
+The signed catalog is the only authority. `catalog/crhy-flatpaks.json` ships
+`"peers": []` and `policy.peer_fetch: "off"`, so today's installs fetch from the
+signed origin exactly as before. The schema keeps `peer_fetch` at `"off"` and
+declares each peer entry with `name`, an HTTPS-only `base_url` template that must
+contain the `{filename}` placeholder, and `allow_for_arches`; unknown keys are still
+refused, so opting in later is a deliberate catalog and schema change, not a
+loosening.
+
+When an operator opts in for one run with `--peer-mirror NAME=URL`:
+
+1. Candidate URLs are tried peer-first, signed-origin-last. The order is about
+   availability only; it never changes who decides what is acceptable.
+2. Every candidate streams into a bounded partial file: at most the advertised
+   size plus 64 KiB, so a hostile peer cannot fill the cache.
+3. A candidate is kept only if it matches the origin-published size and SHA-256
+   (`release_pin.asset_sha256` and the GitHub asset digest). A peer's own digest
+   is never read and cannot override the catalog.
+4. On any mismatch the partial is deleted and `rejected peer <name>: SHA-256
+   <got>/<want>` is recorded in `<cache-dir>/provenance.json` and repeated in the
+   failure message; then the next candidate is tried.
+5. If every peer fails, the signed origin is fetched exactly as before. If the
+   origin also fails, the command exits with an error and nothing unverified is
+   installed or imported.
+
+The build report names the source that served each asset (`origin`, a peer name,
+or `cache` for verified cached bytes), and the run prints the peers it will consult
+or `peers: none (origin only)`. A peer is never a mirror of authority: it may
+shorten the trip, never the verification. Chunked or torrent transport, verifying
+peer-supplied repository signatures, and the application consuming this path are
+not implemented, and peers are not enabled by default; see crhy/spacedbazaar#9 and
+the design rules in crhy/spaced#9 and crhy/spacedupdate#2.
+
 ## Current catalog status
 
 | Application | Published architectures | Status |

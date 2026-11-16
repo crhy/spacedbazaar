@@ -22,8 +22,10 @@
     "require_github_sha256": true,
     "require_appstream_metadata": true,
     "require_appstream_icon": true,
-    "unverified_github_assets": "never-install-automatically"
+    "unverified_github_assets": "never-install-automatically",
+    "peer_fetch": "off"
   },
+  "peers": [],
   "apps": [
     {
       "id": "io.github.crhy.SpacedBazaar",

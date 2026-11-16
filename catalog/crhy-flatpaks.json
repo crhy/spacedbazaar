@@ -214,6 +214,11 @@
           "url": "https://raw.githubusercontent.com/crhy/spacedbazaar/d8d1fdf2a24944d2b7063a17911336254129f687/screenshots/rhyciv-main-menu-1600.png",
           "caption": "Create or load an empire strategy game in rhYciv",
           "sha256": "ea88207af048fd6952bca2aebc0732cbd80852684b488402f1c090e9a0a85b52"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/crhy/spacedbazaar/3486d9713cfafc758a746fcee900de9401de3154/screenshots/rhyciv-main-menu-2026-09.png",
+          "caption": "The current rhYciv main menu, captured 2026-09",
+          "sha256": "c3d071f8c0b0c8fca75f22eb3f7d7068e988c24ab680bb58588a59176b1e501f"
         }
       ]
     }

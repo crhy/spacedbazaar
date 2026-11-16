@@ -7,6 +7,7 @@ on:
       - "scripts/spaced_github_repo.py"
       - "scripts/configure-spaced-github-remote.sh"
       - "tests/test_spaced_github_repo.py"
+      - "tests/test_catalog_screenshots.py"
       - ".github/workflows/publish-spaced-github-repo.yml"
   push:
     branches: [main]
@@ -15,6 +16,7 @@ on:
       - "scripts/spaced_github_repo.py"
       - "scripts/configure-spaced-github-remote.sh"
       - "tests/test_spaced_github_repo.py"
+      - "tests/test_catalog_screenshots.py"
       - ".github/workflows/publish-spaced-github-repo.yml"
   schedule:
     - cron: "17 4 * * *"
@@ -39,7 +41,7 @@ jobs:
       - uses: actions/checkout@v4
       - name: Compile and test repository tooling
         run: |
-          python3 -m py_compile scripts/spaced_github_repo.py tests/test_spaced_github_repo.py
+          python3 -m py_compile scripts/spaced_github_repo.py tests/test_spaced_github_repo.py tests/test_catalog_screenshots.py
           python3 -m unittest discover -s tests -v
           python3 scripts/spaced_github_repo.py validate
           sh -n scripts/configure-spaced-github-remote.sh

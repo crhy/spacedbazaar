@@ -45,6 +45,11 @@ The repository builder verifies, in order:
    runtime, and AppStream component.
 7. Every app has reviewed PNG screenshots; HTTPS downloads match their pinned
    SHA-256 and expected image format. The images are hosted with the repository.
+   Screenshots hosted with this repository are pinned to an exact commit: that
+   commit must exist here, the file must be present under `screenshots/` in it,
+   and its bytes must still hash to the recorded digest. This is checked before
+   anything is staged, imported or signed, so a pin the repository cannot serve
+   fails the build instead of publishing a broken tile.
 8. Publication is signed, including both AppStream metadata generations after
    inserting screenshots. Unsigned builds are for local verification only.
 

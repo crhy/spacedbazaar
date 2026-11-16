@@ -39,6 +39,14 @@ SHA256_RE = re.compile(r"^[0-9a-f]{64}$")
 APP_ID_RE = re.compile(r"^[A-Za-z0-9_-]+(?:\.[A-Za-z0-9_-]+)+$")
 REPOSITORY_RE = re.compile(r"^crhy/[A-Za-z0-9_.-]+$")
 SUPPORTED_ARCHES = {"aarch64", "x86_64"}
+# A screenshot URL that points back at this repository is a pin: it promises
+# that one commit holds one file with one digest. Only full commit SHAs are
+# accepted so the promise cannot drift with a moving branch.
+SELF_HOSTED_RAW_RE = re.compile(
+    r"^https://raw\.githubusercontent\.com/crhy/spacedbazaar/([^/]+)/(.+)$"
+)
+COMMIT_SHA_RE = re.compile(r"^[0-9a-f]{40}$")
+REPOSITORY_CHECKOUT = pathlib.Path(__file__).resolve().parents[1]
 
 
 class CatalogError(RuntimeError):
@@ -712,6 +720,68 @@ def apply_screenshots(checkout: pathlib.Path, screenshots: dict[str, list[dict[s
         destination.write_bytes(payload)
 
 
+def _git(checkout: pathlib.Path, *args: str) -> subprocess.CompletedProcess:
+    return subprocess.run(
+        ["git", "-C", str(checkout), *args],
+        capture_output=True,
+        text=False,
+        check=False,
+    )
+
+
+def verify_pinned_screenshots(
+    catalog: dict[str, Any],
+    checkout: pathlib.Path,
+) -> None:
+    """Confirm this repository can still serve the screenshots it pins to itself.
+
+    Self-hosted screenshot URLs are checked against this checkout: the pinned
+    commit must exist, the path must live under ``screenshots/`` and be present
+    in that commit, and the bytes at that commit must still hash to the recorded
+    SHA-256. Screenshots hosted by another repository are left to that repository.
+    """
+    if _git(checkout, "rev-parse", "--git-dir").returncode:
+        raise CatalogError(
+            f"cannot verify pinned screenshots outside a git checkout: {checkout}"
+        )
+    for raw_app in catalog.get("apps", []):
+        app = _require_mapping(raw_app, "catalog app")
+        app_id = _require_nonempty_string(app.get("id"), "catalog app.id")
+        for raw_shot in _require_list(app.get("screenshots", []), f"{app_id}.screenshots"):
+            shot = _require_mapping(raw_shot, f"{app_id}.screenshot")
+            url = _require_https_url(shot.get("url"), f"{app_id}.screenshot.url")
+            match = SELF_HOSTED_RAW_RE.fullmatch(url)
+            if match is None:
+                continue
+            commit, path = match.group(1), match.group(2)
+            if not COMMIT_SHA_RE.fullmatch(commit):
+                raise CatalogError(
+                    f"{app_id} pins screenshot {url} to {commit!r}; a self-hosted pin "
+                    "must name an exact 40-character commit SHA"
+                )
+            if not path.startswith("screenshots/") or ".." in pathlib.PurePosixPath(path).parts:
+                raise CatalogError(
+                    f"{app_id} pins a self-hosted screenshot outside screenshots/: {url}"
+                )
+            if _git(checkout, "cat-file", "-e", f"{commit}^{{commit}}").returncode:
+                raise CatalogError(
+                    f"{app_id} pins screenshot commit {commit}, which is not in this "
+                    f"repository: {url}"
+                )
+            result = _git(checkout, "show", f"{commit}:{path}")
+            if result.returncode:
+                raise CatalogError(
+                    f"{app_id} pins {path}, which is not in commit {commit}: {url}"
+                )
+            digest = hashlib.sha256(result.stdout).hexdigest()
+            pinned = _require_nonempty_string(shot.get("sha256"), f"{app_id}.screenshot.sha256")
+            if digest != pinned:
+                raise CatalogError(
+                    f"{app_id} screenshot {path} at {commit} hashes to {digest}, "
+                    f"not the pinned {pinned}"
+                )
+
+
 def stage_screenshots(resolved: dict[str, Any], output_dir: pathlib.Path, cache_dir: pathlib.Path) -> dict[str, list[dict[str, Any]]]:
     staged: dict[str, list[dict[str, Any]]] = {}
     screenshot_dir = output_dir / "screenshots"
@@ -897,6 +967,9 @@ def build_repository(
         raise CatalogError("publishing requires --gpg-sign")
     if gpg_homedir is not None and not gpg_sign:
         raise CatalogError("--gpg-homedir requires --gpg-sign")
+    # Fail closed on screenshot pins before staging, importing or signing anything:
+    # a pin this repository cannot serve would ship a broken tile in the store.
+    verify_pinned_screenshots(catalog, REPOSITORY_CHECKOUT)
     if output_dir.exists() and any(output_dir.iterdir()):
         raise CatalogError(f"output directory must be absent or empty: {output_dir}")
     output_dir.mkdir(parents=True, exist_ok=True)

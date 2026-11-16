@@ -3,6 +3,14 @@
 These docs are intended for distributors of Bazaar to learn how to configure the
 application.
 
+## Screenshot rule
+
+Every screenshot set a Spaced package publishes (README gallery, AppStream metainfo,
+signed app catalog) must be at least half dark captures, measured with
+`scripts/check-screenshot-mix.py` and `scripts/png_luminance.py` rather than
+judged by eye, because Spaced Linux ships a dark desktop by default
+(crhy/spacedbazaar#15).
+
 ## Features
 Here is a short list of some of the things Bazaar can do, beyond the basics of
 managing software through the GUI:

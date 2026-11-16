@@ -115,6 +115,7 @@ grep -q '"notify::syncing"' "$repo_root/src/bz-flathub-page.c" || {
 test -x "$repo_root/scripts/spaced_github_repo.py"
 test -x "$repo_root/scripts/configure-spaced-github-remote.sh"
 sh -n "$repo_root/scripts/configure-spaced-github-remote.sh"
+python3 "$repo_root/scripts/check-screenshot-mix.py"
 python3 "$repo_root/scripts/spaced_github_repo.py" \
     --catalog "$repo_root/catalog/crhy-flatpaks.json" validate
 python3 -m unittest discover -s "$repo_root/tests" -v

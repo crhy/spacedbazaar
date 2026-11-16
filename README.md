@@ -57,22 +57,22 @@ Bazaar's market stall icon.
 ### Screenshots
 
 <img src="screenshots/spaced-bazaar-explore-2026-09.png" width="100%"
-     alt="SpacedBazaar: the full Flatpak catalog view" />
+     alt="SpacedBazaar: the full Flatpak catalog view on the Spaced Linux dark desktop" />
 
 <br/>
 
-<img src="screenshots/search.png" width="48%" alt="Searching the catalog" />
-<img src="screenshots/categories.png" width="48%" alt="Browsing app categories" />
+<img src="screenshots/spaced-bazaar-search-dark-9.26.1.png" width="48%" alt="Searching the catalog on the Spaced Linux dark desktop (9.26.1)" />
+<img src="screenshots/categories.png" width="48%" alt="Browsing app categories on the Spaced Linux dark desktop" />
 
 <br/>
 
-<img src="screenshots/library.png" width="48%" alt="The installed libraries view" />
-<img src="screenshots/flathub.png" width="48%" alt="The Flathub remote" />
+<img src="screenshots/spaced-bazaar-explore-dark-9.26.1.png" width="48%" alt="The catalog view on the Spaced Linux dark desktop (9.26.1), the capture Flathub shows" />
+<img src="screenshots/bazaar-dark.png" width="48%" alt="An application page on the Spaced Linux dark theme" />
 
 <br/>
 
-<img src="screenshots/bazaar-light.png" width="48%" alt="SpacedBazaar in the Spaced Linux light theme" />
-<img src="screenshots/bazaar-dark.png" width="48%" alt="SpacedBazaar in the Spaced Linux dark theme" />
+<img src="screenshots/library.png" width="48%" alt="The installed libraries view on the Spaced Linux light desktop" />
+<img src="screenshots/flathub.png" width="48%" alt="The Flathub remote on the Spaced Linux light desktop" />
 
 ### Installing
 

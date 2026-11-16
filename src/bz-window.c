@@ -439,6 +439,31 @@ resolve_group_from_parameter (BzWindow *self,
       gtk_string_object_new (id));
 }
 
+/*
+ * Install-time information only: Bazaar has not installed, and will not install,
+ * the apt package. It names the package and the exact command the user can
+ * run themselves.
+ */
+static void
+notify_apt_alternative (BzWindow *self, BzEntryGroup *group)
+{
+  g_autofree char *package = NULL;
+  g_autofree char *reason  = NULL;
+  g_autofree char *message = NULL;
+
+  if (group == NULL)
+    return;
+  if (!bz_entry_group_get_apt_alternative (group, &package, &reason))
+    return;
+
+  message = g_strdup_printf (_ ("Also in apt as %s: %s\n"
+                                "To install that version instead, run:\n"
+                                "sudo apt install %s"),
+                             package, reason, package);
+
+  adw_toast_overlay_add_toast (self->toasts, adw_toast_new (message));
+}
+
 static void
 action_install_group (GtkWidget  *widget,
                       const char *action_name,
@@ -450,7 +475,10 @@ action_install_group (GtkWidget  *widget,
 
   group = resolve_group_from_parameter (self, parameter, &auto_confirm);
   if (group != NULL)
-    try_transact (self, NULL, group, FALSE, auto_confirm, NULL);
+    {
+      notify_apt_alternative (self, group);
+      try_transact (self, NULL, group, FALSE, auto_confirm, NULL);
+    }
 }
 
 static void

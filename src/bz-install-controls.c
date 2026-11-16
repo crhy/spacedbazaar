@@ -221,6 +221,33 @@ is_not_empty_page (gpointer    object,
   return g_strcmp0 (page_name, "empty") != 0;
 }
 
+/*
+ * Information only: Bazaar installs the Flatpak build, so the install button
+ * merely names the apt package the user can install themselves. Nothing here
+ * runs apt or claims anything was installed.
+ */
+static void
+set_install_btn_tooltip (BzInstallControls *self)
+{
+  g_autofree char *package = NULL;
+  g_autofree char *reason  = NULL;
+  g_autofree char *tooltip = NULL;
+
+  if (self->animated_button == NULL)
+    return;
+
+  if (self->group != NULL &&
+      bz_entry_group_get_apt_alternative (self->group, &package, &reason))
+    {
+      tooltip = g_strdup_printf (_ ("Also in apt as %s: %s\n"
+                                    "To install that version instead, run:\n"
+                                    "sudo apt install %s"),
+                                 package, reason, package);
+    }
+
+  gtk_widget_set_tooltip_text (self->animated_button, tooltip);
+}
+
 static char *
 get_visible_page (gpointer    object,
                   int         installable,
@@ -230,6 +257,8 @@ get_visible_page (gpointer    object,
 {
   BzInstallControls *self      = BZ_INSTALL_CONTROLS (object);
   g_autoptr (GListStore) store = NULL;
+
+  set_install_btn_tooltip (self);
 
   if (active)
     return g_strdup ("install");

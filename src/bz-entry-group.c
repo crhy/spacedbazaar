@@ -22,6 +22,7 @@
 #define BAZAAR_MODULE "entry-group"
 
 #include "bz-entry-group.h"
+#include "bz-apt-alternatives.h"
 #include "env.h"
 #include "io.h"
 #include "bz-size-result.h"
@@ -749,6 +750,22 @@ bz_entry_group_get_eol (BzEntryGroup *self)
 {
   g_return_val_if_fail (BZ_IS_ENTRY_GROUP (self), NULL);
   return self->eol;
+}
+
+gboolean
+bz_entry_group_get_apt_alternative (BzEntryGroup *self,
+                                    char         **package,
+                                    char         **reason)
+{
+  const char *id = NULL;
+
+  g_return_val_if_fail (BZ_IS_ENTRY_GROUP (self), FALSE);
+
+  id = bz_entry_group_get_id (self);
+  if (id == NULL)
+    return FALSE;
+
+  return bz_apt_alternative_lookup (id, package, reason);
 }
 
 guint64

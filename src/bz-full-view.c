@@ -226,6 +226,30 @@ format_leftover_label (gpointer object, const char *name, guint64 size)
   return g_strdup_printf (_ ("%s is not installed, but it still has <b>%s</b> of data present."), name, formatted_size);
 }
 
+static gboolean
+apt_alternative_exists (gpointer    object,
+                        BzEntryGroup *group)
+{
+  return group != NULL && bz_entry_group_get_apt_alternative (group, NULL, NULL);
+}
+
+/*
+ * Only names the apt build as something the user may prefer and run themselves;
+ * Bazaar never installs it, so the label must not read as if it had.
+ */
+static char *
+format_apt_alternative_label (gpointer    object,
+                              BzEntryGroup *group)
+{
+  g_autofree char *package = NULL;
+  g_autofree char *reason  = NULL;
+
+  if (group == NULL || !bz_entry_group_get_apt_alternative (group, &package, &reason))
+    return g_strdup ("");
+
+  return g_strdup_printf (_ ("Also in apt as %s: %s"), package, reason);
+}
+
 static gpointer
 filter_own_app_id (BzEntry *entry, GtkStringList *app_ids)
 {
@@ -728,6 +752,8 @@ bz_full_view_class_init (BzFullViewClass *klass)
   gtk_widget_class_bind_template_callback (widget_class, format_leftover_label);
   gtk_widget_class_bind_template_callback (widget_class, format_other_apps_label);
   gtk_widget_class_bind_template_callback (widget_class, format_more_other_apps_label);
+  gtk_widget_class_bind_template_callback (widget_class, apt_alternative_exists);
+  gtk_widget_class_bind_template_callback (widget_class, format_apt_alternative_label);
   gtk_widget_class_bind_template_callback (widget_class, get_developer_apps_entries);
   gtk_widget_class_bind_template_callback (widget_class, more_apps_button_clicked_cb);
   gtk_widget_class_bind_template_callback (widget_class, open_url_cb);

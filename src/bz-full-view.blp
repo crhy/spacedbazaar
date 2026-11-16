@@ -214,6 +214,20 @@ template $BzFullView: Adw.Bin {
                               label: bind template.ui-entry as <$BzResult>.object as <$BzEntry>.title;
                             }
 
+                            Label apt_alternative_label {
+                              styles [
+                                "dim",
+                              ]
+
+                              xalign: 0.0;
+                              wrap: true;
+                              wrap-mode: word_char;
+                              natural-wrap-mode: word;
+                              selectable: true;
+                              visible: bind $apt_alternative_exists(template.entry-group as <$BzEntryGroup>) as <bool>;
+                              label: bind $format_apt_alternative_label(template.entry-group as <$BzEntryGroup>) as <string>;
+                            }
+
                             Box {
                               styles [
                                 "bz-debug",

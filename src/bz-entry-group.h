@@ -90,6 +90,17 @@ bz_entry_group_get_search_tokens (BzEntryGroup *self);
 const char *
 bz_entry_group_get_eol (BzEntryGroup *self);
 
+/*
+ * The apt package this group's id also exists as on Spaced Linux, plus the
+ * reason that build may be the better install. Both out-parameters receive
+ * newly allocated strings and may be NULL; FALSE means there is no alternative
+ * and Bazaar's Flatpak install is the only one it will talk about.
+ */
+gboolean
+bz_entry_group_get_apt_alternative (BzEntryGroup *self,
+                                    char         **package,
+                                    char         **reason);
+
 guint64
 bz_entry_group_get_installed_size (BzEntryGroup *self);
 

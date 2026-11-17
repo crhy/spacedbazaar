@@ -361,6 +361,10 @@ Curated configs are YAML files. They are constantly monitored by Bazaar for
 filesystem events, so when the config changes, Bazaar will automatically reload
 the content.
 
+For the Spaced Linux GitHub catalog, curation scales through an offline review queue:
+`scripts/spaced_github_repo.py candidates` reports the evidence a human should read next, and
+the tool never installs anything that person has not reviewed.
+
 Right now, curated configs are essentially composed of a vertical list of
 elements which appear stacked on top of each other inside of a scrollable
 viewport in the order they appear in the YAML. Each element has certain

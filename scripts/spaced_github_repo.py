@@ -6,6 +6,10 @@ search endpoint, and a filename ending in ``.flatpak`` is not a trust signal.
 This tool accepts only catalogued repositories, exact-one asset matches,
 GitHub-published SHA-256 digests, and bundles whose embedded identity matches
 the catalog before importing them into the repository.
+
+The ``candidates`` command turns release fixtures into a review queue: it records
+the evidence a person needs in order to curate at scale, and never an action to
+take.
 """
 
 from __future__ import annotations
@@ -39,6 +43,7 @@ SHA256_RE = re.compile(r"^[0-9a-f]{64}$")
 APP_ID_RE = re.compile(r"^[A-Za-z0-9_-]+(?:\.[A-Za-z0-9_-]+)+$")
 REPOSITORY_RE = re.compile(r"^crhy/[A-Za-z0-9_.-]+$")
 SUPPORTED_ARCHES = {"aarch64", "x86_64"}
+FLATPAK_ASSET_SUFFIX = ".flatpak"
 
 
 class CatalogError(RuntimeError):
@@ -393,6 +398,151 @@ def select_release_asset(
         "sha256": digest,
         "download_url": download_url,
     }
+
+
+CANDIDATE_REASONS = (
+    ("not a stable published release", "release-not-stable"),
+    ("must match exactly one", "exactly-one-flatpak-asset"),
+    ("is not fully uploaded", "asset-not-fully-uploaded"),
+    ("asset digest must be a non-empty string", "missing-github-sha256-digest"),
+    ("no valid GitHub SHA-256 digest", "missing-github-sha256-digest"),
+    ("has invalid size", "asset-size-invalid"),
+    ("has invalid ID", "asset-id-invalid"),
+    ("must be an HTTPS URL", "asset-download-url-not-https"),
+    ("outside its GitHub release path", "asset-download-url-outside-release"),
+)
+
+
+def _candidate_reason(message: str) -> str:
+    """Turn a guard message into a stable, greppable review-queue reason."""
+    for needle, code in CANDIDATE_REASONS:
+        if needle in message:
+            return f"{code}: {message}"
+    return f"release-rejected: {message}"
+
+
+def _candidate_view(release_value: Any, repository: str) -> dict[str, Any]:
+    """Read what a release fixture advertises, before the trust guards run."""
+    release = _require_mapping(release_value, f"latest release for {repository}")
+    assets = [
+        asset
+        for asset in _require_list(release.get("assets"), f"{repository} release assets")
+        if isinstance(asset, dict)
+        and isinstance(asset.get("name"), str)
+        and asset["name"].endswith(FLATPAK_ASSET_SUFFIX)
+    ]
+    if len(assets) != 1:
+        return {"asset": None, "app_id": None, "arch": None, "digest": None}
+    asset = assets[0]
+    name = asset["name"]
+    stem = name[: -len(FLATPAK_ASSET_SUFFIX)]
+    app_id, separator, remainder = stem.partition("-")
+    arch = remainder.rsplit("-", 1)[-1] if separator else ""
+    digest = asset.get("digest")
+    if isinstance(digest, str) and digest.startswith("sha256:"):
+        digest = digest[len("sha256:"):]
+    return {
+        "asset": name,
+        "app_id": app_id,
+        "arch": arch if arch in SUPPORTED_ARCHES else None,
+        "digest": digest if isinstance(digest, str) else "",
+    }
+
+
+def collect_candidates(
+    catalog: dict[str, Any],
+    metadata_dir: pathlib.Path,
+) -> list[dict[str, Any]]:
+    """Sort release fixtures into a human review queue without any network access.
+
+    Every entry is evidence for a person to read. Nothing here downloads, imports,
+    installs, or otherwise acts on a bundle: the catalog policy keeps unverified
+    GitHub assets at ``never-install-automatically``.
+    """
+    validate_catalog(catalog)
+    if not metadata_dir.is_dir():
+        raise CatalogError(f"release metadata directory is missing: {metadata_dir}")
+    descriptor_url = catalog["remote"]["descriptor_url"]
+    catalogued = {app["repository"].casefold(): app["id"] for app in catalog["apps"]}
+    candidates: list[dict[str, Any]] = []
+    for fixture in sorted(metadata_dir.glob("*.json")):
+        repository = fixture.stem.replace("__", "/", 1)
+        candidate = {
+            "repository": repository,
+            "app_id": "",
+            "asset": "",
+            "arch": "",
+            "digest": "",
+            "state": "rejected",
+            "reason": "",
+            "descriptor_url": descriptor_url,
+        }
+        if not REPOSITORY_RE.fullmatch(repository):
+            candidate["reason"] = (
+                "rejected-repository: only repositories published by the curated "
+                f"publisher are candidates: {repository}"
+            )
+            candidates.append(candidate)
+            continue
+        try:
+            release = _load_release_fixture(metadata_dir, repository)
+            view = _candidate_view(release, repository)
+        except CatalogError as error:
+            candidate["reason"] = f"malformed-release-fixture: {error}"
+            candidates.append(candidate)
+            continue
+        candidate["app_id"] = view["app_id"] or ""
+        candidate["asset"] = view["asset"] or ""
+        candidate["arch"] = view["arch"] or ""
+        candidate["digest"] = view["digest"] or ""
+        if repository.casefold() in catalogued:
+            candidate["state"] = "already-catalogued"
+            candidate["app_id"] = catalogued[repository.casefold()]
+            candidate["reason"] = (
+                "already-catalogued: the curated catalog already publishes this "
+                f"repository: {repository}"
+            )
+            candidates.append(candidate)
+            continue
+        if view["asset"] is None:
+            candidate["reason"] = (
+                "exactly-one-flatpak-asset: the release must advertise exactly one "
+                f"{FLATPAK_ASSET_SUFFIX} asset for {repository}"
+            )
+            candidates.append(candidate)
+            continue
+        if not APP_ID_RE.fullmatch(view["app_id"]):
+            candidate["reason"] = (
+                f"invalid-app-id: {view['app_id']!r} is not a reverse-DNS Flatpak ID"
+            )
+            candidates.append(candidate)
+            continue
+        if view["arch"] is None:
+            candidate["reason"] = (
+                "unsupported-architecture: "
+                f"{view['asset']} does not name one of "
+                f"{', '.join(sorted(SUPPORTED_ARCHES))}"
+            )
+            candidates.append(candidate)
+            continue
+        try:
+            select_release_asset(
+                release,
+                repository,
+                view["arch"],
+                f"*{FLATPAK_ASSET_SUFFIX}",
+            )
+        except CatalogError as error:
+            candidate["reason"] = _candidate_reason(str(error))
+            candidates.append(candidate)
+            continue
+        candidate["state"] = "reviewable"
+        candidate["reason"] = (
+            "reviewable: every offline guard passed; a human must still confirm "
+            f"bundle identity, AppStream metadata, icon and screenshots for {repository}"
+        )
+        candidates.append(candidate)
+    return sorted(candidates, key=lambda item: item["repository"])
 
 
 def resolve_catalog(
@@ -1054,6 +1204,12 @@ def _path(value: str) -> pathlib.Path:
     return pathlib.Path(value).expanduser().resolve()
 
 
+def _output_target(value: str) -> pathlib.Path:
+    if value == "-":
+        return pathlib.Path("-")
+    return _path(value)
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
@@ -1065,6 +1221,22 @@ def build_parser() -> argparse.ArgumentParser:
     subparsers = parser.add_subparsers(dest="command", required=True)
 
     subparsers.add_parser("validate", help="validate catalog invariants without network access")
+
+    candidates = subparsers.add_parser(
+        "candidates", help="list review candidates for the curated catalog without network access"
+    )
+    candidates.add_argument(
+        "--release-metadata-dir",
+        type=_path,
+        required=True,
+        help="read deterministic GitHub API fixtures instead of the network",
+    )
+    candidates.add_argument(
+        "--output",
+        type=_output_target,
+        required=True,
+        help="candidate report as JSON (use - for stdout)",
+    )
 
     resolve_parser = subparsers.add_parser(
         "resolve", help="resolve stable releases and explicitly reviewed release pins"
@@ -1104,6 +1276,22 @@ def main(argv: list[str] | None = None) -> int:
         catalog = load_catalog(args.catalog)
         if args.command == "validate":
             print(f"catalog valid: {len(catalog['apps'])} apps")
+            return 0
+        if args.command == "candidates":
+            report = {
+                "generated_by": "spaced_github_repo candidates",
+                "candidates": collect_candidates(catalog, args.release_metadata_dir),
+            }
+            payload = canonical_json_bytes(report)
+            if str(args.output) == "-":
+                sys.stdout.write(payload.decode("utf-8"))
+            else:
+                args.output.parent.mkdir(parents=True, exist_ok=True)
+                args.output.write_bytes(payload)
+            print(
+                f"candidate report: {len(report['candidates'])} fixtures reviewed",
+                file=sys.stderr,
+            )
             return 0
         token = os.environ.get("GITHUB_TOKEN")
         resolved = resolve_catalog(catalog, args.release_metadata_dir, token)

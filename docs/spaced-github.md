@@ -52,6 +52,51 @@ GitHub release assets remain mutable unless the release is made immutable. The
 GitHub digest protects a particular download, but repository GPG signing is the
 publisher trust boundary presented to users.
 
+## Curation review queue
+
+Curation scales by putting evidence in front of a person, not by trusting a
+filename. `candidates` reads the same deterministic GitHub API fixtures that
+`resolve` and `build` accept, runs the existing guards over every fixture, and
+reports what a maintainer should look at next:
+
+```sh
+python3 scripts/spaced_github_repo.py candidates \
+  --release-metadata-dir build/release-fixtures \
+  --output build/candidates.json
+```
+
+Use `--output -` to print the report instead of writing a file. The report is
+`{"generated_by": "spaced_github_repo candidates", "candidates": [...]}`, sorted by
+repository, one entry per fixture, each carrying `repository`, `app_id`, `asset`,
+`arch`, `digest`, `state`, `reason`, and the `descriptor_url` of the remote the
+application would land in. `state` is one of:
+
+- `already-catalogued`: the curated catalog already publishes that repository, so
+  it needs no review.
+- `reviewable`: exactly one `.flatpak` asset, a reverse-DNS application ID, a
+  supported architecture named in the asset name, a GitHub-published SHA-256,
+  a stable (neither draft nor prerelease) release, and a download URL inside that
+  repository's own release path.
+- `rejected`: one guard failed. `reason` begins with a stable code -
+  `rejected-repository`, `malformed-release-fixture`,
+  `exactly-one-flatpak-asset`, `invalid-app-id`,
+  `unsupported-architecture`, `missing-github-sha256-digest`,
+  `release-not-stable`, `asset-not-fully-uploaded`,
+  `asset-size-invalid`, `asset-id-invalid`,
+  `asset-download-url-not-https`, or `asset-download-url-outside-release` -
+  followed by the guard's message.
+
+For a candidate the application ID and architecture are read from the asset name,
+so a bundle intended for review is expected to be named
+`<reverse-DNS-id>-<version>-<arch>.flatpak`; catalogued repositories keep the ID
+from the catalog. The report contains no install, download, or command field:
+in line with `unverified_github_assets: never-install-automatically`, a candidate
+becomes publishable only after a human reviews the bundle and adds it to
+[`catalog/crhy-flatpaks.json`](../catalog/crhy-flatpaks.json). End-user voting and
+the CoinKitty reputation signal stay open, because identities, anti-Sybil controls,
+appeals, and ranking transparency have not been chosen; nothing here scores or
+ranks applications.
+
 ## Current catalog status
 
 | Application | Published architectures | Status |

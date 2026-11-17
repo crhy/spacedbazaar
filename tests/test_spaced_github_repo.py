@@ -2,10 +2,12 @@
 
 from __future__ import annotations
 
+import contextlib
 import copy
 import gzip
 import hashlib
 import importlib.util
+import io
 import json
 import pathlib
 import tempfile
@@ -441,6 +443,200 @@ class RepositoryOutputTests(unittest.TestCase):
             )
             icon.write_bytes(b"")
             self.assertEqual(repo._exported_icon_paths(checkout, "io.github.crhy.Example"), [])
+
+
+class CandidateReviewQueueTests(unittest.TestCase):
+    def setUp(self) -> None:
+        self.catalog_path = REPOSITORY_ROOT / "catalog" / "crhy-flatpaks.json"
+        self.catalog = repo.load_catalog(self.catalog_path)
+
+    def write_fixture(
+        self, directory: pathlib.Path, repository: str, release: dict
+    ) -> None:
+        path = directory / f"{repository.replace('/', '__')}.json"
+        path.write_text(json.dumps(release), encoding="utf-8")
+
+    def test_clean_candidate_is_reviewable(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = pathlib.Path(temporary)
+            self.write_fixture(
+                root,
+                "crhy/example",
+                release_for("crhy/example", ["io.github.crhy.Example-x86_64.flatpak"]),
+            )
+            candidates = repo.collect_candidates(self.catalog, root)
+            self.assertEqual(len(candidates), 1)
+            entry = candidates[0]
+            self.assertEqual(entry["state"], "reviewable")
+            self.assertEqual(entry["repository"], "crhy/example")
+            self.assertEqual(entry["app_id"], "io.github.crhy.Example")
+            self.assertEqual(entry["asset"], "io.github.crhy.Example-x86_64.flatpak")
+            self.assertEqual(entry["arch"], "x86_64")
+            self.assertRegex(entry["digest"], r"^[0-9a-f]{64}$")
+            self.assertEqual(
+                entry["descriptor_url"],
+                "https://crhy.github.io/spacedbazaar/spaced-github.flatpakrepo",
+            )
+            self.assertRegex(entry["reason"], r"^reviewable: ")
+
+    def test_two_matching_assets_are_rejected(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = pathlib.Path(temporary)
+            self.write_fixture(
+                root,
+                "crhy/example",
+                release_for(
+                    "crhy/example",
+                    [
+                        "io.github.crhy.Example-one-x86_64.flatpak",
+                        "io.github.crhy.Example-two-x86_64.flatpak",
+                    ],
+                ),
+            )
+            entry = repo.collect_candidates(self.catalog, root)[0]
+            self.assertEqual(entry["state"], "rejected")
+            self.assertRegex(entry["reason"], r"^exactly-one-flatpak-asset: ")
+
+    def test_asset_without_a_published_digest_is_rejected(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = pathlib.Path(temporary)
+            release = release_for("crhy/example", ["io.github.crhy.Example-x86_64.flatpak"])
+            release["assets"][0]["digest"] = None
+            self.write_fixture(root, "crhy/example", release)
+            entry = repo.collect_candidates(self.catalog, root)[0]
+            self.assertEqual(entry["state"], "rejected")
+            self.assertIn("missing-github-sha256-digest", entry["reason"])
+            self.assertEqual(entry["digest"], "")
+
+    def test_catalogued_repository_is_already_catalogued(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = pathlib.Path(temporary)
+            self.write_fixture(
+                root,
+                "crhy/voxa",
+                release_for("crhy/voxa", ["Voxa-0.1.4-x86_64.flatpak"]),
+            )
+            entry = repo.collect_candidates(self.catalog, root)[0]
+            self.assertEqual(entry["state"], "already-catalogued")
+            self.assertEqual(entry["app_id"], "io.github.crhy.voxa")
+            self.assertRegex(entry["reason"], r"^already-catalogued: ")
+
+    def test_foreign_repository_is_rejected_by_the_repository_rule(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = pathlib.Path(temporary)
+            self.write_fixture(
+                root,
+                "somebody-else/app",
+                release_for("somebody-else/app", ["io.github.crhy.Example-x86_64.flatpak"]),
+            )
+            entry = repo.collect_candidates(self.catalog, root)[0]
+            self.assertEqual(entry["state"], "rejected")
+            self.assertEqual(entry["repository"], "somebody-else/app")
+            self.assertRegex(entry["reason"], r"^rejected-repository: ")
+
+    def test_app_id_without_dots_is_rejected(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = pathlib.Path(temporary)
+            self.write_fixture(
+                root,
+                "crhy/example",
+                release_for("crhy/example", ["Example-x86_64.flatpak"]),
+            )
+            entry = repo.collect_candidates(self.catalog, root)[0]
+            self.assertEqual(entry["state"], "rejected")
+            self.assertEqual(entry["app_id"], "Example")
+            self.assertRegex(entry["reason"], r"^invalid-app-id: ")
+
+    def test_unsupported_architecture_is_rejected(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = pathlib.Path(temporary)
+            self.write_fixture(
+                root,
+                "crhy/example",
+                release_for("crhy/example", ["io.github.crhy.Example-0.1.0.flatpak"]),
+            )
+            entry = repo.collect_candidates(self.catalog, root)[0]
+            self.assertEqual(entry["state"], "rejected")
+            self.assertRegex(entry["reason"], r"^unsupported-architecture: ")
+
+    def test_malformed_fixture_is_rejected_not_fatal(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = pathlib.Path(temporary)
+            (root / "crhy__broken.json").write_text("{not json", encoding="utf-8")
+            entry = repo.collect_candidates(self.catalog, root)[0]
+            self.assertEqual(entry["state"], "rejected")
+            self.assertRegex(entry["reason"], r"^malformed-release-fixture: ")
+
+    def test_missing_metadata_directory_is_an_error(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            with self.assertRaisesRegex(repo.CatalogError, "metadata directory"):
+                repo.collect_candidates(self.catalog, pathlib.Path(temporary) / "absent")
+
+    def test_report_is_deterministic_and_carries_no_action(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = pathlib.Path(temporary)
+            fixtures = root / "fixtures"
+            fixtures.mkdir()
+            self.write_fixture(
+                fixtures,
+                "crhy/example",
+                release_for("crhy/example", ["io.github.crhy.Example-x86_64.flatpak"]),
+            )
+            self.write_fixture(
+                fixtures,
+                "crhy/voxa",
+                release_for("crhy/voxa", ["Voxa-0.1.4-x86_64.flatpak"]),
+            )
+            output = root / "report.json"
+            base = [
+                "--catalog",
+                str(self.catalog_path),
+                "candidates",
+                "--release-metadata-dir",
+                str(fixtures),
+            ]
+            with contextlib.redirect_stderr(io.StringIO()):
+                self.assertEqual(repo.main(base + ["--output", str(output)]), 0)
+            first = json.loads(output.read_text(encoding="utf-8"))
+            with contextlib.redirect_stdout(io.StringIO()) as buffer, contextlib.redirect_stderr(io.StringIO()):
+                self.assertEqual(repo.main(base + ["--output", "-"]), 0)
+            self.assertEqual(json.loads(buffer.getvalue()), first)
+            self.assertEqual(first["generated_by"], "spaced_github_repo candidates")
+            self.assertEqual(
+                [item["repository"] for item in first["candidates"]],
+                ["crhy/example", "crhy/voxa"],
+            )
+            self.assertEqual(
+                sorted(first["candidates"][0]),
+                [
+                    "app_id",
+                    "arch",
+                    "asset",
+                    "descriptor_url",
+                    "digest",
+                    "reason",
+                    "repository",
+                    "state",
+                ],
+            )
+
+            def report_keys(value: object):
+                if isinstance(value, dict):
+                    for key, child in value.items():
+                        yield key
+                        yield from report_keys(child)
+                elif isinstance(value, list):
+                    for child in value:
+                        yield from report_keys(child)
+
+            self.assertEqual(
+                [
+                    key
+                    for key in report_keys(first)
+                    if "install" in key or "download" in key
+                ],
+                [],
+            )
 
 
 if __name__ == "__main__":

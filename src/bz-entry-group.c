@@ -22,6 +22,9 @@
 #define BAZAAR_MODULE "entry-group"
 
 #include "bz-entry-group.h"
+#include "bz-appimage-source.h"
+#include "bz-flatpak-entry.h"
+#include "bz-format-choice.h"
 #include "env.h"
 #include "io.h"
 #include "bz-size-result.h"
@@ -749,6 +752,69 @@ bz_entry_group_get_eol (BzEntryGroup *self)
 {
   g_return_val_if_fail (BZ_IS_ENTRY_GROUP (self), NULL);
   return self->eol;
+}
+
+/*
+ * Score the builds this application actually exists as, and return the one
+ * Bazaar should offer with the sentence explaining it.
+ *
+ * Flatpak is always a candidate: it is the catalog this group came from. apt
+ * and AppImage are only candidates when the curated advice names a package or
+ * an upstream repository for this application id. Nothing here installs, or
+ * claims to have installed, anything.
+ */
+BzFormatChoice *
+bz_entry_group_get_format_choice (BzEntryGroup *self,
+                                  const char  *override,
+                                  GError     **error)
+{
+  g_autoptr (BzFormatChoice) choice = NULL;
+  g_autoptr (BzResult) ui_entry = NULL;
+  GObject *ui_object = NULL;
+  g_autofree char *flatpak_version = NULL;
+  const BzFormatAdvice *advice = NULL;
+  const char *app_id = NULL;
+  BzFormatChoiceOffer offers[BZ_FORMAT_CHOICE_N_FORMATS] = {0};
+
+  g_return_val_if_fail (BZ_IS_ENTRY_GROUP (self), NULL);
+
+  app_id = bz_entry_group_get_id (self);
+  if (app_id == NULL)
+    return NULL;
+
+  advice = bz_format_advice_lookup (app_id);
+
+  offers[BZ_FORMAT_CHOICE_FORMAT_APT] = (BzFormatChoiceOffer) {
+    BZ_FORMAT_CHOICE_FORMAT_APT,
+    advice != NULL && advice->apt_package != NULL,
+    advice != NULL && advice->apt_package != NULL
+      ? bz_format_choice_apt_package_is_installed (advice->apt_package)
+      : FALSE,
+    NULL,
+  };
+
+  ui_entry = bz_entry_group_dup_ui_entry (self);
+  if (ui_entry != NULL)
+    ui_object = bz_result_get_object (ui_entry);
+  if (ui_object != NULL && BZ_IS_FLATPAK_ENTRY (ui_object))
+    flatpak_version = g_strdup (bz_flatpak_entry_get_flatpak_version (
+        BZ_FLATPAK_ENTRY (ui_object)));
+
+  offers[BZ_FORMAT_CHOICE_FORMAT_FLATPAK] = (BzFormatChoiceOffer) {
+    BZ_FORMAT_CHOICE_FORMAT_FLATPAK,
+    TRUE,
+    bz_entry_group_get_removable (self) > 0,
+    flatpak_version,
+  };
+
+  offers[BZ_FORMAT_CHOICE_FORMAT_APPIMAGE] = (BzFormatChoiceOffer) {
+    BZ_FORMAT_CHOICE_FORMAT_APPIMAGE,
+    advice != NULL && advice->appimage_repo != NULL,
+    bz_appimage_is_installed (app_id),
+    NULL,
+  };
+
+  return bz_format_choice_evaluate (app_id, offers, override, error);
 }
 
 guint64

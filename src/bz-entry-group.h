@@ -22,6 +22,7 @@
 
 #include "bz-application-map-factory.h"
 #include "bz-entry.h"
+#include "bz-format-choice.h"
 #include "bz-result.h"
 
 G_BEGIN_DECLS
@@ -89,6 +90,21 @@ bz_entry_group_get_search_tokens (BzEntryGroup *self);
 
 const char *
 bz_entry_group_get_eol (BzEntryGroup *self);
+
+/*
+ * Which build of this application Bazaar should offer: apt, Flatpak or
+ * AppImage, with one sentence saying why and one line per build for the app
+ * page.
+ *
+ * `override` is the user's own explicit choice of a build; it wins over the
+ * curated advice as long as that build exists for this application at all.
+ * Returns NULL when the group has no id, and an error when no build of it is
+ * offered.
+ */
+BzFormatChoice *
+bz_entry_group_get_format_choice (BzEntryGroup *self,
+                                  const char  *override,
+                                  GError     **error);
 
 guint64
 bz_entry_group_get_installed_size (BzEntryGroup *self);

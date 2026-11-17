@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "manifest": "build-aux/flatpak/io.github.crhy.SpacedBazaar.json",
+  "reviewed_on": "2026-11-17",
+  "comment": "Reviewed git pins for the SpacedBazaar Flatpak manifest. Every source the Flatpak External Data Checker may move must appear here with its tag and its full 40-character commit, so a half-moved pin (new tag with the old commit, or the reverse) fails scripts/check-flatpak-pins.py.",
+  "pins": [
+    {
+      "name": "md4c",
+      "url": "https://github.com/mity/md4c.git",
+      "tag": "release-0.5.3",
+      "commit": "472c417005c2c71b8617de4f7b8d6b30411d78f4"
+    },
+    {
+      "name": "flatpak",
+      "url": "https://github.com/flatpak/flatpak",
+      "tag": "1.18.4",
+      "commit": "a02d0ba48abe9aacc377de15699e5d8c024b5669"
+    },
+    {
+      "name": "polkit",
+      "url": "https://github.com/polkit-org/polkit",
+      "tag": "128",
+      "commit": "e6373dc19975d8583568c6cd7025d03e682ca956"
+    },
+    {
+      "name": "ostree",
+      "url": "https://github.com/ostreedev/ostree",
+      "tag": "v2026.7",
+      "commit": "882a60eade8ede3e2978b7e7bf914c6fb6869ddc"
+    },
+    {
+      "name": "xdg-dbus-proxy",
+      "url": "https://github.com/flatpak/xdg-dbus-proxy",
+      "tag": "0.1.9",
+      "commit": "72b40c8f6d9d585cfbdb249690724f740d207087"
+    },
+    {
+      "name": "bubblewrap",
+      "url": "https://github.com/containers/bubblewrap",
+      "tag": "v0.13.1",
+      "commit": "362936aea0d5c6e70f7af75d2d44b5a914cb4ba2"
+    }
+  ]
+}

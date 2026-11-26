@@ -226,13 +226,13 @@ class FormatChoiceTests(unittest.TestCase):
         ids = [row["app_id"] for row in rows]
         self.assertEqual(len(ids), len(set(ids)), f"duplicate app ids: {ids}")
 
-    def test_freeCAD_is_offered_as_the_appimage_with_the_investigated_reason(self):
+    def test_freeCAD_is_offered_as_the_appimage_with_a_users_wording_reason(self):
         rows = {row["app_id"]: row for row in advice_entries()}
         freecad = [row for app_id, row in rows.items() if "FreeCAD" in app_id]
         self.assertEqual(len(freecad), 1, "exactly one FreeCAD line is expected")
         self.assertEqual(freecad[0]["pick"], "appimage")
-        self.assertIn("flatpak", freecad[0]["reason"])
-        self.assertIn("under investigation", freecad[0]["reason"])
+        self.assertIn("Runs best on Spaced", freecad[0]["reason"])
+        self.assertIn("Flatpak version freezes", freecad[0]["reason"])
 
     def test_nothing_is_advised_for_an_app_without_evidence(self):
         for row in advice_entries():
@@ -241,10 +241,10 @@ class FormatChoiceTests(unittest.TestCase):
 
 
 class AppPageTests(unittest.TestCase):
-    def test_the_app_page_shows_every_format_side_by_side(self):
+    def test_the_app_page_lists_the_other_builds_side_by_side(self):
         row_box = FULL_VIEW_TEMPLATE.split("other_formats_box", 1)[1].split("Box context_bar", 1)[0]
         self.assertIn('label: _("Other ways to install");', row_box)
-        for fmt in FORMATS:
+        for fmt in ("flatpak", "appimage"):
             self.assertIn(f"Box other_{fmt}_row", row_box)
             self.assertIn(
                 f'label: bind $other_summary(template.entry-group '
@@ -252,10 +252,12 @@ class AppPageTests(unittest.TestCase):
                 row_box,
             )
         card = FULL_VIEW_TEMPLATE.split("Box recommendation_card", 1)[1].split("Box other_formats_box", 1)[0]
-        self.assertIn("recommend_install_button", card)
+        self.assertNotIn("recommend_install_button", card,
+                         "the card has no Install button of its own")
+        self.assertNotIn("install_recommended_cb", card)
 
     def test_a_row_hides_itself_when_that_build_does_not_exist(self):
-        for fmt in FORMATS:
+        for fmt in ("flatpak", "appimage"):
             self.assertIn(
                 f'visible: bind $other_has_format(template.entry-group '
                 f'as <$BzEntryGroup>, "{fmt}") as <bool>;',
@@ -274,13 +276,16 @@ class AppPageTests(unittest.TestCase):
     def test_the_headline_names_the_recommended_build(self):
         card = FULL_VIEW_TEMPLATE.split("Box recommendation_card", 1)[1].split("Box other_formats_box", 1)[0]
         self.assertIn('label: _("Recommended for you");', card)
-        self.assertIn('_ ("Install %s")', FULL_VIEW_SOURCE)
+        self.assertIn('_ ("Install %s")', INSTALL_CONTROLS)
 
 
 class InstallTimeTests(unittest.TestCase):
     def test_the_install_button_names_the_recommended_build(self):
         self.assertIn("set_install_btn_tooltip (self);", INSTALL_CONTROLS)
         self.assertIn("bz_entry_group_get_format_choice", INSTALL_CONTROLS)
+        self.assertIn('set_install_btn_label (self);', INSTALL_CONTROLS)
+        self.assertIn('"lbl-install"', INSTALL_CONTROLS,
+                      "the header's Install button names the recommended build")
 
     def test_the_window_says_it_before_starting_the_install(self):
         action = function_body(WINDOW, "action_install_group")
@@ -304,9 +309,13 @@ class InstallTimeTests(unittest.TestCase):
                 self.assertNotRegex(literal.lower(), r"installed (the|an|this)")
                 self.assertNotRegex(literal.lower(), r"was installed")
 
-    def test_the_flatpak_build_stays_the_one_bazaar_installs(self):
-        self.assertIn("Bazaar installs the Flatpak build.", INSTALL_CONTROLS)
-        self.assertIn("Bazaar installs the Flatpak build.", WINDOW)
+    def test_the_install_button_installs_the_recommended_build(self):
+        self.assertIn('"window.install-format"', INSTALL_CONTROLS)
+        self.assertIn('"recommended"', INSTALL_CONTROLS,
+                      "the header's Install button installs the recommendation")
+        self.assertIn('_ ("Install %s")', INSTALL_CONTROLS)
+        self.assertIn("This app recommends the %s build", WINDOW,
+                      "installs from the listings still name the recommendation")
 
 
 class ThemeAndHygieneTests(unittest.TestCase):

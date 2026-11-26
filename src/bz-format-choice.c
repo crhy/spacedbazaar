@@ -711,14 +711,18 @@ bz_format_choice_evaluate (const char *app_id,
           continue;
         }
 
-      version = offer->version ? g_strdup_printf (_ ("version %s"), offer->version)
-                               : g_strdup (_ ("version not known yet"));
+      /* an unknown version or size is simply left out: the line never says
+         "not known", it just names what is known */
+      version = offer->version ? g_strdup_printf (", %s",
+                                                  _ ("version %s"),
+                                                  offer->version)
+                               : g_strdup ("");
 
       size = offer->download_size > 0
                ? g_strdup_printf (", %s", g_format_size ((guint64) offer->download_size))
                : g_strdup ("");
 
-      line = g_strdup_printf ("%s: %s, %s%s, %s",
+      line = g_strdup_printf ("%s: %s, %s%s%s",
                               label,
                               offer->installed ? _ ("already installed")
                                                : _ ("not installed"),
@@ -734,6 +738,12 @@ bz_format_choice_evaluate (const char *app_id,
         choice->installed_note = g_strdup_printf (_ ("Installed as %s"), label);
     }
 
+  /*
+   * The reason is user wording, never the working-out: what the user gets
+   * out of this build, in a sentence. The curated sentence wins when it is
+   * the curated pick; otherwise the reason names the rule that actually
+   * decided it.
+   */
   if (choice->overridden)
     {
       choice->reason = g_strdup_printf (
@@ -743,17 +753,29 @@ bz_format_choice_evaluate (const char *app_id,
   else if (advice != NULL && advice->pick == choice->pick)
     choice->reason = g_strdup (advice->reason);
   else if (offers != NULL && offers[choice->pick].installed)
-    choice->reason = g_strdup_printf (
-      _ ("the %s build is already installed for this app"),
-      bz_format_choice_format_label (choice->pick));
-  else if (bz_format_choice_format_is_sandboxed (choice->pick))
-    choice->reason = g_strdup_printf (
-      _ ("the %s build is the only sandboxed one offered for this app"),
-      bz_format_choice_format_label (choice->pick));
+    choice->reason = g_strdup (_ ("Already installed"));
   else
-    choice->reason = g_strdup_printf (
-      _ ("the %s build is the best match offered for this app"),
-      bz_format_choice_format_label (choice->pick));
+    {
+      gboolean is_newest = FALSE;
+
+      if (offers != NULL && newest != NULL &&
+          offers[choice->pick].version != NULL)
+        {
+          g_autofree char *release =
+              bz_format_choice_dup_release_version (
+                  offers[choice->pick].version);
+
+          is_newest = bz_format_choice_compare_versions (release, newest) == 0;
+        }
+
+      if (is_newest)
+        choice->reason = g_strdup (_ ("Newest version"));
+      else if (bz_format_choice_format_is_sandboxed (choice->pick))
+        choice->reason = g_strdup (
+          _ ("Sandboxed: kept apart from your files"));
+      else
+        choice->reason = g_strdup (_ ("Runs best on Spaced"));
+    }
 
   return g_steal_pointer (&choice);
 }

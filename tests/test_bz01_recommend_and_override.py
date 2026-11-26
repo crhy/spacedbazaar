@@ -99,7 +99,7 @@ class RecommendationOrderTests(unittest.TestCase):
         rows = [row for row in ADVICE["advice"] if "FreeCAD" in row["app_id"]]
         self.assertEqual(len(rows), 1)
         self.assertEqual(rows[0]["pick"], "appimage")
-        self.assertIn("flatpak freezes", rows[0]["reason"])
+        self.assertIn("Flatpak version freezes", rows[0]["reason"])
         evaluate = function_body(CHOICE_SOURCE, "bz_format_choice_evaluate")
         self.assertIn("score += ADVICE_WEIGHT", evaluate)
         self.assertIn("advice->reason", CHOICE_SOURCE)
@@ -116,22 +116,29 @@ class RecommendationCardTests(unittest.TestCase):
         self.assertLess(card_at, other_at, "the row must sit under the card")
         self.assertLess(other_at, context_at)
 
-    def test_the_card_shows_the_format_version_size_reason_and_one_button(self):
+    def test_the_card_shows_the_format_version_size_reason_and_no_button(self):
         card = FULL_VIEW_TEMPLATE.split("Box recommendation_card", 1)[1].split("Box other_formats_box", 1)[0]
         for name in ("recommend_badge", "recommend_version", "recommend_size",
-                     "recommend_reason", "recommend_install_button"):
+                     "recommend_reason"):
             self.assertIn(name, card)
-        self.assertIn('clicked => $install_recommended_cb(template);', card)
-        self.assertEqual(card.count("install_recommended_cb"), 1,
-                         "exactly one big Install button on the card")
+        self.assertNotIn("recommend_install_button", card,
+                         "bz02 B1: no second Install button on the card")
+        self.assertNotIn("install_recommended_cb", card)
+        self.assertNotIn("clicked =>", card,
+                         "the card itself installs nothing")
 
-    def test_the_row_lists_every_format_with_its_own_install_button(self):
+    def test_the_row_lists_the_other_formats_with_their_own_install_button(self):
         row_box = FULL_VIEW_TEMPLATE.split("Box other_formats_box", 1)[1].split("Box context_bar", 1)[0]
         self.assertIn("_(\"Other ways to install\")", row_box)
-        for fmt in ("apt", "flatpak", "appimage"):
+        for fmt in ("flatpak", "appimage"):
             self.assertIn(f"other_{fmt}_row", row_box)
             self.assertIn(f'other_summary(template.entry-group as <$BzEntryGroup>, "{fmt}")', row_box)
             self.assertIn(f'clicked => $install_{fmt}_cb(template);', row_box)
+        self.assertNotIn("other_apt_row", FULL_VIEW_TEMPLATE,
+                         "bz02 B7: apt is never installed, so it never gets a row")
+        self.assertIn("bz_format_choice_get_pick (choice) == parsed",
+                      FULL_VIEW_SOURCE,
+                      "bz02 B3: the recommended build is not repeated in the row")
 
     def test_installed_in_another_format_says_so_and_stops_recommending(self):
         self.assertIn('_ ("Installed as %s")', CHOICE_SOURCE)
@@ -139,15 +146,15 @@ class RecommendationCardTests(unittest.TestCase):
         card = FULL_VIEW_TEMPLATE.split("Box recommendation_card", 1)[1].split("Box other_formats_box", 1)[0]
         self.assertIn("recommend_installed_note", card)
         self.assertIn("$invert_boolean($recommend_installed(", card,
-                      "the install button hides while something is installed")
+                      "the format badge hides while something is installed")
 
     def test_the_page_registers_the_card_callbacks(self):
-        for callback in ("recommend_badge", "recommend_version", "recommend_size",
+        for callback in ("recommend_badge", "recommend_badge_icon",
+                         "recommend_version", "recommend_size",
                          "recommend_reason", "recommend_installed",
-                         "recommend_installed_note", "recommend_install_label",
+                         "recommend_installed_note",
                          "other_formats_exists", "other_has_format",
-                         "other_summary", "install_recommended_cb",
-                         "install_apt_cb", "install_flatpak_cb",
+                         "other_summary", "install_flatpak_cb",
                          "install_appimage_cb"):
             self.assertIn(
                 "gtk_widget_class_bind_template_callback (widget_class, "

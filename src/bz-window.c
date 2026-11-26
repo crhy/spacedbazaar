@@ -441,10 +441,11 @@ resolve_group_from_parameter (BzWindow *self,
 }
 
 /*
- * Install-time information only: Bazaar has not installed, and will not
- * install, the recommended build when it is not the Flatpak one. The toast
- * names the recommendation, the reason for it, and says plainly whether that
- * build is sandboxed.
+ * Install-time information: the app page's own Install button installs the
+ * recommended build, but installs started from the listings go through the
+ * ordinary Flatpak transaction. When that happens for an application whose
+ * recommendation is a different build, the toast names the recommendation,
+ * its reason, and says plainly whether it is sandboxed.
  */
 static void
 notify_format_choice (BzWindow *self, BzEntryGroup *group)
@@ -465,14 +466,13 @@ notify_format_choice (BzWindow *self, BzEntryGroup *group)
       pick == BZ_FORMAT_CHOICE_FORMAT_FLATPAK)
     return;
 
-  message = g_strdup_printf (_ ("Bazaar installs the Flatpak build.\n"
-                                "Recommended for this app: %s: %s\n"
+  message = g_strdup_printf (_ ("This app recommends the %s build: %s\n"
                                 "%s"),
-                             bz_format_choice_format_label (pick),
-                             bz_format_choice_get_reason (choice),
-                             bz_format_choice_format_is_sandboxed (pick)
-                               ? _ ("That build runs sandboxed.")
-                               : _ ("That build is not sandboxed."));
+                              bz_format_choice_format_label (pick),
+                              bz_format_choice_get_reason (choice),
+                              bz_format_choice_format_is_sandboxed (pick)
+                                ? _ ("That build runs sandboxed.")
+                                : _ ("That build is not sandboxed."));
 
   adw_toast_overlay_add_toast (self->toasts, adw_toast_new (message));
 }

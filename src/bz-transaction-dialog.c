@@ -249,7 +249,7 @@ configure_install_dialog (AdwAlertDialog *alert,
 
   adw_alert_dialog_add_responses (alert,
                                   "cancel", _ ("_Cancel"),
-                                  "install", _ ("_Install"),
+                                  "install", _ ("Install"),
                                   NULL);
 
   adw_alert_dialog_set_response_appearance (alert, "install", ADW_RESPONSE_SUGGESTED);
@@ -323,7 +323,7 @@ configure_high_risk_warning_dialog (AdwAlertDialog *alert,
 
   adw_alert_dialog_add_responses (alert,
                                   "cancel", _ ("_Cancel"),
-                                  "install", _ ("_Install Anyway"),
+                                  "install", _ ("Install Anyway"),
                                   NULL);
 
   adw_alert_dialog_set_response_appearance (alert, "install", ADW_RESPONSE_DESTRUCTIVE);
@@ -642,7 +642,7 @@ bulk_install_dialog_fiber (BulkInstallDialogData *data)
       _ ("%d addons will be installed."),
       _ ("Additionally, addons will be installed."),
       _ ("_Cancel"),
-      _ ("_Install All"));
+      _ ("Install All"));
 
   adw_alert_dialog_set_default_response (ADW_ALERT_DIALOG (dialog), "confirm");
   adw_alert_dialog_set_close_response (ADW_ALERT_DIALOG (dialog), "cancel");

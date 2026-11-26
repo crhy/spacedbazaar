@@ -301,7 +301,40 @@ recommend_badge (gpointer    object,
   if (pick == BZ_FORMAT_CHOICE_FORMAT_INVALID)
     return g_strdup ("");
 
+  if (pick == BZ_FORMAT_CHOICE_FORMAT_APT)
+    return g_strdup (_ ("System package"));
+
   return g_strdup (bz_format_choice_format_label (pick));
+}
+
+static char *
+recommend_badge_icon (gpointer    object,
+                      BzEntryGroup *group)
+{
+  g_autoptr (BzFormatChoice) choice = NULL;
+  BzFormatChoiceFormat pick = BZ_FORMAT_CHOICE_FORMAT_INVALID;
+
+  choice = choice_for_group (group);
+  if (choice == NULL ||
+      bz_format_choice_get_installed_note (choice) != NULL)
+    return g_strdup ("");
+
+  pick = bz_format_choice_get_pick (choice);
+
+  switch (pick)
+    {
+      case BZ_FORMAT_CHOICE_FORMAT_APT:
+        return g_strdup ("package-x-generic-symbolic");
+
+      case BZ_FORMAT_CHOICE_FORMAT_FLATPAK:
+        return g_strdup ("flathub-symbolic");
+
+      case BZ_FORMAT_CHOICE_FORMAT_APPIMAGE:
+        return g_strdup ("application-x-executable-symbolic");
+
+      default:
+        return g_strdup ("");
+    }
 }
 
 static char *
@@ -376,30 +409,32 @@ recommend_installed_note (gpointer    object,
   return g_strdup (note != NULL ? note : "");
 }
 
-static char *
-recommend_install_label (gpointer    object,
-                         BzEntryGroup *group)
-{
-  g_autoptr (BzFormatChoice) choice = NULL;
-  BzFormatChoiceFormat pick = BZ_FORMAT_CHOICE_FORMAT_INVALID;
+static gboolean other_has_format (gpointer      object,
+                                  BzEntryGroup *group,
+                                  const char   *format);
 
-  choice = choice_for_group (group);
-  if (choice == NULL)
-    return g_strdup ("");
-
-  pick = bz_format_choice_get_pick (choice);
-  if (pick == BZ_FORMAT_CHOICE_FORMAT_INVALID)
-    return g_strdup ("");
-
-  return g_strdup_printf (_ ("Install %s"),
-                          bz_format_choice_format_label (pick));
-}
-
+/*
+ * "Other ways to install" lists the builds the card does not offer: the
+ * recommended build has its Install button in the header, so listing it
+ * again here would be the same button twice. Builds Bazaar cannot install
+ * (apt) are not listed at all.
+ */
 static gboolean
 other_formats_exists (gpointer    object,
                       BzEntryGroup *group)
 {
-  return format_choice_exists (object, group);
+  if (group == NULL)
+    return FALSE;
+
+  for (guint i = 0; i < BZ_FORMAT_CHOICE_N_FORMATS; i++)
+    {
+      if (other_has_format (object, group,
+                            bz_format_choice_format_name (
+                              (BzFormatChoiceFormat) i)))
+        return TRUE;
+    }
+
+  return FALSE;
 }
 
 static gboolean
@@ -415,8 +450,18 @@ other_has_format (gpointer      object,
   if (group == NULL || parsed == BZ_FORMAT_CHOICE_FORMAT_INVALID)
     return FALSE;
 
+  /* apt is named for comparison only; Bazaar cannot install system
+     packages, so it never gets a row */
+  if (parsed == BZ_FORMAT_CHOICE_FORMAT_APT)
+    return FALSE;
+
   choice = choice_for_group (group);
   if (choice == NULL)
+    return FALSE;
+
+  /* the recommended build is offered by the page's own Install button,
+     not by this row */
+  if (bz_format_choice_get_pick (choice) == parsed)
     return FALSE;
 
   line = bz_format_choice_get_line (choice, parsed);
@@ -469,9 +514,11 @@ other_summary (gpointer      object,
 }
 
 /*
- * The card and the row hand their install buttons to the window: it knows
- * how to install each build (Flatpak through the transaction, AppImage
- * through bz-appimage-source, apt not yet).
+ * The "Other ways to install" rows hand their install buttons to the
+ * window: it knows how to install each build (Flatpak through the
+ * transaction, AppImage through bz-appimage-source). The header's Install
+ * button installs whatever the format choice recommends, and apt has no row
+ * because Bazaar cannot install system packages.
  */
 static void
 install_format (BzFullView *self,
@@ -487,20 +534,6 @@ install_format (BzFullView *self,
 
   gtk_widget_activate_action (GTK_WIDGET (self), "window.install-format",
                               "(ss)", id, format);
-}
-
-static void
-install_recommended_cb (BzFullView *self,
-                        GtkButton  *button)
-{
-  install_format (self, "recommended");
-}
-
-static void
-install_apt_cb (BzFullView *self,
-                GtkButton  *button)
-{
-  install_format (self, "apt");
 }
 
 static void
@@ -1043,16 +1076,14 @@ bz_full_view_class_init (BzFullViewClass *klass)
   gtk_widget_class_bind_template_callback (widget_class, format_choice_exists);
   gtk_widget_class_bind_template_callback (widget_class, recommend_installed);
   gtk_widget_class_bind_template_callback (widget_class, recommend_badge);
+  gtk_widget_class_bind_template_callback (widget_class, recommend_badge_icon);
   gtk_widget_class_bind_template_callback (widget_class, recommend_version);
   gtk_widget_class_bind_template_callback (widget_class, recommend_size);
   gtk_widget_class_bind_template_callback (widget_class, recommend_reason);
   gtk_widget_class_bind_template_callback (widget_class, recommend_installed_note);
-  gtk_widget_class_bind_template_callback (widget_class, recommend_install_label);
   gtk_widget_class_bind_template_callback (widget_class, other_formats_exists);
   gtk_widget_class_bind_template_callback (widget_class, other_has_format);
   gtk_widget_class_bind_template_callback (widget_class, other_summary);
-  gtk_widget_class_bind_template_callback (widget_class, install_recommended_cb);
-  gtk_widget_class_bind_template_callback (widget_class, install_apt_cb);
   gtk_widget_class_bind_template_callback (widget_class, install_flatpak_cb);
   gtk_widget_class_bind_template_callback (widget_class, install_appimage_cb);
   gtk_widget_class_bind_template_callback (widget_class, debug_id_inspect_cb);

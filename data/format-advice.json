@@ -6,7 +6,7 @@
       "app_id": "org.freecad.FreeCAD",
       "pick": "appimage",
       "appimage_repo": "freecad/freecad",
-      "reason": "the FreeCAD 1.1.4 flatpak freezes on Spaced; under investigation"
+      "reason": "Runs best on Spaced. The Flatpak version freezes on this desktop."
     }
   ]
 }

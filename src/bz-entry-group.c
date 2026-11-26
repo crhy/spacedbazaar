@@ -25,6 +25,7 @@
 #include "bz-appimage-source.h"
 #include "bz-flatpak-entry.h"
 #include "bz-format-choice.h"
+#include "bz-release.h"
 #include "env.h"
 #include "io.h"
 #include "bz-size-result.h"
@@ -772,6 +773,7 @@ bz_entry_group_get_format_choice (BzEntryGroup *self,
   g_autoptr (BzResult) ui_entry = NULL;
   GObject *ui_object = NULL;
   g_autofree char *flatpak_version = NULL;
+  g_autofree char *appimage_version = NULL;
   gint64 flatpak_size = 0;
   const BzFormatAdvice *advice = NULL;
   const char *app_id = NULL;
@@ -798,8 +800,21 @@ bz_entry_group_get_format_choice (BzEntryGroup *self,
   if (ui_entry != NULL)
     ui_object = bz_result_get_object (ui_entry);
   if (ui_object != NULL && BZ_IS_FLATPAK_ENTRY (ui_object))
-    flatpak_version = g_strdup (bz_flatpak_entry_get_flatpak_version (
-        BZ_FLATPAK_ENTRY (ui_object)));
+    {
+      /* the version the remote's own appdata advertises: the release this
+         build actually carries, not the ref branch */
+      g_autoptr (GListModel) history = NULL;
+
+      g_object_get (BZ_ENTRY (ui_object), "version-history", &history, NULL);
+
+      if (history != NULL && g_list_model_get_n_items (history) > 0)
+        {
+          g_autoptr (BzRelease) release =
+              g_list_model_get_item (history, 0);
+
+          flatpak_version = g_strdup (bz_release_get_version (release));
+        }
+    }
 
   flatpak_size = (ui_object != NULL && BZ_IS_ENTRY (ui_object))
                    ? (gint64) bz_entry_get_size (BZ_ENTRY (ui_object))
@@ -813,11 +828,18 @@ bz_entry_group_get_format_choice (BzEntryGroup *self,
     flatpak_size,
   };
 
+  /* an AppImage's version is its upstream release tag: known once installed
+     (recorded at install time), and otherwise only when the upstream
+     releases have actually been queried - an unknown version is left out of
+     the listings rather than announced */
+  if (bz_appimage_is_installed (app_id))
+    appimage_version = bz_appimage_dup_installed_version (app_id);
+
   offers[BZ_FORMAT_CHOICE_FORMAT_APPIMAGE] = (BzFormatChoiceOffer) {
     BZ_FORMAT_CHOICE_FORMAT_APPIMAGE,
     advice != NULL && advice->appimage_repo != NULL,
     bz_appimage_is_installed (app_id),
-    NULL,
+    appimage_version,
     0,
   };
 

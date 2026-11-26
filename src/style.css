@@ -1002,3 +1002,19 @@ curated-list-view list {
 .transact-icon-flag {
     background: var(--flag-gradient, var(--accent-bg-color));
 }
+
+/* the "Recommended for you" card: one rounded card, bordered with the
+   desktop's own accent colour, everything inside its padding */
+.recommend-card {
+    border: 1px solid var(--accent-color);
+    padding: 14px;
+}
+
+/* the format badge pill: icon + format name, tinted with the accent */
+.recommend-badge {
+    background-color: var(--accent-bg-color);
+    border: 1px solid var(--accent-color);
+    border-radius: 9999px;
+    padding: 3px 12px;
+}
+

@@ -843,9 +843,17 @@ bz_appimage_is_installed (const char *app_id)
 
   paths = bz_appimage_dup_uninstall_paths (app_id, NULL);
 
-  /* the desktop entry and the icon are counted too, so a half-removed
-     install is still reported as present until it is cleaned up */
-  installed = paths->len > 0;
+  /* dup_uninstall_paths always names where the files would go, so installed
+     means one of those paths really exists: the desktop entry and the icon
+     count too, and a half-removed install is still reported as present */
+  for (guint i = 0; i < paths->len; i++)
+    {
+      if (g_file_test ((const char *) paths->pdata[i], G_FILE_TEST_EXISTS))
+        {
+          installed = TRUE;
+          break;
+        }
+    }
 
   return installed;
 }

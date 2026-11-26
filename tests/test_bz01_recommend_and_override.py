@@ -206,6 +206,12 @@ class OverrideInstallTests(unittest.TestCase):
         self.assertIn("as an AppImage (version %s)", contents,
                       "the installed version is recorded so the check can read it back")
 
+    def test_an_appimage_only_counts_as_installed_when_the_files_exist(self):
+        body = function_body(APPIMAGE_SOURCE, "bz_appimage_is_installed")
+        self.assertNotIn("paths->len > 0", body,
+                         "the candidate paths are always listed; installed must mean present")
+        self.assertIn("G_FILE_TEST_EXISTS", body)
+
     def test_the_installed_page_lists_the_appimages(self):
         self.assertIn("Installed as AppImages", LIBRARY_TEMPLATE)
         self.assertIn("appimage_installed_rows", LIBRARY_TEMPLATE)

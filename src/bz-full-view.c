@@ -227,10 +227,21 @@ format_leftover_label (gpointer object, const char *name, guint64 size)
 }
 
 /*
- * The app page shows every build of this application side by side, and names
- * the one Bazaar recommends. Nothing here installs anything: the lines say
- * what exists, and the headline says which one is offered.
+ * The app page puts a "Recommended for you" card at the top, and under it a
+ * compact "Other ways to install" row naming every build of this application
+ * side by side. Nothing here installs anything: the card names the build
+ * Bazaar would install, the row names the overrides, and the install actions
+ * do the work.
  */
+static BzFormatChoice *
+choice_for_group (BzEntryGroup *group)
+{
+  if (group == NULL)
+    return NULL;
+
+  return bz_entry_group_get_format_choice (group, NULL, NULL);
+}
+
 static gboolean
 format_choice_exists (gpointer    object,
                       BzEntryGroup *group)
@@ -241,18 +252,20 @@ format_choice_exists (gpointer    object,
   if (group == NULL)
     return FALSE;
 
-  choice = bz_entry_group_get_format_choice (group, NULL, NULL);
+  choice = choice_for_group (group);
   if (choice == NULL)
     return FALSE;
 
-  /* one line is not a choice: the block appears only when more than one
+  /* one line is not a choice: the card appears only when more than one
      build exists for this application */
   for (guint i = 0; i < BZ_FORMAT_CHOICE_N_FORMATS; i++)
     {
       const char *line = bz_format_choice_get_line (
         choice, (BzFormatChoiceFormat) i);
 
-      if (line != NULL && g_strcmp0 (line, "") != 0)
+      if (line != NULL && !g_str_has_prefix (line, "apt: not offered") &&
+          !g_str_has_prefix (line, "Flatpak: not offered") &&
+          !g_str_has_prefix (line, "AppImage: not offered"))
         offered++;
     }
 
@@ -260,68 +273,117 @@ format_choice_exists (gpointer    object,
 }
 
 static gboolean
-format_choice_has_line (gpointer    object,
-                        BzEntryGroup *group,
-                        const char   *format)
+recommend_installed (gpointer    object,
+                     BzEntryGroup *group)
 {
   g_autoptr (BzFormatChoice) choice = NULL;
-  BzFormatChoiceFormat parsed = BZ_FORMAT_CHOICE_FORMAT_INVALID;
-  const char *line = NULL;
 
-  if (group == NULL)
-    return FALSE;
-
-  parsed = bz_format_choice_parse_format (format);
-  if (parsed == BZ_FORMAT_CHOICE_FORMAT_INVALID)
-    return FALSE;
-
-  choice = bz_entry_group_get_format_choice (group, NULL, NULL);
+  choice = choice_for_group (group);
   if (choice == NULL)
     return FALSE;
 
-  line = bz_format_choice_get_line (choice, parsed);
-  return line != NULL && g_strcmp0 (line, "") != 0;
+  return bz_format_choice_get_installed_note (choice) != NULL;
 }
 
 static char *
-format_choice_line (gpointer    object,
-                    BzEntryGroup *group,
-                    const char   *format)
-{
-  g_autoptr (BzFormatChoice) choice = NULL;
-  BzFormatChoiceFormat parsed = BZ_FORMAT_CHOICE_FORMAT_INVALID;
-  const char *line = NULL;
-
-  if (group == NULL)
-    return g_strdup ("");
-
-  parsed = bz_format_choice_parse_format (format);
-  if (parsed == BZ_FORMAT_CHOICE_FORMAT_INVALID)
-    return g_strdup ("");
-
-  choice = bz_entry_group_get_format_choice (group, NULL, NULL);
-  if (choice == NULL)
-    return g_strdup ("");
-
-  line = bz_format_choice_get_line (choice, parsed);
-  if (line == NULL)
-    return g_strdup ("");
-
-  return g_strdup (line);
-}
-
-static char *
-format_choice_headline (gpointer    object,
-                        BzEntryGroup *group)
+recommend_badge (gpointer    object,
+                 BzEntryGroup *group)
 {
   g_autoptr (BzFormatChoice) choice = NULL;
   BzFormatChoiceFormat pick = BZ_FORMAT_CHOICE_FORMAT_INVALID;
-  const char *reason = NULL;
 
-  if (group == NULL)
+  choice = choice_for_group (group);
+  if (choice == NULL ||
+      bz_format_choice_get_installed_note (choice) != NULL)
     return g_strdup ("");
 
-  choice = bz_entry_group_get_format_choice (group, NULL, NULL);
+  pick = bz_format_choice_get_pick (choice);
+  if (pick == BZ_FORMAT_CHOICE_FORMAT_INVALID)
+    return g_strdup ("");
+
+  return g_strdup (bz_format_choice_format_label (pick));
+}
+
+static char *
+recommend_version (gpointer    object,
+                   BzEntryGroup *group)
+{
+  g_autoptr (BzFormatChoice) choice = NULL;
+  const char *version = NULL;
+
+  choice = choice_for_group (group);
+  if (choice == NULL ||
+      bz_format_choice_get_installed_note (choice) != NULL)
+    return g_strdup ("");
+
+  version = bz_format_choice_get_pick_version (choice);
+
+  if (version == NULL)
+    return g_strdup ("");
+
+  return g_strdup_printf (_ ("version %s"), version);
+}
+
+static char *
+recommend_size (gpointer    object,
+                BzEntryGroup *group)
+{
+  g_autoptr (BzFormatChoice) choice = NULL;
+  gint64 size = 0;
+
+  choice = choice_for_group (group);
+  if (choice == NULL ||
+      bz_format_choice_get_installed_note (choice) != NULL)
+    return g_strdup ("");
+
+  size = bz_format_choice_get_pick_size (choice);
+  if (size <= 0)
+    return g_strdup ("");
+
+  return g_strdup (g_format_size ((guint64) size));
+}
+
+static char *
+recommend_reason (gpointer    object,
+                  BzEntryGroup *group)
+{
+  g_autoptr (BzFormatChoice) choice = NULL;
+  const char *reason = NULL;
+
+  choice = choice_for_group (group);
+  if (choice == NULL ||
+      bz_format_choice_get_installed_note (choice) != NULL)
+    return g_strdup ("");
+
+  reason = bz_format_choice_get_reason (choice);
+
+  return g_strdup (reason != NULL ? reason : "");
+}
+
+static char *
+recommend_installed_note (gpointer    object,
+                          BzEntryGroup *group)
+{
+  g_autoptr (BzFormatChoice) choice = NULL;
+  const char *note = NULL;
+
+  choice = choice_for_group (group);
+  if (choice == NULL)
+    return g_strdup ("");
+
+  note = bz_format_choice_get_installed_note (choice);
+
+  return g_strdup (note != NULL ? note : "");
+}
+
+static char *
+recommend_install_label (gpointer    object,
+                         BzEntryGroup *group)
+{
+  g_autoptr (BzFormatChoice) choice = NULL;
+  BzFormatChoiceFormat pick = BZ_FORMAT_CHOICE_FORMAT_INVALID;
+
+  choice = choice_for_group (group);
   if (choice == NULL)
     return g_strdup ("");
 
@@ -329,11 +391,130 @@ format_choice_headline (gpointer    object,
   if (pick == BZ_FORMAT_CHOICE_FORMAT_INVALID)
     return g_strdup ("");
 
-  reason = bz_format_choice_get_reason (choice);
+  return g_strdup_printf (_ ("Install %s"),
+                          bz_format_choice_format_label (pick));
+}
 
-  return g_strdup_printf (_ ("Recommended build: %s: %s"),
-                           bz_format_choice_format_label (pick),
-                           reason ? reason : "");
+static gboolean
+other_formats_exists (gpointer    object,
+                      BzEntryGroup *group)
+{
+  return format_choice_exists (object, group);
+}
+
+static gboolean
+other_has_format (gpointer      object,
+                  BzEntryGroup *group,
+                  const char   *format)
+{
+  g_autoptr (BzFormatChoice) choice = NULL;
+  BzFormatChoiceFormat parsed = BZ_FORMAT_CHOICE_FORMAT_INVALID;
+  const char *line = NULL;
+
+  parsed = bz_format_choice_parse_format (format);
+  if (group == NULL || parsed == BZ_FORMAT_CHOICE_FORMAT_INVALID)
+    return FALSE;
+
+  choice = choice_for_group (group);
+  if (choice == NULL)
+    return FALSE;
+
+  line = bz_format_choice_get_line (choice, parsed);
+
+  return line != NULL && strstr (line, "not offered") == NULL;
+}
+
+/*
+ * One compact line for the "Other ways to install" row: what the build is
+ * (installed, sandboxed, size, version) plus a short reason naming why this
+ * build is the curated one, or what it costs.
+ */
+static char *
+other_summary (gpointer      object,
+               BzEntryGroup *group,
+               const char   *format)
+{
+  g_autoptr (BzFormatChoice) choice = NULL;
+  const BzFormatAdvice *advice = NULL;
+  BzFormatChoiceFormat parsed = BZ_FORMAT_CHOICE_FORMAT_INVALID;
+  const char *line = NULL;
+  const char *short_reason = NULL;
+
+  parsed = bz_format_choice_parse_format (format);
+  if (group == NULL || parsed == BZ_FORMAT_CHOICE_FORMAT_INVALID)
+    return g_strdup ("");
+
+  choice = choice_for_group (group);
+  if (choice == NULL)
+    return g_strdup ("");
+
+  line = bz_format_choice_get_line (choice, parsed);
+  if (line == NULL)
+    return g_strdup ("");
+
+  advice = bz_format_advice_lookup (bz_entry_group_get_id (group));
+
+  if (advice != NULL && advice->pick == parsed)
+    short_reason = advice->reason;
+  else if (g_str_has_prefix (line, "apt: already installed") ||
+           g_str_has_prefix (line, "Flatpak: already installed") ||
+           g_str_has_prefix (line, "AppImage: already installed"))
+    short_reason = _ ("already installed on this system");
+  else if (bz_format_choice_format_is_sandboxed (parsed))
+    short_reason = _ ("the sandboxed build");
+  else
+    short_reason = _ ("not sandboxed");
+
+  return g_strdup_printf ("%s — %s", line, short_reason);
+}
+
+/*
+ * The card and the row hand their install buttons to the window: it knows
+ * how to install each build (Flatpak through the transaction, AppImage
+ * through bz-appimage-source, apt not yet).
+ */
+static void
+install_format (BzFullView *self,
+                const char *format)
+{
+  g_autoptr (BzEntryGroup) group = NULL;
+  const char *id = NULL;
+
+  group = bz_full_view_get_entry_group (self);
+  id = bz_entry_group_get_id (group);
+  if (id == NULL)
+    return;
+
+  gtk_widget_activate_action (GTK_WIDGET (self), "window.install-format",
+                              "(ss)", id, format);
+}
+
+static void
+install_recommended_cb (BzFullView *self,
+                        GtkButton  *button)
+{
+  install_format (self, "recommended");
+}
+
+static void
+install_apt_cb (BzFullView *self,
+                GtkButton  *button)
+{
+  install_format (self, "apt");
+}
+
+static void
+install_flatpak_cb (BzFullView *self,
+                    GtkButton  *button)
+{
+  install_format (self, "flatpak");
+}
+
+static void
+install_appimage_cb (BzFullView *self,
+                     GtkButton  *button)
+{
+  install_format (self, "appimage");
 }
 
 static gpointer
@@ -860,9 +1041,20 @@ bz_full_view_class_init (BzFullViewClass *klass)
   gtk_widget_class_bind_template_callback (widget_class, preview_other_metainfo_cb);
   gtk_widget_class_bind_template_callback (widget_class, copy_id_cb);
   gtk_widget_class_bind_template_callback (widget_class, format_choice_exists);
-  gtk_widget_class_bind_template_callback (widget_class, format_choice_headline);
-  gtk_widget_class_bind_template_callback (widget_class, format_choice_has_line);
-  gtk_widget_class_bind_template_callback (widget_class, format_choice_line);
+  gtk_widget_class_bind_template_callback (widget_class, recommend_installed);
+  gtk_widget_class_bind_template_callback (widget_class, recommend_badge);
+  gtk_widget_class_bind_template_callback (widget_class, recommend_version);
+  gtk_widget_class_bind_template_callback (widget_class, recommend_size);
+  gtk_widget_class_bind_template_callback (widget_class, recommend_reason);
+  gtk_widget_class_bind_template_callback (widget_class, recommend_installed_note);
+  gtk_widget_class_bind_template_callback (widget_class, recommend_install_label);
+  gtk_widget_class_bind_template_callback (widget_class, other_formats_exists);
+  gtk_widget_class_bind_template_callback (widget_class, other_has_format);
+  gtk_widget_class_bind_template_callback (widget_class, other_summary);
+  gtk_widget_class_bind_template_callback (widget_class, install_recommended_cb);
+  gtk_widget_class_bind_template_callback (widget_class, install_apt_cb);
+  gtk_widget_class_bind_template_callback (widget_class, install_flatpak_cb);
+  gtk_widget_class_bind_template_callback (widget_class, install_appimage_cb);
   gtk_widget_class_bind_template_callback (widget_class, debug_id_inspect_cb);
 }
 

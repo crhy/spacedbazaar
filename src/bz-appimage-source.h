@@ -160,12 +160,15 @@ bz_appimage_dup_icon_path (const char *app_id);
 /*
  * The .desktop file Bazaar writes for an installed AppImage. The name is
  * "<app-id> (AppImage)" so it can never be mistaken for the Flatpak entry of
- * the same app, and Exec= points at the AppImage under ~/Applications.
+ * the same app, and Exec= points at the AppImage under ~/Applications. The
+ * Comment= line records the release version that was installed, so the
+ * update check can compare it with the newest upstream release.
  */
 char *
 bz_appimage_dup_desktop_contents (const char *app_id,
                                   const char *title,
-                                  const char *asset_name);
+                                  const char *asset_name,
+                                  const char *version);
 
 /*
  * Every path an installed AppImage owns, newest first: the AppImage itself,
@@ -183,6 +186,22 @@ bz_appimage_dup_uninstall_paths (const char *app_id,
  */
 gboolean
 bz_appimage_is_installed (const char *app_id);
+
+/*
+ * The version recorded in the launcher entry of an installed AppImage, or
+ * NULL when the AppImage is not installed or predates version recording. The
+ * update check compares this with the newest upstream release.
+ */
+char *
+bz_appimage_dup_installed_version (const char *app_id);
+
+/*
+ * Every application id Bazaar has installed as an AppImage, read from the
+ * launcher entries it wrote. A cheap directory scan, no network; the Library
+ * uses this to list AppImages beside the other installed formats.
+ */
+GPtrArray *
+bz_appimage_dup_installed_app_ids (void);
 
 /*
  * Network and file I/O, kept behind these few functions:

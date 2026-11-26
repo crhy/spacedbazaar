@@ -214,55 +214,6 @@ template $BzFullView: Adw.Bin {
                               label: bind template.ui-entry as <$BzResult>.object as <$BzEntry>.title;
                             }
 
-                            Box format_choice_box {
-                              styles [
-                                "dim",
-                              ]
-
-                              orientation: vertical;
-                              spacing: 3;
-                              visible: bind $format_choice_exists(template.entry-group as <$BzEntryGroup>) as <bool>;
-
-                              Label format_choice_headline {
-                                xalign: 0.0;
-                                wrap: true;
-                                wrap-mode: word_char;
-                                natural-wrap-mode: word;
-                                selectable: true;
-                                label: bind $format_choice_headline(template.entry-group as <$BzEntryGroup>) as <string>;
-                              }
-
-                              Label format_choice_apt_line {
-                                xalign: 0.0;
-                                wrap: true;
-                                wrap-mode: word_char;
-                                natural-wrap-mode: word;
-                                selectable: true;
-                                visible: bind $format_choice_has_line(template.entry-group as <$BzEntryGroup>, "apt") as <bool>;
-                                label: bind $format_choice_line(template.entry-group as <$BzEntryGroup>, "apt") as <string>;
-                              }
-
-                              Label format_choice_flatpak_line {
-                                xalign: 0.0;
-                                wrap: true;
-                                wrap-mode: word_char;
-                                natural-wrap-mode: word;
-                                selectable: true;
-                                visible: bind $format_choice_has_line(template.entry-group as <$BzEntryGroup>, "flatpak") as <bool>;
-                                label: bind $format_choice_line(template.entry-group as <$BzEntryGroup>, "flatpak") as <string>;
-                              }
-
-                              Label format_choice_appimage_line {
-                                xalign: 0.0;
-                                wrap: true;
-                                wrap-mode: word_char;
-                                natural-wrap-mode: word;
-                                selectable: true;
-                                visible: bind $format_choice_has_line(template.entry-group as <$BzEntryGroup>, "appimage") as <bool>;
-                                label: bind $format_choice_line(template.entry-group as <$BzEntryGroup>, "appimage") as <string>;
-                              }
-                            }
-
                             Box {
                               styles [
                                 "bz-debug",
@@ -335,6 +286,188 @@ template $BzFullView: Adw.Bin {
                             state: bind template.state as <$BzStateInfo>;
                             settings: bind template.state as <$BzStateInfo>.settings;
                             update => $update_cb(template);
+                          }
+                        }
+                      }
+
+                      Box recommendation_card {
+                        styles [
+                          "card",
+                        ]
+
+                        halign: fill;
+                        valign: fill;
+                        orientation: vertical;
+                        spacing: 6;
+                        margin-start: 12;
+                        margin-end: 12;
+                        visible: bind $format_choice_exists(template.entry-group as <$BzEntryGroup>) as <bool>;
+
+                        Label {
+                          styles [
+                            "heading",
+                            "dim",
+                          ]
+
+                          xalign: 0.0;
+                          label: _("Recommended for you");
+                        }
+
+                        Box {
+                          spacing: 8;
+
+                          Label recommend_badge {
+                            styles [
+                              "title-4",
+                            ]
+
+                            label: bind $recommend_badge(template.entry-group as <$BzEntryGroup>) as <string>;
+                          }
+
+                          Label recommend_version {
+                            styles [
+                              "dim",
+                            ]
+
+                            label: bind $recommend_version(template.entry-group as <$BzEntryGroup>) as <string>;
+                          }
+
+                          Label recommend_size {
+                            styles [
+                              "dim",
+                            ]
+
+                            label: bind $recommend_size(template.entry-group as <$BzEntryGroup>) as <string>;
+                          }
+                        }
+
+                        Label recommend_reason {
+                          xalign: 0.0;
+                          wrap: true;
+                          wrap-mode: word_char;
+                          natural-wrap-mode: word;
+                          selectable: true;
+                          label: bind $recommend_reason(template.entry-group as <$BzEntryGroup>) as <string>;
+                        }
+
+                        Label recommend_installed_note {
+                          styles [
+                            "heading",
+                          ]
+
+                          xalign: 0.0;
+                          wrap: true;
+                          wrap-mode: word_char;
+                          natural-wrap-mode: word;
+                          selectable: true;
+                          visible: bind $recommend_installed(template.entry-group as <$BzEntryGroup>) as <bool>;
+                          label: bind $recommend_installed_note(template.entry-group as <$BzEntryGroup>) as <string>;
+                        }
+
+                        Button recommend_install_button {
+                          styles [
+                            "suggested-action",
+                            "pill",
+                          ]
+
+                          halign: center;
+                          margin-top: 6;
+                          visible: bind $invert_boolean($recommend_installed(template.entry-group as <$BzEntryGroup>) as <bool>) as <bool>;
+                          label: bind $recommend_install_label(template.entry-group as <$BzEntryGroup>) as <string>;
+                          clicked => $install_recommended_cb(template);
+                        }
+                      }
+
+                      Box other_formats_box {
+                        halign: fill;
+                        orientation: vertical;
+                        spacing: 4;
+                        margin-start: 12;
+                        margin-end: 12;
+                        visible: bind $other_formats_exists(template.entry-group as <$BzEntryGroup>) as <bool>;
+
+                        Label {
+                          styles [
+                            "heading",
+                            "dim",
+                          ]
+
+                          xalign: 0.0;
+                          label: _("Other ways to install");
+                        }
+
+                        Box other_apt_row {
+                          spacing: 8;
+                          visible: bind $other_has_format(template.entry-group as <$BzEntryGroup>, "apt") as <bool>;
+
+                          Label other_apt_summary {
+                            hexpand: true;
+                            xalign: 0.0;
+                            wrap: true;
+                            wrap-mode: word_char;
+                            natural-wrap-mode: word;
+                            selectable: true;
+                            label: bind $other_summary(template.entry-group as <$BzEntryGroup>, "apt") as <string>;
+                          }
+
+                          Button {
+                            styles [
+                              "small-pill",
+                            ]
+
+                            valign: center;
+                            label: _("_Install");
+                            clicked => $install_apt_cb(template);
+                          }
+                        }
+
+                        Box other_flatpak_row {
+                          spacing: 8;
+                          visible: bind $other_has_format(template.entry-group as <$BzEntryGroup>, "flatpak") as <bool>;
+
+                          Label other_flatpak_summary {
+                            hexpand: true;
+                            xalign: 0.0;
+                            wrap: true;
+                            wrap-mode: word_char;
+                            natural-wrap-mode: word;
+                            selectable: true;
+                            label: bind $other_summary(template.entry-group as <$BzEntryGroup>, "flatpak") as <string>;
+                          }
+
+                          Button {
+                            styles [
+                              "small-pill",
+                            ]
+
+                            valign: center;
+                            label: _("_Install");
+                            clicked => $install_flatpak_cb(template);
+                          }
+                        }
+
+                        Box other_appimage_row {
+                          spacing: 8;
+                          visible: bind $other_has_format(template.entry-group as <$BzEntryGroup>, "appimage") as <bool>;
+
+                          Label other_appimage_summary {
+                            hexpand: true;
+                            xalign: 0.0;
+                            wrap: true;
+                            wrap-mode: word_char;
+                            natural-wrap-mode: word;
+                            selectable: true;
+                            label: bind $other_summary(template.entry-group as <$BzEntryGroup>, "appimage") as <string>;
+                          }
+
+                          Button {
+                            styles [
+                              "small-pill",
+                            ]
+
+                            valign: center;
+                            label: _("_Install");
+                            clicked => $install_appimage_cb(template);
                           }
                         }
                       }

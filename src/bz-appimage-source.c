@@ -364,7 +364,8 @@ install_appimage_fiber (AppImageInstallData *data)
   desktop_path = bz_appimage_dup_desktop_path (release->app_id);
   desktop_contents = bz_appimage_dup_desktop_contents (release->app_id,
                                                        data->title,
-                                                       release->asset_name);
+                                                       release->asset_name,
+                                                       release->tag_name);
   if (desktop_path == NULL || desktop_contents == NULL ||
       !ensure_parent_dir (desktop_path, NULL) ||
       !write_text_to_path (desktop_path, desktop_contents, &local_error))
@@ -748,11 +749,13 @@ bz_appimage_dup_icon_path (const char *app_id)
 char *
 bz_appimage_dup_desktop_contents (const char *app_id,
                                   const char *title,
-                                  const char *asset_name)
+                                  const char *asset_name,
+                                  const char *version)
 {
   g_autofree char *install_path = NULL;
   g_autofree char *safe_title = NULL;
   g_autofree char *name = NULL;
+  g_autofree char *comment = NULL;
 
   if (app_id == NULL)
     return NULL;
@@ -766,17 +769,23 @@ bz_appimage_dup_desktop_contents (const char *app_id,
   safe_title = title ? dup_safe_title (title) : g_strdup (app_id);
   name = g_strdup_printf ("%s (AppImage)", safe_title);
 
+  /* the Comment= line doubles as the installed-version record the update
+     check reads back; it is shown to the user, so keep it plain */
+  comment = version != NULL
+              ? g_strdup_printf ("Installed by SpacedBazaar as an AppImage (version %s)", version)
+              : g_strdup ("Installed by SpacedBazaar as an AppImage");
+
   return g_strdup_printf ("[Desktop Entry]\n"
                           "Version=1.0\n"
                           "Type=Application\n"
                           "Name=%s\n"
-                          "Comment=Installed by SpacedBazaar as an AppImage\n"
+                          "Comment=%s\n"
                           "Exec=%s\n"
                           "Path=%s\n"
                           "Icon=%s\n"
                           "Terminal=false\n"
                           "StartupNotify=false\n",
-                          name, install_path,
+                          name, comment, install_path,
                           bz_appimage_dup_applications_dir (), app_id);
 }
 
@@ -839,6 +848,79 @@ bz_appimage_is_installed (const char *app_id)
   installed = paths->len > 0;
 
   return installed;
+}
+
+/*
+ * Read the installed version back out of the launcher entry's Comment= line:
+ * "Installed by SpacedBazaar as an AppImage (version X)". No network: this is
+ * what the update check compares the newest upstream release against.
+ */
+char *
+bz_appimage_dup_installed_version (const char *app_id)
+{
+  g_autofree char *desktop_path = NULL;
+  g_autofree char *contents = NULL;
+  const char *marker = NULL;
+  const char *close_paren = NULL;
+
+  if (app_id == NULL)
+    return NULL;
+
+  desktop_path = bz_appimage_dup_desktop_path (app_id);
+  if (desktop_path == NULL ||
+      !g_file_get_contents (desktop_path, &contents, NULL, NULL))
+    return NULL;
+
+  marker = strstr (contents, " as an AppImage (version ");
+  if (marker == NULL)
+    return NULL;
+
+  marker += strlen (" as an AppImage (version ");
+  close_paren = strchr (marker, ')');
+
+  if (close_paren == NULL || close_paren <= marker)
+    return NULL;
+
+  return g_strndup (marker, close_paren - marker);
+}
+
+/*
+ * The launcher entries Bazaar wrote are named "<app-id>-AppImage.desktop";
+ * listing them recovers every application installed as an AppImage.
+ */
+GPtrArray *
+bz_appimage_dup_installed_app_ids (void)
+{
+  g_autoptr (GPtrArray) app_ids = NULL;
+  g_autofree char *applications = NULL;
+  GDir *dir_handle = NULL;
+  const gchar *entry_name = NULL;
+
+  app_ids = g_ptr_array_new_with_free_func (g_free);
+
+  applications = g_build_filename (g_get_home_dir (), ".local", "share",
+                                   "applications", NULL);
+  dir_handle = g_dir_open (applications, 0, NULL);
+  if (dir_handle == NULL)
+    return g_steal_pointer (&app_ids);
+
+  while ((entry_name = g_dir_read_name (dir_handle)) != NULL)
+    {
+      gsize name_len = 0;
+
+      if (!g_str_has_suffix (entry_name, "-AppImage.desktop"))
+        continue;
+
+      name_len = strlen (entry_name) - strlen ("-AppImage.desktop");
+      if (name_len == 0)
+        continue;
+
+      g_ptr_array_add (app_ids, g_strndup (entry_name, name_len));
+    }
+
+  g_dir_close (dir_handle);
+
+  return g_steal_pointer (&app_ids);
 }
 
 DexFuture *

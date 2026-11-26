@@ -1,4 +1,5 @@
 build
+build-dir/
 .cache
 .flatpak-builder/
 .flatpak-repo/

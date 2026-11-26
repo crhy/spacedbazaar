@@ -57,6 +57,18 @@
   </screenshots>
 
   <releases>
+    <release version="0.1.16" date="2026-11-26">
+      <description>
+        <p>AppImage is a third install format, and Bazaar now recommends the best one for you, at the top of the app page.</p>
+        <ul>
+          <li>A "Recommended for you" card shows the format, version, size and a plain-words reason, with one big Install button; a compact "Other ways to install" row lists every build side by side, each with its own Install button.</li>
+          <li>AppImages come only from a project's official GitHub releases with a published SHA256 that matches; without one they are not offered. They install to ~/Applications with a themed menu entry and icon, and uninstall removes exactly those files.</li>
+          <li>An app already installed in another format says so ("Installed as Flatpak") and recommends nothing new. The Library lists AppImages and can remove them.</li>
+          <li>FreeCAD is recommended as the AppImage: the FreeCAD 1.1.4 flatpak freezes on Spaced; under investigation.</li>
+        </ul>
+      </description>
+      <url type="details">https://github.com/crhy/spacedbazaar/releases/tag/v0.1.16</url>
+    </release>
     <release version="0.1.15" date="2026-11-06">
       <description><p>Follow Spaced Linux light, dark and coloured desktop palettes, including live theme changes.</p></description>
       <url type="details">https://github.com/crhy/spacedbazaar/releases/tag/v0.1.15</url>

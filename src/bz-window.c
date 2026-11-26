@@ -439,6 +439,43 @@ resolve_group_from_parameter (BzWindow *self,
       gtk_string_object_new (id));
 }
 
+/*
+ * Install-time information only: Bazaar has not installed, and will not
+ * install, the recommended build when it is not the Flatpak one. The toast
+ * names the recommendation, the reason for it, and says plainly whether that
+ * build is sandboxed.
+ */
+static void
+notify_format_choice (BzWindow *self, BzEntryGroup *group)
+{
+  g_autoptr (BzFormatChoice) choice = NULL;
+  g_autofree char *message = NULL;
+  BzFormatChoiceFormat pick = BZ_FORMAT_CHOICE_FORMAT_INVALID;
+
+  if (group == NULL || self->toasts == NULL)
+    return;
+
+  choice = bz_entry_group_get_format_choice (group, NULL, NULL);
+  if (choice == NULL)
+    return;
+
+  pick = bz_format_choice_get_pick (choice);
+  if (pick == BZ_FORMAT_CHOICE_FORMAT_INVALID ||
+      pick == BZ_FORMAT_CHOICE_FORMAT_FLATPAK)
+    return;
+
+  message = g_strdup_printf (_ ("Bazaar installs the Flatpak build.\n"
+                                "Recommended for this app: %s: %s\n"
+                                "%s"),
+                             bz_format_choice_format_label (pick),
+                             bz_format_choice_get_reason (choice),
+                             bz_format_choice_format_is_sandboxed (pick)
+                               ? _ ("That build runs sandboxed.")
+                               : _ ("That build is not sandboxed."));
+
+  adw_toast_overlay_add_toast (self->toasts, adw_toast_new (message));
+}
+
 static void
 action_install_group (GtkWidget  *widget,
                       const char *action_name,
@@ -450,7 +487,10 @@ action_install_group (GtkWidget  *widget,
 
   group = resolve_group_from_parameter (self, parameter, &auto_confirm);
   if (group != NULL)
-    try_transact (self, NULL, group, FALSE, auto_confirm, NULL);
+    {
+      notify_format_choice (self, group);
+      try_transact (self, NULL, group, FALSE, auto_confirm, NULL);
+    }
 }
 
 static void

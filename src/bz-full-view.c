@@ -226,6 +226,116 @@ format_leftover_label (gpointer object, const char *name, guint64 size)
   return g_strdup_printf (_ ("%s is not installed, but it still has <b>%s</b> of data present."), name, formatted_size);
 }
 
+/*
+ * The app page shows every build of this application side by side, and names
+ * the one Bazaar recommends. Nothing here installs anything: the lines say
+ * what exists, and the headline says which one is offered.
+ */
+static gboolean
+format_choice_exists (gpointer    object,
+                      BzEntryGroup *group)
+{
+  g_autoptr (BzFormatChoice) choice = NULL;
+  guint offered = 0;
+
+  if (group == NULL)
+    return FALSE;
+
+  choice = bz_entry_group_get_format_choice (group, NULL, NULL);
+  if (choice == NULL)
+    return FALSE;
+
+  /* one line is not a choice: the block appears only when more than one
+     build exists for this application */
+  for (guint i = 0; i < BZ_FORMAT_CHOICE_N_FORMATS; i++)
+    {
+      const char *line = bz_format_choice_get_line (
+        choice, (BzFormatChoiceFormat) i);
+
+      if (line != NULL && g_strcmp0 (line, "") != 0)
+        offered++;
+    }
+
+  return offered > 1;
+}
+
+static gboolean
+format_choice_has_line (gpointer    object,
+                        BzEntryGroup *group,
+                        const char   *format)
+{
+  g_autoptr (BzFormatChoice) choice = NULL;
+  BzFormatChoiceFormat parsed = BZ_FORMAT_CHOICE_FORMAT_INVALID;
+  const char *line = NULL;
+
+  if (group == NULL)
+    return FALSE;
+
+  parsed = bz_format_choice_parse_format (format);
+  if (parsed == BZ_FORMAT_CHOICE_FORMAT_INVALID)
+    return FALSE;
+
+  choice = bz_entry_group_get_format_choice (group, NULL, NULL);
+  if (choice == NULL)
+    return FALSE;
+
+  line = bz_format_choice_get_line (choice, parsed);
+  return line != NULL && g_strcmp0 (line, "") != 0;
+}
+
+static char *
+format_choice_line (gpointer    object,
+                    BzEntryGroup *group,
+                    const char   *format)
+{
+  g_autoptr (BzFormatChoice) choice = NULL;
+  BzFormatChoiceFormat parsed = BZ_FORMAT_CHOICE_FORMAT_INVALID;
+  const char *line = NULL;
+
+  if (group == NULL)
+    return g_strdup ("");
+
+  parsed = bz_format_choice_parse_format (format);
+  if (parsed == BZ_FORMAT_CHOICE_FORMAT_INVALID)
+    return g_strdup ("");
+
+  choice = bz_entry_group_get_format_choice (group, NULL, NULL);
+  if (choice == NULL)
+    return g_strdup ("");
+
+  line = bz_format_choice_get_line (choice, parsed);
+  if (line == NULL)
+    return g_strdup ("");
+
+  return g_strdup (line);
+}
+
+static char *
+format_choice_headline (gpointer    object,
+                        BzEntryGroup *group)
+{
+  g_autoptr (BzFormatChoice) choice = NULL;
+  BzFormatChoiceFormat pick = BZ_FORMAT_CHOICE_FORMAT_INVALID;
+  const char *reason = NULL;
+
+  if (group == NULL)
+    return g_strdup ("");
+
+  choice = bz_entry_group_get_format_choice (group, NULL, NULL);
+  if (choice == NULL)
+    return g_strdup ("");
+
+  pick = bz_format_choice_get_pick (choice);
+  if (pick == BZ_FORMAT_CHOICE_FORMAT_INVALID)
+    return g_strdup ("");
+
+  reason = bz_format_choice_get_reason (choice);
+
+  return g_strdup_printf (_ ("Recommended build: %s: %s"),
+                           bz_format_choice_format_label (pick),
+                           reason ? reason : "");
+}
+
 static gpointer
 filter_own_app_id (BzEntry *entry, GtkStringList *app_ids)
 {
@@ -749,6 +859,10 @@ bz_full_view_class_init (BzFullViewClass *klass)
   gtk_widget_class_bind_template_callback (widget_class, metainfo_banner_visible);
   gtk_widget_class_bind_template_callback (widget_class, preview_other_metainfo_cb);
   gtk_widget_class_bind_template_callback (widget_class, copy_id_cb);
+  gtk_widget_class_bind_template_callback (widget_class, format_choice_exists);
+  gtk_widget_class_bind_template_callback (widget_class, format_choice_headline);
+  gtk_widget_class_bind_template_callback (widget_class, format_choice_has_line);
+  gtk_widget_class_bind_template_callback (widget_class, format_choice_line);
   gtk_widget_class_bind_template_callback (widget_class, debug_id_inspect_cb);
 }
 

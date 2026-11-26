@@ -221,6 +221,49 @@ is_not_empty_page (gpointer    object,
   return g_strcmp0 (page_name, "empty") != 0;
 }
 
+/*
+ * Information only: Bazaar installs the Flatpak build, so the install button
+ * merely names the build the curated advice prefers for this application and
+ * says plainly whether that build is sandboxed. Nothing here installs an
+ * AppImage or an apt package.
+ */
+static void
+set_install_btn_tooltip (BzInstallControls *self)
+{
+  g_autoptr (BzFormatChoice) choice = NULL;
+  g_autofree char *tooltip = NULL;
+  BzFormatChoiceFormat pick = BZ_FORMAT_CHOICE_FORMAT_INVALID;
+
+  if (self->animated_button == NULL)
+    return;
+
+  if (self->group == NULL)
+    return;
+
+  choice = bz_entry_group_get_format_choice (self->group, NULL, NULL);
+  if (choice == NULL)
+    return;
+
+  pick = bz_format_choice_get_pick (choice);
+
+  /* the Flatpak build is Bazaar's own install path: nothing to say when it
+     is also the recommendation */
+  if (pick == BZ_FORMAT_CHOICE_FORMAT_INVALID ||
+      pick == BZ_FORMAT_CHOICE_FORMAT_FLATPAK)
+    return;
+
+  tooltip = g_strdup_printf (_ ("Bazaar installs the Flatpak build.\n"
+                                "For this app the %s build is recommended: %s\n"
+                                "%s"),
+                             bz_format_choice_format_label (pick),
+                             bz_format_choice_get_reason (choice),
+                             bz_format_choice_format_is_sandboxed (pick)
+                               ? _ ("That build runs sandboxed.")
+                               : _ ("That build is not sandboxed."));
+
+  gtk_widget_set_tooltip_text (self->animated_button, tooltip);
+}
+
 static char *
 get_visible_page (gpointer    object,
                   int         installable,
@@ -230,6 +273,8 @@ get_visible_page (gpointer    object,
 {
   BzInstallControls *self      = BZ_INSTALL_CONTROLS (object);
   g_autoptr (GListStore) store = NULL;
+
+  set_install_btn_tooltip (self);
 
   if (active)
     return g_strdup ("install");

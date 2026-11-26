@@ -214,6 +214,55 @@ template $BzFullView: Adw.Bin {
                               label: bind template.ui-entry as <$BzResult>.object as <$BzEntry>.title;
                             }
 
+                            Box format_choice_box {
+                              styles [
+                                "dim",
+                              ]
+
+                              orientation: vertical;
+                              spacing: 3;
+                              visible: bind $format_choice_exists(template.entry-group as <$BzEntryGroup>) as <bool>;
+
+                              Label format_choice_headline {
+                                xalign: 0.0;
+                                wrap: true;
+                                wrap-mode: word_char;
+                                natural-wrap-mode: word;
+                                selectable: true;
+                                label: bind $format_choice_headline(template.entry-group as <$BzEntryGroup>) as <string>;
+                              }
+
+                              Label format_choice_apt_line {
+                                xalign: 0.0;
+                                wrap: true;
+                                wrap-mode: word_char;
+                                natural-wrap-mode: word;
+                                selectable: true;
+                                visible: bind $format_choice_has_line(template.entry-group as <$BzEntryGroup>, "apt") as <bool>;
+                                label: bind $format_choice_line(template.entry-group as <$BzEntryGroup>, "apt") as <string>;
+                              }
+
+                              Label format_choice_flatpak_line {
+                                xalign: 0.0;
+                                wrap: true;
+                                wrap-mode: word_char;
+                                natural-wrap-mode: word;
+                                selectable: true;
+                                visible: bind $format_choice_has_line(template.entry-group as <$BzEntryGroup>, "flatpak") as <bool>;
+                                label: bind $format_choice_line(template.entry-group as <$BzEntryGroup>, "flatpak") as <string>;
+                              }
+
+                              Label format_choice_appimage_line {
+                                xalign: 0.0;
+                                wrap: true;
+                                wrap-mode: word_char;
+                                natural-wrap-mode: word;
+                                selectable: true;
+                                visible: bind $format_choice_has_line(template.entry-group as <$BzEntryGroup>, "appimage") as <bool>;
+                                label: bind $format_choice_line(template.entry-group as <$BzEntryGroup>, "appimage") as <string>;
+                              }
+                            }
+
                             Box {
                               styles [
                                 "bz-debug",

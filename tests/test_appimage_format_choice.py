@@ -242,29 +242,29 @@ class FormatChoiceTests(unittest.TestCase):
 
 class AppPageTests(unittest.TestCase):
     def test_the_app_page_shows_every_format_side_by_side(self):
-        name_box = FULL_VIEW_TEMPLATE.split("app_name_box", 1)[1].split('"bz-debug"', 1)[0]
+        row_box = FULL_VIEW_TEMPLATE.split("other_formats_box", 1)[1].split("Box context_bar", 1)[0]
+        self.assertIn('label: _("Other ways to install");', row_box)
         for fmt in FORMATS:
-            self.assertIn(f"format_choice_{fmt}_line", name_box)
+            self.assertIn(f"Box other_{fmt}_row", row_box)
             self.assertIn(
-                f'label: bind $format_choice_line(template.entry-group '
+                f'label: bind $other_summary(template.entry-group '
                 f'as <$BzEntryGroup>, "{fmt}") as <string>;',
-                name_box,
+                row_box,
             )
-        self.assertIn("format_choice_headline", name_box)
-        self.assertIn("wrap: true;", name_box)
-        self.assertIn("selectable: true;", name_box)
+        card = FULL_VIEW_TEMPLATE.split("Box recommendation_card", 1)[1].split("Box other_formats_box", 1)[0]
+        self.assertIn("recommend_install_button", card)
 
-    def test_a_line_hides_itself_when_that_build_does_not_exist(self):
+    def test_a_row_hides_itself_when_that_build_does_not_exist(self):
         for fmt in FORMATS:
             self.assertIn(
-                f'visible: bind $format_choice_has_line(template.entry-group '
+                f'visible: bind $other_has_format(template.entry-group '
                 f'as <$BzEntryGroup>, "{fmt}") as <bool>;',
                 FULL_VIEW_TEMPLATE,
             )
 
     def test_the_page_registers_the_callbacks(self):
-        for callback in ("format_choice_exists", "format_choice_headline",
-                         "format_choice_has_line", "format_choice_line"):
+        for callback in ("other_formats_exists", "other_has_format",
+                         "other_summary"):
             self.assertIn(
                 "gtk_widget_class_bind_template_callback (widget_class, "
                 f"{callback});",
@@ -272,7 +272,9 @@ class AppPageTests(unittest.TestCase):
             )
 
     def test_the_headline_names_the_recommended_build(self):
-        self.assertIn('_ ("Recommended build: %s: %s")', FULL_VIEW_SOURCE)
+        card = FULL_VIEW_TEMPLATE.split("Box recommendation_card", 1)[1].split("Box other_formats_box", 1)[0]
+        self.assertIn('label: _("Recommended for you");', card)
+        self.assertIn('_ ("Install %s")', FULL_VIEW_SOURCE)
 
 
 class InstallTimeTests(unittest.TestCase):
@@ -288,9 +290,14 @@ class InstallTimeTests(unittest.TestCase):
         )
 
     def test_no_message_claims_bazaar_installed_another_format(self):
-        # Bazaar installs the Flatpak build; the other builds are only ever
-        # named, so no string may read as if one had already been installed.
-        for source in (FULL_VIEW_SOURCE, INSTALL_CONTROLS, WINDOW):
+        # Bazaar installs the format the user asked for; the listings only
+        # name the other builds, so no listing string may read as if one had
+        # already been installed. The override paths the user presses do
+        # report their own result and are excluded from the scan.
+        window = WINDOW
+        for name in ("install_appimage_choice_fiber", "action_install_format"):
+            window = window.replace(function_body(window, name), "")
+        for source in (FULL_VIEW_SOURCE, INSTALL_CONTROLS, window):
             for literal in string_literals(source):
                 if "AppImage" not in literal and "apt" not in literal:
                     continue

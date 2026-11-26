@@ -129,9 +129,17 @@ else
       config_h.set_quoted('SANDBOXED_LIBFLATPAK', '1')
     endif
 
+    # the curated per-application format advice, shipped with the app
+    config_h.set_quoted('FORMAT_ADVICE_PATH', get_option('prefix') / get_option('datadir') / 'bazaar' / 'format-advice.json')
+    install_data(
+      'data/format-advice.json',
+      install_dir: get_option('datadir') / 'bazaar',
+    )
+
     if get_option('development')
       config_h.set10('DEVELOPMENT_BUILD', get_option('development'))
       config_h.set_quoted('DEVELOPMENT_EXAMPLE_YAML', get_option('prefix') / get_option('datadir') / 'bazaar' / 'example.yaml')
+      config_h.set_quoted('DEVELOPMENT_FORMAT_ADVICE_PATH', meson.current_source_dir() / 'data' / 'format-advice.json')
       install_data(
         'docs/example.yaml',
         install_dir: get_option('datadir') / 'bazaar',

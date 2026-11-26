@@ -15,6 +15,7 @@ src/bz-app-size-dialog.blp
 src/bz-app-size-dialog.c
 src/bz-app-tile.blp
 src/bz-app-tile.c
+src/bz-appimage-source.c
 src/bz-application-map-factory.c
 src/bz-application.c
 src/bz-apps-page.blp
@@ -74,6 +75,7 @@ src/bz-flatpak-entry.c
 src/bz-flatpak-instance.c
 src/bz-full-view.blp
 src/bz-full-view.c
+src/bz-format-choice.c
 src/bz-group-tile-css-watcher.c
 src/bz-hardware-support-dialog.blp
 src/bz-hardware-support-dialog.c

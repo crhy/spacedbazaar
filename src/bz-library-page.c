@@ -20,6 +20,7 @@
 
 #include <glib/gi18n.h>
 
+#include "bz-appimage-source.h"
 #include "bz-entry-group.h"
 #include "bz-installed-tile.h"
 #include "bz-library-page.h"
@@ -49,6 +50,8 @@ struct _BzLibraryPage
   GtkCustomSorter    *sorter;
   GtkCheckButton     *sort_name;
   GtkCheckButton     *sort_size;
+  GtkWidget          *appimage_installed_section;
+  GtkBox             *appimage_installed_rows;
 };
 
 G_DEFINE_FINAL_TYPE (BzLibraryPage, bz_library_page, ADW_TYPE_BIN)
@@ -95,6 +98,85 @@ set_page_idle_cb (BzLibraryPage *self);
 static gboolean
 filter (BzEntryGroup  *group,
         BzLibraryPage *self);
+
+/*
+ * The Library also lists applications Bazaar installed as AppImages: they
+ * are not Flatpak installs, so they are not in the model, and Bazaar owns
+ * their files (~/Applications, the launcher entry, the icon) and removes
+ * exactly them. No new daemon: this is a directory scan on page load.
+ */
+static void
+refresh_appimage_rows (BzLibraryPage *self);
+
+static DexFuture *
+appimage_uninstall_done (DexFuture *future,
+                         gpointer   user_data)
+{
+  refresh_appimage_rows (BZ_LIBRARY_PAGE (user_data));
+  return dex_future_new_for_boolean (TRUE);
+}
+
+static void
+remove_appimage_clicked_cb (GtkButton      *button,
+                            BzLibraryPage  *self)
+{
+  const char *app_id = NULL;
+
+  app_id = g_object_get_data (G_OBJECT (button), "bz-appimage-id");
+  if (app_id == NULL)
+    return;
+
+  dex_future_disown (
+      dex_future_then (bz_appimage_source_uninstall (app_id),
+                       (DexFutureCallback) appimage_uninstall_done, self, NULL));
+}
+
+static void
+refresh_appimage_rows (BzLibraryPage *self)
+{
+  g_autoptr (GPtrArray) app_ids = NULL;
+  GtkWidget *child = NULL;
+
+  while ((child = gtk_widget_get_first_child (
+              GTK_WIDGET (self->appimage_installed_rows))) != NULL)
+    gtk_box_remove (self->appimage_installed_rows, child);
+
+  app_ids = bz_appimage_dup_installed_app_ids ();
+  gtk_widget_set_visible (self->appimage_installed_section,
+                          app_ids->len > 0);
+
+  for (guint i = 0; i < app_ids->len; i++)
+    {
+      const char *app_id = app_ids->pdata[i];
+      g_autofree char *version = bz_appimage_dup_installed_version (app_id);
+      g_autofree char *text = NULL;
+      GtkWidget *row = NULL;
+      GtkWidget *label = NULL;
+      GtkWidget *button = NULL;
+
+      text = version != NULL
+               ? g_strdup_printf (_ ("%s (AppImage, version %s)"), app_id, version)
+               : g_strdup_printf (_ ("%s (AppImage)"), app_id);
+
+      row = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 8);
+      label = gtk_label_new (text);
+      button = gtk_button_new_with_label (_ ("Remove"));
+
+      gtk_label_set_xalign (GTK_LABEL (label), 0);
+      gtk_label_set_wrap (GTK_LABEL (label), TRUE);
+      gtk_widget_set_hexpand (label, TRUE);
+      gtk_widget_add_css_class (button, "small-pill");
+
+      g_object_set_data_full (G_OBJECT (button), "bz-appimage-id",
+                              g_strdup (app_id), g_free);
+      g_signal_connect (button, "clicked",
+                        G_CALLBACK (remove_appimage_clicked_cb), self);
+
+      gtk_box_append (GTK_BOX (row), label);
+      gtk_box_append (GTK_BOX (row), button);
+      gtk_box_append (self->appimage_installed_rows, row);
+    }
+}
 
 static void
 bz_library_page_dispose (GObject *object)
@@ -422,6 +504,8 @@ bz_library_page_class_init (BzLibraryPageClass *klass)
   gtk_widget_class_bind_template_child (widget_class, BzLibraryPage, sorter);
   gtk_widget_class_bind_template_child (widget_class, BzLibraryPage, sort_name);
   gtk_widget_class_bind_template_child (widget_class, BzLibraryPage, sort_size);
+  gtk_widget_class_bind_template_child (widget_class, BzLibraryPage, appimage_installed_section);
+  gtk_widget_class_bind_template_child (widget_class, BzLibraryPage, appimage_installed_rows);
   gtk_widget_class_bind_template_callback (widget_class, no_results_found_subtitle);
   gtk_widget_class_bind_template_callback (widget_class, format_update_count);
   gtk_widget_class_bind_template_callback (widget_class, format_install_count);
@@ -446,6 +530,7 @@ bz_library_page_init (BzLibraryPage *self)
   gtk_custom_sorter_set_sort_func (
       self->sorter, (GCompareDataFunc) sort_func,
       self, NULL);
+  refresh_appimage_rows (self);
 }
 
 GtkWidget *

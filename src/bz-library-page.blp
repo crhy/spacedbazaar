@@ -102,6 +102,28 @@ template $BzLibraryPage: Adw.Bin {
                   };
                 }
 
+                Box appimage_installed_section {
+                  margin-top: 15;
+                  orientation: vertical;
+                  spacing: 4;
+
+                  Label {
+                    label: _("Installed as AppImages");
+                    xalign: 0;
+                    margin-start: 12;
+
+                    styles [
+                      "heading",
+                      "h4",
+                    ]
+                  }
+
+                  Box appimage_installed_rows {
+                    orientation: vertical;
+                    spacing: 4;
+                  }
+                }
+
                 Revealer {
                   reveal-child: bind $invert_boolean($is_zero(template.state as <$BzStateInfo>.transaction-manager as <$BzTransactionManager>.install-trackers as <FilterListModel>.n-items) as <bool>) as <bool>;
                   transition-type: slide_down;

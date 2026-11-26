@@ -25,6 +25,7 @@
 
 #include "bz-addons-dialog.h"
 #include "bz-application.h"
+#include "bz-appimage-source.h"
 #include "bz-curated-view.h"
 #include "bz-entry-group-util.h"
 #include "bz-entry-group.h"
@@ -439,6 +440,155 @@ resolve_group_from_parameter (BzWindow *self,
       gtk_string_object_new (id));
 }
 
+/*
+ * Install-time information: the app page's own Install button installs the
+ * recommended build, but installs started from the listings go through the
+ * ordinary Flatpak transaction. When that happens for an application whose
+ * recommendation is a different build, the toast names the recommendation,
+ * its reason, and says plainly whether it is sandboxed.
+ */
+static void
+notify_format_choice (BzWindow *self, BzEntryGroup *group)
+{
+  g_autoptr (BzFormatChoice) choice = NULL;
+  g_autofree char *message = NULL;
+  BzFormatChoiceFormat pick = BZ_FORMAT_CHOICE_FORMAT_INVALID;
+
+  if (group == NULL || self->toasts == NULL)
+    return;
+
+  choice = bz_entry_group_get_format_choice (group, NULL, NULL);
+  if (choice == NULL)
+    return;
+
+  pick = bz_format_choice_get_pick (choice);
+  if (pick == BZ_FORMAT_CHOICE_FORMAT_INVALID ||
+      pick == BZ_FORMAT_CHOICE_FORMAT_FLATPAK)
+    return;
+
+  message = g_strdup_printf (_ ("This app recommends the %s build: %s\n"
+                                "%s"),
+                              bz_format_choice_format_label (pick),
+                              bz_format_choice_get_reason (choice),
+                              bz_format_choice_format_is_sandboxed (pick)
+                                ? _ ("That build runs sandboxed.")
+                                : _ ("That build is not sandboxed."));
+
+  adw_toast_overlay_add_toast (self->toasts, adw_toast_new (message));
+}
+
+BZ_DEFINE_DATA (
+    install_appimage_choice,
+    InstallAppImageChoice,
+    {
+      GWeakRef     *self;
+      BzEntryGroup *group;
+    },
+    BZ_RELEASE_DATA (self, bz_weak_release);
+    BZ_RELEASE_DATA (group, g_object_unref))
+
+/*
+ * Install the AppImage build the curated advice picked for this app, right
+ * from the app page card or the override row. Nothing is written to disk
+ * before the published SHA256 has been fetched and the downloaded bytes are
+ * compared against it (see bz-appimage-source.c). The update check compares
+ * release versions: a newer upstream release reinstalls, an equal or older
+ * one says so. zsync is never used: the module refuses .zsync sidecars, so
+ * an update is always a fresh, checksum-verified download.
+ */
+static DexFuture *
+install_appimage_choice_fiber (InstallAppImageChoiceData *data)
+{
+  g_autoptr (GError) local_error = NULL;
+  g_autoptr (JsonNode) node = NULL;
+  g_autoptr (BzAppImageRelease) release = NULL;
+  BzWindow *self = NULL;
+  const BzFormatAdvice *advice = NULL;
+  const char *app_id = NULL;
+  const char *title = NULL;
+  g_autofree char *installed_version = NULL;
+
+  bz_weak_get_or_return_reject (self, data->self);
+
+  app_id = bz_entry_group_get_id (data->group);
+  title = bz_entry_group_get_title (data->group);
+  advice = bz_format_advice_lookup (app_id);
+
+  if (app_id == NULL || advice == NULL || advice->appimage_repo == NULL)
+    {
+      adw_toast_overlay_add_toast (
+          self->toasts,
+          adw_toast_new (_ ("Not offered: no official AppImage release is known for this app")));
+      return dex_future_new_false ();
+    }
+
+  node = dex_await_object (
+      bz_appimage_source_query_release_json (advice->appimage_repo),
+      &local_error);
+  if (node == NULL)
+    {
+      bz_show_error_for_widget (GTK_WIDGET (self),
+                                _ ("Could not check the upstream releases"),
+                                local_error != NULL ? local_error->message : "(unknown)");
+      g_clear_error (&local_error);
+      return dex_future_new_false ();
+    }
+
+  release = bz_appimage_release_from_json (node, app_id, advice->appimage_repo,
+                                           &local_error);
+  if (release == NULL)
+    {
+      if (local_error != NULL &&
+          g_error_matches (local_error, BZ_APPIMAGE_ERROR,
+                           BZ_APPIMAGE_ERROR_NO_PUBLISHED_SHA256))
+        adw_toast_overlay_add_toast (self->toasts,
+                                     adw_toast_new (_ ("Not offered: no published checksum")));
+      else
+        bz_show_error_for_widget (GTK_WIDGET (self),
+                                  _ ("This app offers no AppImage"),
+                                  local_error != NULL ? local_error->message : "(unknown)");
+
+      g_clear_error (&local_error);
+      return dex_future_new_false ();
+    }
+
+  /* update check: the newest release against the installed version */
+  installed_version = bz_appimage_dup_installed_version (app_id);
+  if (installed_version != NULL &&
+      bz_format_choice_compare_versions (release->tag_name,
+                                         installed_version) <= 0)
+    {
+      adw_toast_overlay_add_toast (
+          self->toasts,
+          adw_toast_new_format (_ ("Already on the newest AppImage (%s)"),
+                                installed_version));
+      return dex_future_new_false ();
+    }
+
+  if (!dex_await_boolean (bz_appimage_source_install (release, title, NULL),
+                          &local_error))
+    {
+      if (local_error != NULL &&
+          g_error_matches (local_error, BZ_APPIMAGE_ERROR,
+                           BZ_APPIMAGE_ERROR_SHA256_MISMATCH))
+        adw_toast_overlay_add_toast (
+            self->toasts,
+            adw_toast_new (_ ("Refused: the downloaded bytes did not match the published SHA256; nothing was installed")));
+      else
+        bz_show_error_for_widget (GTK_WIDGET (self),
+                                  _ ("Could not install the AppImage"),
+                                  local_error != NULL ? local_error->message : "(unknown)");
+
+      g_clear_error (&local_error);
+      return dex_future_new_false ();
+    }
+
+  adw_toast_overlay_add_toast (self->toasts,
+                               adw_toast_new (_ ("Installed the AppImage build")));
+
+  return dex_future_new_true ();
+}
+
 static void
 action_install_group (GtkWidget  *widget,
                       const char *action_name,
@@ -450,7 +600,83 @@ action_install_group (GtkWidget  *widget,
 
   group = resolve_group_from_parameter (self, parameter, &auto_confirm);
   if (group != NULL)
-    try_transact (self, NULL, group, FALSE, auto_confirm, NULL);
+    {
+      notify_format_choice (self, group);
+      try_transact (self, NULL, group, FALSE, auto_confirm, NULL);
+    }
+}
+
+/*
+ * The app page card and the "Other ways to install" row: install one build
+ * of this application by name. "recommended" means whatever the format
+ * choice picked for this application. The Flatpak build goes through
+ * Bazaar's ordinary transaction machinery; the AppImage build is fetched,
+ * checksum-verified and installed by bz-appimage-source.c; the apt build is
+ * named but not installable yet, and that is said plainly.
+ */
+static void
+action_install_format (GtkWidget  *widget,
+                       const char *action_name,
+                       GVariant   *parameter)
+{
+  BzWindow   *self               = BZ_WINDOW (widget);
+  const char *id                 = NULL;
+  const char *format             = NULL;
+  g_autoptr (BzEntryGroup) group = NULL;
+  BzFormatChoiceFormat chosen    = BZ_FORMAT_CHOICE_FORMAT_INVALID;
+
+  g_variant_get (parameter, "(&s&s)", &id, &format);
+
+  group = bz_application_map_factory_convert_one (
+      bz_state_info_get_application_factory (self->state),
+      gtk_string_object_new (id));
+  if (group == NULL)
+    return;
+
+  if (g_strcmp0 (format, "recommended") == 0)
+    {
+      g_autoptr (BzFormatChoice) choice = NULL;
+
+      choice = bz_entry_group_get_format_choice (group, NULL, NULL);
+      chosen = bz_format_choice_get_pick (choice);
+    }
+  else
+    chosen = bz_format_choice_parse_format (format);
+
+  switch (chosen)
+    {
+      case BZ_FORMAT_CHOICE_FORMAT_FLATPAK:
+        try_transact (self, NULL, group, FALSE, FALSE, NULL);
+        break;
+
+      case BZ_FORMAT_CHOICE_FORMAT_APPIMAGE:
+        {
+          InstallAppImageChoiceData *data   = NULL;
+          DexFuture *future                 = NULL;
+
+          data        = install_appimage_choice_data_new ();
+          data->self  = bz_track_weak (self);
+          data->group = g_object_ref (group);
+
+          future = dex_scheduler_spawn (
+              dex_scheduler_get_default (),
+              bz_get_dex_stack_size (),
+              (DexFiberFunc) install_appimage_choice_fiber,
+              install_appimage_choice_data_ref (data),
+              install_appimage_choice_data_unref);
+          dex_future_disown (future);
+        }
+        break;
+
+      case BZ_FORMAT_CHOICE_FORMAT_APT:
+        adw_toast_overlay_add_toast (
+            self->toasts,
+            adw_toast_new (_ ("The apt build is named here for comparison, but Bazaar cannot install system packages yet: it never touches the system package manager")));
+        break;
+
+      default:
+        break;
+    }
 }
 
 static void
@@ -836,6 +1062,7 @@ bz_window_class_init (BzWindowClass *klass)
   gtk_widget_class_install_action (widget_class, "window.open-flathub-page", NULL, action_open_flathub_page);
 
   gtk_widget_class_install_action (widget_class, "window.install-group", "(sb)", action_install_group);
+  gtk_widget_class_install_action (widget_class, "window.install-format", "(ss)", action_install_format);
   gtk_widget_class_install_action (widget_class, "window.remove-group", "(sb)", action_remove_group);
   gtk_widget_class_install_action (widget_class, "window.cancel-group", "s", action_cancel_group);
   gtk_widget_class_install_action (widget_class, "window.show-group", "s", action_show_group);

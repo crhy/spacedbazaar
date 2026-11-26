@@ -290,6 +290,161 @@ template $BzFullView: Adw.Bin {
                         }
                       }
 
+                      Box recommendation_card {
+                        styles [
+                          "card",
+                          "recommend-card",
+                        ]
+
+                        halign: fill;
+                        valign: fill;
+                        orientation: vertical;
+                        spacing: 6;
+                        margin-start: 12;
+                        margin-end: 12;
+                        visible: bind $format_choice_exists(template.entry-group as <$BzEntryGroup>) as <bool>;
+
+                        Label {
+                          styles [
+                            "heading",
+                            "dim",
+                          ]
+
+                          xalign: 0.0;
+                          label: _("Recommended for you");
+                        }
+
+                        Box recommend_badge {
+                          styles [
+                            "recommend-badge",
+                          ]
+
+                          spacing: 6;
+                          halign: start;
+                          visible: bind $invert_boolean($recommend_installed(template.entry-group as <$BzEntryGroup>) as <bool>) as <bool>;
+
+                          Image {
+                            icon-name: bind $recommend_badge_icon(template.entry-group as <$BzEntryGroup>) as <string>;
+                          }
+
+                          Label {
+                            label: bind $recommend_badge(template.entry-group as <$BzEntryGroup>) as <string>;
+                          }
+                        }
+
+                        Box {
+                          spacing: 8;
+
+                          Label recommend_version {
+                            styles [
+                              "dim",
+                            ]
+
+                            label: bind $recommend_version(template.entry-group as <$BzEntryGroup>) as <string>;
+                          }
+
+                          Label recommend_size {
+                            styles [
+                              "dim",
+                            ]
+
+                            label: bind $recommend_size(template.entry-group as <$BzEntryGroup>) as <string>;
+                          }
+                        }
+
+                        Label recommend_reason {
+                          xalign: 0.0;
+                          wrap: true;
+                          wrap-mode: word_char;
+                          natural-wrap-mode: word;
+                          selectable: true;
+                          label: bind $recommend_reason(template.entry-group as <$BzEntryGroup>) as <string>;
+                        }
+
+                        Label recommend_installed_note {
+                          styles [
+                            "heading",
+                          ]
+
+                          xalign: 0.0;
+                          wrap: true;
+                          wrap-mode: word_char;
+                          natural-wrap-mode: word;
+                          selectable: true;
+                          visible: bind $recommend_installed(template.entry-group as <$BzEntryGroup>) as <bool>;
+                          label: bind $recommend_installed_note(template.entry-group as <$BzEntryGroup>) as <string>;
+                        }
+                      }
+
+                      Box other_formats_box {
+                        halign: fill;
+                        orientation: vertical;
+                        spacing: 4;
+                        margin-start: 12;
+                        margin-end: 12;
+                        visible: bind $other_formats_exists(template.entry-group as <$BzEntryGroup>) as <bool>;
+
+                        Label {
+                          styles [
+                            "heading",
+                            "dim",
+                          ]
+
+                          xalign: 0.0;
+                          label: _("Other ways to install");
+                        }
+
+                        Box other_flatpak_row {
+                          spacing: 8;
+                          visible: bind $other_has_format(template.entry-group as <$BzEntryGroup>, "flatpak") as <bool>;
+
+                          Label other_flatpak_summary {
+                            hexpand: true;
+                            xalign: 0.0;
+                            wrap: true;
+                            wrap-mode: word_char;
+                            natural-wrap-mode: word;
+                            selectable: true;
+                            label: bind $other_summary(template.entry-group as <$BzEntryGroup>, "flatpak") as <string>;
+                          }
+
+                          Button {
+                            styles [
+                              "small-pill",
+                            ]
+
+                            valign: center;
+                            label: _("Install");
+                            clicked => $install_flatpak_cb(template);
+                          }
+                        }
+
+                        Box other_appimage_row {
+                          spacing: 8;
+                          visible: bind $other_has_format(template.entry-group as <$BzEntryGroup>, "appimage") as <bool>;
+
+                          Label other_appimage_summary {
+                            hexpand: true;
+                            xalign: 0.0;
+                            wrap: true;
+                            wrap-mode: word_char;
+                            natural-wrap-mode: word;
+                            selectable: true;
+                            label: bind $other_summary(template.entry-group as <$BzEntryGroup>, "appimage") as <string>;
+                          }
+
+                          Button {
+                            styles [
+                              "small-pill",
+                            ]
+
+                            valign: center;
+                            label: _("Install");
+                            clicked => $install_appimage_cb(template);
+                          }
+                        }
+                      }
+
                       Box context_bar {
                         hexpand: false;
                         homogeneous: true;

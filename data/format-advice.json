@@ -1,0 +1,12 @@
+{
+  "version": 1,
+  "_comment": "Curated per-application format advice for Spaced Linux. Only applications with evidence are listed; anything absent keeps Bazaar's default, which is the sandboxed Flatpak build. Reasons are shown to the user verbatim, so they name the specific problem, not a category.",
+  "advice": [
+    {
+      "app_id": "org.freecad.FreeCAD",
+      "pick": "appimage",
+      "appimage_repo": "freecad/freecad",
+      "reason": "Runs best on Spaced. The Flatpak version freezes on this desktop."
+    }
+  ]
+}

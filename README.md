@@ -27,6 +27,7 @@ SpacedBazaar
 >   AppStream-capable `spaced-github` Flatpak repository make Spaced Linux apps
 >   searchable, installable, and updateable without treating arbitrary GitHub
 >   uploads as trusted software.
+> - `Best install format`: Bazaar scores apt, Flatpak and AppImage per application from curated advice (`format-advice.json`, installed with the app), version freshness, sandboxing and existing installs, and offers the winner with its reason shown; the other builds are listed side by side on the app page, and a user's explicit choice wins. AppImages come from the upstream project's own GitHub releases and are installed only after their published SHA256 matches, into `~/Applications/` with their own launcher entry and icon. apt and AppImage are labelled plainly as not sandboxed, and the app page's Install button names the recommended build ("Install AppImage") and installs it.
 
 > [!NOTE]
 > If you are a distributor/packager who would like to learn how to customize

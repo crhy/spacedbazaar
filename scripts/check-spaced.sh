@@ -24,7 +24,7 @@ PY
 version=$($repo_root/version.sh get-version)
 release_url=$($repo_root/version.sh get-gh-release)
 
-test "$version" = "0.1.15"
+test "$version" = "0.1.16"
 test "$release_url" = "https://github.com/crhy/spacedbazaar/releases/tag/v$version"
 
 python3 - "$repo_root/data/io.github.crhy.SpacedBazaar.metainfo.xml.in" "$version" <<'PY'

@@ -132,8 +132,25 @@ install_cancel_cb (BzInstallControls *self,
     return;
 
   if (g_strcmp0 (state, "inactive") == 0)
-    gtk_widget_activate_action (GTK_WIDGET (self), "window.install-group", "(sb)",
-                                bz_entry_group_get_id (self->group), TRUE);
+    {
+      g_autoptr (BzFormatChoice) choice = NULL;
+      BzFormatChoiceFormat pick = BZ_FORMAT_CHOICE_FORMAT_INVALID;
+
+      /* the button installs the build it names: whatever the format choice
+         recommends. The Flatpak build is the ordinary transaction; anything
+         else goes through the window's per-format install action. */
+      choice = bz_entry_group_get_format_choice (self->group, NULL, NULL);
+      pick = bz_format_choice_get_pick (choice);
+
+      if (pick != BZ_FORMAT_CHOICE_FORMAT_INVALID &&
+          pick != BZ_FORMAT_CHOICE_FORMAT_FLATPAK)
+        gtk_widget_activate_action (GTK_WIDGET (self), "window.install-format",
+                                    "(ss)", bz_entry_group_get_id (self->group),
+                                    "recommended");
+      else
+        gtk_widget_activate_action (GTK_WIDGET (self), "window.install-group", "(sb)",
+                                    bz_entry_group_get_id (self->group), TRUE);
+    }
   else
     gtk_widget_activate_action (GTK_WIDGET (self), "window.cancel-group", "s",
                                 bz_entry_group_get_id (self->group));
@@ -221,6 +238,84 @@ is_not_empty_page (gpointer    object,
   return g_strcmp0 (page_name, "empty") != 0;
 }
 
+ /*
+  * Information only: the install button installs the build the format
+  * choice recommends, and the tooltip names that build, says why, and says
+  * plainly whether it is sandboxed. Nothing here installs anything.
+  */
+static void
+set_install_btn_tooltip (BzInstallControls *self)
+{
+  g_autoptr (BzFormatChoice) choice = NULL;
+  g_autofree char *tooltip = NULL;
+  BzFormatChoiceFormat pick = BZ_FORMAT_CHOICE_FORMAT_INVALID;
+
+  if (self->animated_button == NULL)
+    return;
+
+  if (self->group == NULL)
+    return;
+
+  choice = bz_entry_group_get_format_choice (self->group, NULL, NULL);
+  if (choice == NULL)
+    return;
+
+  pick = bz_format_choice_get_pick (choice);
+
+  /* the Flatpak build is Bazaar's own install path: nothing extra to say
+     when it is also the recommendation */
+  if (pick == BZ_FORMAT_CHOICE_FORMAT_INVALID ||
+      pick == BZ_FORMAT_CHOICE_FORMAT_FLATPAK)
+    return;
+
+  tooltip = g_strdup_printf (_ ("Install installs the recommended %s build:\n%s\n"
+                                "%s"),
+                              bz_format_choice_format_label (pick),
+                              bz_format_choice_get_reason (choice),
+                              bz_format_choice_format_is_sandboxed (pick)
+                                ? _ ("That build runs sandboxed.")
+                                : _ ("That build is not sandboxed."));
+
+  gtk_widget_set_tooltip_text (self->animated_button, tooltip);
+}
+
+/*
+ * The header's Install button is the page's only Install button: it names
+ * the build the choice recommends, so the card needs no button of its own
+ * and there is never an "Install" for one format and "Install AppImage"
+ * for another.
+ */
+static void
+set_install_btn_label (BzInstallControls *self)
+{
+  GtkWidget *label = NULL;
+  g_autoptr (BzFormatChoice) choice = NULL;
+  BzFormatChoiceFormat pick = BZ_FORMAT_CHOICE_FORMAT_INVALID;
+
+  if (self->animated_button == NULL || self->group == NULL)
+    return;
+
+  label = bge_wdgt_renderer_lookup_object (
+      BGE_WDGT_RENDERER (self->animated_button), "lbl-install");
+
+  if (label == NULL)
+    return;
+
+  choice = bz_entry_group_get_format_choice (self->group, NULL, NULL);
+  pick = bz_format_choice_get_pick (choice);
+
+  if (pick == BZ_FORMAT_CHOICE_FORMAT_INVALID ||
+      pick == BZ_FORMAT_CHOICE_FORMAT_FLATPAK)
+    gtk_label_set_text (GTK_LABEL (label), C_("Install Controls", "Install"));
+  else
+    {
+      g_autofree char *text = g_strdup_printf (
+          _ ("Install %s"), bz_format_choice_format_label (pick));
+
+      gtk_label_set_text (GTK_LABEL (label), text);
+    }
+}
+
 static char *
 get_visible_page (gpointer    object,
                   int         installable,
@@ -230,6 +325,9 @@ get_visible_page (gpointer    object,
 {
   BzInstallControls *self      = BZ_INSTALL_CONTROLS (object);
   g_autoptr (GListStore) store = NULL;
+
+  set_install_btn_tooltip (self);
+  set_install_btn_label (self);
 
   if (active)
     return g_strdup ("install");

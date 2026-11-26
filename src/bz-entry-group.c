@@ -807,6 +807,10 @@ bz_entry_group_get_format_choice (BzEntryGroup *self,
 
       g_object_get (BZ_ENTRY (ui_object), "version-history", &history, NULL);
 
+      g_debug ("bz02 probe: flatpak entry %s history items %u",
+               bz_flatpak_entry_get_flatpak_id (BZ_FLATPAK_ENTRY (ui_object)),
+               history != NULL ? g_list_model_get_n_items (history) : 0u);
+
       if (history != NULL && g_list_model_get_n_items (history) > 0)
         {
           g_autoptr (BzRelease) release =

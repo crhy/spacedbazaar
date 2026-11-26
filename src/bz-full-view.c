@@ -321,20 +321,16 @@ recommend_badge_icon (gpointer    object,
 
   pick = bz_format_choice_get_pick (choice);
 
-  switch (pick)
-    {
-      case BZ_FORMAT_CHOICE_FORMAT_APT:
-        return g_strdup ("package-x-generic-symbolic");
+  if (pick == BZ_FORMAT_CHOICE_FORMAT_APT)
+    return g_strdup ("package-x-generic-symbolic");
 
-      case BZ_FORMAT_CHOICE_FORMAT_FLATPAK:
-        return g_strdup ("flathub-symbolic");
+  if (pick == BZ_FORMAT_CHOICE_FORMAT_FLATPAK)
+    return g_strdup ("flathub-symbolic");
 
-      case BZ_FORMAT_CHOICE_FORMAT_APPIMAGE:
-        return g_strdup ("application-x-executable-symbolic");
+  if (pick == BZ_FORMAT_CHOICE_FORMAT_APPIMAGE)
+    return g_strdup ("application-x-executable-symbolic");
 
-      default:
-        return g_strdup ("");
-    }
+  return g_strdup ("");
 }
 
 static char *

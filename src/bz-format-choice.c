@@ -713,10 +713,15 @@ bz_format_choice_evaluate (const char *app_id,
 
       /* an unknown version or size is simply left out: the line never says
          "not known", it just names what is known */
-      version = offer->version ? g_strdup_printf (", %s",
-                                                  _ ("version %s"),
-                                                  offer->version)
-                               : g_strdup ("");
+      if (offer->version != NULL)
+        {
+          g_autofree char *version_text =
+              g_strdup_printf (_ ("version %s"), offer->version);
+
+          version = g_strdup_printf (", %s", version_text);
+        }
+      else
+        version = g_strdup ("");
 
       size = offer->download_size > 0
                ? g_strdup_printf (", %s", g_format_size ((guint64) offer->download_size))

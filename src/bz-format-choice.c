@@ -28,16 +28,18 @@
 #include "bz-format-choice.h"
 
 /*
- * How much each fact is worth. The curated advice for a specific application
- * outweighs everything else; being already installed outweighs freshness;
- * sandboxing is worth least, because it is a property of the format and not
- * of the application.
+ * How much each fact is worth, in the order the rules are weighed: the
+ * curated advice for a specific application outweighs everything else;
+ * being already installed outranks freshness; sandboxing only matters when
+ * the versions are equal; and the download being smaller is the very last
+ * tie-breaker.
  */
 #define ADVICE_WEIGHT 100
-#define INSTALLED_WEIGHT 25
+#define INSTALLED_WEIGHT 50
 #define NEWEST_WEIGHT 20
 #define KNOWN_VERSION_WEIGHT 5
 #define SANDBOX_WEIGHT 15
+#define SIZE_WEIGHT 1
 
 /*
  * Ties go to the sandboxed build first: Bazaar's own install path, and the
@@ -353,6 +355,66 @@ bz_format_choice_compare_versions (const char *a,
   return 0;
 }
 
+/*
+ * TRUE when the part after a '-' or '+' separator is a packaging suffix and
+ * not part of the release: a bare revision number (Debian's "-1", Flatpak's
+ * "-2"), an "r", "rev", "re" or "build" revision, or the "dfsg"/"ds" marks.
+ * Anything with text in it ("beta1", "rc2", "spaced") belongs to the release
+ * itself and is never treated as packaging.
+ */
+static gboolean
+is_packaging_suffix (const char *suffix)
+{
+  const char *p = NULL;
+  const char *digits = NULL;
+
+  if (suffix == NULL || suffix[0] == '\0')
+    return FALSE;
+
+  if (g_strcmp0 (suffix, "dfsg") == 0 ||
+      g_strcmp0 (suffix, "ds") == 0)
+    return TRUE;
+
+  if (g_str_has_prefix (suffix, "dfsg"))
+    return TRUE;
+
+  p = suffix;
+  if (g_str_has_prefix (p, "rev") || g_str_has_prefix (p, "build"))
+    p += 3;
+  else if (g_str_has_prefix (p, "re"))
+    p += 2;
+
+  digits = p;
+  while (*p != '\0')
+    {
+      if (!g_ascii_isdigit (*p) && *p != '.')
+        return FALSE;
+      p++;
+    }
+
+  return digits != p && g_ascii_isdigit (digits[0]);
+}
+
+char *
+bz_format_choice_dup_release_version (const char *version)
+{
+  const char *p = NULL;
+
+  if (version == NULL)
+    return NULL;
+
+  for (p = version; *p != '\0'; p++)
+    {
+      if (*p != '-' && *p != '+')
+        continue;
+
+      if (is_packaging_suffix (p + 1))
+        return g_strndup (version, p - version);
+    }
+
+  return g_strdup (version);
+}
+
 gboolean
 bz_format_choice_apt_package_is_installed (const char *package)
 {
@@ -417,6 +479,8 @@ bz_format_choice_unref (BzFormatChoice *self)
     return;
 
   g_free (self->reason);
+  g_free (self->installed_note);
+  g_free (self->pick_version);
   for (guint i = 0; i < BZ_FORMAT_CHOICE_N_FORMATS; i++)
     g_free (self->lines[i]);
 
@@ -463,6 +527,33 @@ bz_format_choice_get_line (BzFormatChoice *self,
   return self->lines[format];
 }
 
+const char *
+bz_format_choice_get_installed_note (BzFormatChoice *self)
+{
+  if (self == NULL)
+    return NULL;
+
+  return self->installed_note;
+}
+
+const char *
+bz_format_choice_get_pick_version (BzFormatChoice *self)
+{
+  if (self == NULL)
+    return NULL;
+
+  return self->pick_version;
+}
+
+gint64
+bz_format_choice_get_pick_size (BzFormatChoice *self)
+{
+  if (self == NULL)
+    return 0;
+
+  return self->pick_size;
+}
+
 BzFormatChoice *
 bz_format_choice_evaluate (const char *app_id,
                            const BzFormatChoiceOffer *offers,
@@ -471,25 +562,49 @@ bz_format_choice_evaluate (const char *app_id,
 {
   g_autoptr (BzFormatChoice) choice = NULL;
   const BzFormatAdvice *advice = NULL;
-  const char *newest = NULL;
+  g_autofree char *newest = NULL;
+  gint64 smallest_size = 0;
   BzFormatChoiceFormat pick = BZ_FORMAT_CHOICE_FORMAT_INVALID;
   gint best_score = G_MININT;
 
   choice = bz_format_choice_new ();
   advice = bz_format_advice_lookup (app_id);
 
-  /* the newest version any build of this application is known to carry */
+  /*
+   * The newest version any build of this application is known to carry,
+   * packaging suffix ignored: "1.1.4" and "1.1.4-1" are the same release,
+   * and neither is newer than the other.
+   */
   if (offers != NULL)
     {
       for (guint i = 0; i < BZ_FORMAT_CHOICE_N_FORMATS; i++)
         {
           const BzFormatChoiceOffer *offer = &offers[i];
+          g_autofree char *release = NULL;
 
           if (!offer->available || offer->version == NULL)
             continue;
+
+          release = bz_format_choice_dup_release_version (offer->version);
+
           if (newest == NULL ||
-              bz_format_choice_compare_versions (offer->version, newest) > 0)
-            newest = offer->version;
+              bz_format_choice_compare_versions (release, newest) > 0)
+            {
+              g_free (newest);
+              newest = g_steal_pointer (&release);
+            }
+        }
+
+      /* the smallest download any build offers, when the size is known */
+      for (guint i = 0; i < BZ_FORMAT_CHOICE_N_FORMATS; i++)
+        {
+          const BzFormatChoiceOffer *offer = &offers[i];
+
+          if (!offer->available || offer->download_size <= 0)
+            continue;
+
+          if (smallest_size == 0 || offer->download_size < smallest_size)
+            smallest_size = offer->download_size;
         }
     }
 
@@ -497,6 +612,7 @@ bz_format_choice_evaluate (const char *app_id,
     {
       BzFormatChoiceFormat format = preference_order[p];
       const BzFormatChoiceOffer *offer = NULL;
+      g_autofree char *release = NULL;
       gint score = 0;
 
       if (offers == NULL)
@@ -519,10 +635,18 @@ bz_format_choice_evaluate (const char *app_id,
       if (offer->version != NULL)
         {
           score += KNOWN_VERSION_WEIGHT;
+
+          release = bz_format_choice_dup_release_version (offer->version);
           if (newest != NULL &&
-              bz_format_choice_compare_versions (offer->version, newest) == 0)
+              bz_format_choice_compare_versions (release, newest) == 0)
             score += NEWEST_WEIGHT;
         }
+
+      /* smaller download breaks the last tie, and only the last one */
+      if (smallest_size > 0 &&
+          offer->download_size > 0 &&
+          offer->download_size == smallest_size)
+        score += SIZE_WEIGHT;
 
       if (advice != NULL && advice->pick == format)
         score += ADVICE_WEIGHT;
@@ -571,7 +695,14 @@ bz_format_choice_evaluate (const char *app_id,
       BzFormatChoiceFormat format = (BzFormatChoiceFormat) i;
       const char *label = bz_format_choice_format_label (format);
       g_autofree char *version = NULL;
+      g_autofree char *size = NULL;
       g_autofree char *line = NULL;
+
+      if (offer != NULL && format == choice->pick)
+        {
+          choice->pick_version = offer->version ? g_strdup (offer->version) : NULL;
+          choice->pick_size = offer->download_size;
+        }
 
       if (offer == NULL || !offer->available)
         {
@@ -583,16 +714,24 @@ bz_format_choice_evaluate (const char *app_id,
       version = offer->version ? g_strdup_printf (_ ("version %s"), offer->version)
                                : g_strdup (_ ("version not known yet"));
 
-      line = g_strdup_printf ("%s: %s, %s, %s",
+      size = offer->download_size > 0
+               ? g_strdup_printf (", %s", g_format_size ((guint64) offer->download_size))
+               : g_strdup ("");
+
+      line = g_strdup_printf ("%s: %s, %s%s, %s",
                               label,
                               offer->installed ? _ ("already installed")
                                                : _ ("not installed"),
                               bz_format_choice_format_is_sandboxed (format)
                                 ? _ ("sandboxed")
                                 : _ ("not sandboxed"),
+                              size,
                               version);
 
       choice->lines[i] = g_steal_pointer (&line);
+
+      if (offer->installed && choice->installed_note == NULL)
+        choice->installed_note = g_strdup_printf (_ ("Installed as %s"), label);
     }
 
   if (choice->overridden)

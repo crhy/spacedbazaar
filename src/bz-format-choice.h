@@ -46,9 +46,10 @@ typedef enum
 
 /*
  * What is known about one build of one application: whether it exists at all,
- * whether it is already installed, and which version it carries. A NULL
- * `version` means the version is not known yet (an AppImage's version is only
- * read when its upstream release is queried).
+ * whether it is already installed, which version it carries, and how big its
+ * download is in bytes. A NULL `version` means the version is not known yet
+ * (an AppImage's version is only read when its upstream release is queried),
+ * and a `download_size` of 0 means the size is not known either.
  */
 typedef struct
 {
@@ -56,6 +57,7 @@ typedef struct
   gboolean available;
   gboolean installed;
   const char *version;
+  gint64 download_size;
 } BzFormatChoiceOffer;
 
 /*
@@ -75,8 +77,9 @@ typedef struct
 
 /*
  * The decision, plus the working out: the build to offer, one sentence saying
- * why, one line per format for the app page, and the score each format
- * earned. `overridden` is TRUE when the user chose a build explicitly, which
+ * why, one line per format for the app page, the score each format earned, and
+ * a note naming the format this application is already installed as (NULL when
+ * none is). `overridden` is TRUE when the user chose a build explicitly, which
  * always wins over the curated advice as long as that build is available.
  */
 typedef struct
@@ -86,6 +89,9 @@ typedef struct
   BzFormatChoiceFormat pick;
   gboolean overridden;
   char *reason;
+  char *installed_note;
+  char *pick_version;
+  gint64 pick_size;
   char *lines[BZ_FORMAT_CHOICE_N_FORMATS];
   gint scores[BZ_FORMAT_CHOICE_N_FORMATS];
 } BzFormatChoice;
@@ -113,6 +119,15 @@ bz_format_choice_parse_format (const char *name);
 gint
 bz_format_choice_compare_versions (const char *a,
                                    const char *b);
+
+/*
+ * The version without its packaging suffix: what upstream actually released.
+ * "1.1.4-1" (Debian revision), "1.1.4+dfsg" and "1.1.4~spaced1" are all
+ * 1.1.4; anything that is part of the release itself ("1.1.4-beta1") is kept.
+ * Freshness ignores a difference only in such a packaging suffix.
+ */
+char *
+bz_format_choice_dup_release_version (const char *version);
 
 /*
  * The curated advice for an application id, or NULL when nothing is curated
@@ -158,13 +173,34 @@ bz_format_choice_get_line (BzFormatChoice *self,
                            BzFormatChoiceFormat format);
 
 /*
- * Score the three builds and return the winner.
+ * "Installed as Flatpak" when one of this application's builds is already
+ * installed, and NULL when none is. The app page shows this in the
+ * "Recommended for you" card and recommends nothing new.
+ */
+const char *
+bz_format_choice_get_installed_note (BzFormatChoice *self);
+
+/*
+ * The winning build's version (NULL when not known yet) and download size in
+ * bytes (0 when not known), for the card under the format badge.
+ */
+const char *
+bz_format_choice_get_pick_version (BzFormatChoice *self);
+
+gint64
+bz_format_choice_get_pick_size (BzFormatChoice *self);
+
+/*
+ * Score the three builds and return the winner, in this order of weight:
  *
- * Weights: curated advice for this app 100 (more than every other signal combined), already installed 25, the newest
- * known version 20, an older known version 5, sandboxing 15. A build that is
- * not available is never scored. Ties go to the sandboxed build first, then
- * AppImage, then apt. The reason is the curated sentence when the curated
- * pick wins, otherwise a sentence about the reason this build scored best.
+ * curated advice for this app 100 (more than every other signal combined),
+ * already installed 50, the newest known version 20 (ignoring a difference
+ * only in a packaging suffix), an older known version 5, sandboxing 15 when
+ * the versions are equal, and the smallest known download 1, last. A build
+ * that is not available is never scored. Ties go to the sandboxed build
+ * first, then AppImage, then apt. The reason is the curated sentence when
+ * the curated pick wins, otherwise a sentence about the reason this build
+ * scored best.
  *
  * `offers` may be NULL, which means nothing is known about any build.
  */

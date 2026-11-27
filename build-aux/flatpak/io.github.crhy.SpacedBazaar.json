@@ -166,8 +166,8 @@
             {
               "type": "git",
               "url": "https://github.com/flatpak/flatpak",
-              "commit": "a02d0ba48abe9aacc377de15699e5d8c024b5669",
-              "tag": "1.18.4",
+              "commit": "7a986ba376d9e2fd8857b0afcdf5d171ef733b1f",
+              "tag": "1.18.6",
               "x-checker-data": {
                 "type": "git",
                 "tag-pattern": "^(1\\.[0-8][02468]\\..*)$",
@@ -221,8 +221,8 @@
               "sources": [
                 {
                   "type": "file",
-                  "url": "https://files.pythonhosted.org/packages/7d/b2/51899539b6ceeeb420d40ed3cd4b7a40519404f9baf3d4ac99dc413a834b/babel-2.18.0.tar.gz",
-                  "sha256": "b80b99a14bd085fcacfa15c9165f651fbb3406e66cc603abf11c5750937c992d",
+                  "url": "https://files.pythonhosted.org/packages/32/44/744169ce3677a541439bc9506ef08bd85674e9d6e3895ebe5a87ff65fb7a/babel-2.19.0.tar.gz",
+                  "sha256": "fddd2cbbbac7c299af3c2880be23609c331bd94f0912baca6cb0abfe054dfc27",
                   "x-checker-data": {
                     "type": "pypi",
                     "name": "babel"
@@ -258,8 +258,8 @@
                 {
                   "type": "git",
                   "url": "https://github.com/polkit-org/polkit",
-                  "commit": "9e4894c969eecf26a3ba762f4f7a268aa0fb3e51",
-                  "tag": "127",
+                  "commit": "e6373dc19975d8583568c6cd7025d03e682ca956",
+                  "tag": "128",
                   "x-checker-data": {
                     "type": "git",
                     "tag-pattern": "^([\\d.]+)$"
@@ -291,8 +291,8 @@
                     {
                       "type": "git",
                       "url": "https://github.com/ostreedev/ostree",
-                      "tag": "v2026.4",
-                      "commit": "4f4445a8912f70c604fa84a057a8f4e904e35a24",
+                      "tag": "v2026.7",
+                      "commit": "882a60eade8ede3e2978b7e7bf914c6fb6869ddc",
                       "x-checker-data": {
                         "type": "anitya",
                         "project-id": 10899,

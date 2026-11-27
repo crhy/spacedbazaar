@@ -211,9 +211,39 @@
       ],
       "screenshots": [
         {
-          "url": "https://raw.githubusercontent.com/crhy/spacedbazaar/d8d1fdf2a24944d2b7063a17911336254129f687/screenshots/rhyciv-main-menu-1600.png",
+          "url": "https://raw.githubusercontent.com/crhy/spacedbazaar/fbd7c9f32274a24eb0d0f0abaa8b78b412c44549/screenshots/rhyciv-main-menu-1600.png",
           "caption": "Create or load an empire strategy game in rhYciv",
           "sha256": "ea88207af048fd6952bca2aebc0732cbd80852684b488402f1c090e9a0a85b52"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/crhy/spacedbazaar/fbd7c9f32274a24eb0d0f0abaa8b78b412c44549/screenshots/rhyciv-map-cities-units-1600.png",
+          "caption": "The strategy game map, zoomed in on the player's city, units and fog of war",
+          "sha256": "0b089db6855e83cc44538419e29fd94c1ceadc58a422290101665da2bda2fb1c"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/crhy/spacedbazaar/fbd7c9f32274a24eb0d0f0abaa8b78b412c44549/screenshots/rhyciv-city-view-1600.png",
+          "caption": "City window showing growth, shields and the worked tiles of a rhYciv city",
+          "sha256": "1fff33d141b1482818214077ec7c510b4b97f4eaa14354aa21f5771b4366088d"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/crhy/spacedbazaar/fbd7c9f32274a24eb0d0f0abaa8b78b412c44549/screenshots/rhyciv-production-list-1600.png",
+          "caption": "Change Production list with the units and buildings a rhYciv city can build",
+          "sha256": "e63b7f43971b1ca407f16c5da84ecd25b0f1a8d7358a1fbc25422761a7a7807e"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/crhy/spacedbazaar/fbd7c9f32274a24eb0d0f0abaa8b78b412c44549/screenshots/rhyciv-diplomacy-ministry-1600.png",
+          "caption": "Foreign Ministry diplomacy screen with rival civilisation leaders and attitudes",
+          "sha256": "85a1ee5909eb194ee484a98bcba6ef948b9adf8b163eaa065f2af4b357e1c1da"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/crhy/spacedbazaar/fbd7c9f32274a24eb0d0f0abaa8b78b412c44549/screenshots/rhyciv-revealed-map-1600.png",
+          "caption": "The whole rhYciv world map revealed, showing continents, terrain and resources",
+          "sha256": "b316425235c9150e7a5a59d3f3bc33f10eea9886f6cee28609dbb184e1e67c1b"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/crhy/spacedbazaar/fbd7c9f32274a24eb0d0f0abaa8b78b412c44549/screenshots/rhyciv-fog-explored-map-1600.png",
+          "caption": "Explored map at start of play: the player's cities ringed by fog of war",
+          "sha256": "cf4380eab91d0d93d364eca9fbe66dcb370e034915785203cafa52e9a78e77b3"
         }
       ]
     }
